@@ -3,29 +3,38 @@ from representation import Map
 from sys import argv
 
 
-def get_station_info(map: object) -> tuple:
+def get_station_info(map: object) -> tuple[list[float], list[float], list[str], dict[str: list[float]]]:
+    """ 
+    pre: 
+            - map input is (correctly initialized) map object
 
-    # create lists
+    post: 
+            - returns 3 lists and 1 dict
+    """
+    # create objects
     lat = []
     long = []
     station_names = []
-
     info_dict = {}
 
-    for station in map.stations:
-        info_dict[str(station.name)] = [station.y, station.x]
-
-    # add information to lists
+    # add information to lists/dict
     for station in map.stations:
 
         lat.append(station.y)
         long.append(station.x)
         station_names.append(station.name)
+        info_dict[str(station.name)] = [station.y, station.x]
 
     return lat, long, station_names, info_dict
 
 
 def show_plot(lat: list, long: list, station_names: list, info_dict: dict[str: list[float]]) -> None:
+    """
+    doc-string nog maken :'(
+    """
+
+    # im = plt.imread("../nederland.png")
+    # implot = plt.imshow(im)
 
     # make scatterplot
     plt.scatter(long, lat, color='red')
