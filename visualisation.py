@@ -10,6 +10,11 @@ def get_station_info(map: object) -> tuple:
     long = []
     station_names = []
 
+    info_dict = {}
+
+    for station in map.stations:
+        info_dict[str(station.name)] = [station.y, station.x]
+
     # add information to lists
     for station in map.stations:
 
@@ -17,15 +22,10 @@ def get_station_info(map: object) -> tuple:
         long.append(station.x)
         station_names.append(station.name)
 
-    return lat, long, station_names
+    return lat, long, station_names, info_dict
 
 
-def show_plot(lat: list, long: list, station_names: list, map: object) -> None:
-
-    info_dict = {}
-
-    for station in map.stations:
-        info_dict[str(station.name)] = [station.y, station.x]
+def show_plot(lat: list, long: list, station_names: list, info_dict: dict[str: list[float]]) -> None:
 
     # make scatterplot
     plt.scatter(long, lat, color='red')
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     map = Map(argv[1], argv[2])
 
     # save coordinates and names
-    lat, long, station_names = get_station_info(map)
+    lat, long, station_names, info_dict = get_station_info(map)
 
     # create and show plot
-    show_plot(lat, long, station_names, map)
+    show_plot(lat, long, station_names, info_dict)
