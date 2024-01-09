@@ -3,7 +3,7 @@ from representation import Map
 from sys import argv
 
 
-def get_information(map: object):
+def get_information(map: object) -> tuple:
 
     # create lists
     lat = []
@@ -19,7 +19,7 @@ def get_information(map: object):
     return lat, long, station_names
 
 
-def show_plot(lat, long, station_names):
+def show_plot(lat: list, long: list, station_names: list) -> None:
 
     # make scatterplot
     plt.scatter(long, lat, color='red')
@@ -35,7 +35,7 @@ def show_plot(lat, long, station_names):
 
 if __name__ == "__main__":
 
-    # make sure a .csv is given for both stations and routes
+    # make sure a csv is given for both stations and routes
     assert len(
         argv) == 3, "Usage: representation.py [file path stations.csv] [file path routes.csv]"
 
