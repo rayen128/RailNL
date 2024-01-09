@@ -35,7 +35,7 @@ class Map():
             for row in routes_reader:
                 assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(), "Routes csv should have station1, station2 and distance headers"
 
-                new_route = Route(row["station1"], row["station2"], int(row["distance"]))
+                new_route = Route(row["station1"], row["station2"], float(row["distance"]))
 
                 # add route to route list
                 routes_list.append(new_route)
@@ -73,5 +73,5 @@ if __name__ == "__main__":
     # make Map object
     new_map = Map(argv[1], argv[2])
     
-    
+
         
