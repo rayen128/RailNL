@@ -6,48 +6,47 @@ from sys import argv
 def get_station_info(map: object) -> tuple[list[float], list[float], list[str], dict[str: list[float]]]:
     """ 
     pre: 
-            - map input is (correctly initialized) map object
+        - map input is map object
+        - map.stations exists and contains stations 
+        - every station has a name, x and y
 
-    post: 
-            - returns 3 lists and 1 dict
+
+    returns: 
+        - 3 list containing the latitude, longitude and names of all stations 
+        - 1 dict containing all this info
     """
-    # create objects
-    lat = []
-    long = []
     station_names = []
     info_dict = {}
 
     # add information to lists/dict
     for station in map.stations:
-
-        lat.append(station.y)
-        long.append(station.x)
         station_names.append(station.name)
         info_dict[str(station.name)] = [station.y, station.x]
 
-    return lat, long, station_names, info_dict
+    return station_names, info_dict
 
 
-def show_plot(lat: list, long: list, station_names: list, info_dict: dict[str: list[float]]) -> None:
+def show_plot(station_names: list, info_dict: dict[str: list[float]]) -> None:
     """
-    doc-string nog maken :'(
-    """
+    pre:
+        - 
 
-    # im = plt.imread("../nederland.png")
-    # implot = plt.imshow(im)
+    post:
+        - 
+    """
 
     # make scatterplot
-    plt.scatter(long, lat, color='red')
+    plt.scatter([info_dict[name][1] for name in station_names], [
+                info_dict[name][0] for name in station_names], color='red')
 
     # add connections
     for connection in map.connections:
 
-        start_lat = info_dict[connection.station_1][0]
-        start_long = info_dict[connection.station_1][1]
+        start_coords = info_dict[connection.station_1]
+        end_coords = info_dict[connection.station_2]
 
-        end_lat = info_dict[connection.station_2][0]
-        end_long = info_dict[connection.station_2][1]
-        plt.plot([start_long, end_long], [start_lat, end_lat], 'b--')
+        plt.plot([start_coords[1], end_coords[1]], [
+                 start_coords[0], end_coords[0]], 'b--')
 
     # axis title
     plt.title('Stations')
@@ -68,7 +67,7 @@ if __name__ == "__main__":
     map = Map(argv[1], argv[2])
 
     # save coordinates and names
-    lat, long, station_names, info_dict = get_station_info(map)
+    station_names, info_dict = get_station_info(map)
 
     # create and show plot
-    show_plot(lat, long, station_names, info_dict)
+    show_plot(station_names, info_dict)
