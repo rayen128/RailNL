@@ -1,0 +1,142 @@
+#1: 60339831552000
+#2: 3486784401
+#3: 351
+#4: 8325749155234022000000000000
+#5: 1/3315312000
+#6: 7936
+
+#7: 
+Variabelen:
+- Aantal stations
+- Aantal trajecten
+- Tijd per traject
+
+Versimpelde aannames:
+- Alleen voor Holland
+- Maximaal 7 trajecten
+- Tijdsframe van 2 uur
+
+Formule: 
+
+
+#1:
+Er zijn 12 vakken, dus twaalf keuzes -> r = 12
+Er zijn 20 keuzemogelijkheden -> n=12
+Volgorde maakt uit: ja.
+Herhaling: nee.
+Berekening:
+(20!)/((20-12)!) = 60339831552000
+
+#2:
+20 kruispunten, dus 20 keuzes -> n = 20
+3 keuzemogelijkheden -> r = 3
+Volgorde maakt uit: ja
+Herhaling: ja
+Berekening: 
+3^20 = 3486784401
+
+#3: 
+Het aantal dozen maakt niet uit, omdat dit bij alle soorten de maximale capaciteit van 25 overschrijdt. Daarom:
+3 keuzemogelijkheden -> r = 3
+25 keuzes -> n = 25
+Volgorde maakt uit: nee
+Herhaling: ja
+berekening:
+(25 + 3 - 1)/(25! * (3 - 1)! ) = 351
+
+#4:
+Dit is een gecombineerde formule van drie verschillende mogelijkheden voor r: 30, 31 of 32 vakken.
+110 vakken -> n = 110
+Volgorde: nee
+Herhaling: nee
+Berekening:
+(110!)/(30! * 80!) + (110!)/(31! * 79!) + (110!)/(32! * 78!) = 8325749155234022000000000000
+
+#5:
+n = 26
+r = 7
+Volgorde: ja
+Herhaling: nee
+Berekening:
+(26!) / ((26 - 7)!) = 3315312000 mogelijkheden
+Kans = 1 / mogelijkheden
+Kans = 1 / 3315312000
+
+#6:
+Omdat volgorde niet belangrijk is en omdat er maar 30 dozen broodjes zijn, kan dit probleem in twee delen worden opgesplitst: één voor 30 dozen met 3 opties, en één voor 15 dozen met 2 opties. Deze twee worden dan met elkaar vermenigvuldigd.
+Herhaling: ja
+Berekening 30 dozen en 3 opties:
+( (30 + 3 - 1)! ) / (30! * (2)!)
+Berekening 15 dozen en 2 opties:
+( (15 + 2 - 1)! ) / (15! * (1)!)
+Volledige berekening:
+( (30 + 3 - 1)! ) / (30! * (2)!) * ( (15 + 2 - 1)! ) / (15! * (1)!) = 7936
+
+#7:
+
+Variabelen:
+Het aantal verbindingen
+Het aantal stations
+Het aantal trajecten 
+Het aantal connecties per station
+Het tijdsframe
+De lengte van de trajecten (in min.)
+
+Assumpties:
+- Een trein kan niet teleporteren.
+- Trajecten hebben een bepaalde maximale lengte, gebaseerd op twee dingen:
+   - Het gegeven tijdsframe;
+   - Het langst mogelijke traject, als alle kortst durende connecties bereden worden.
+- Het hoogst gevonden aantal verbindingen voor een station geldt voor alle stations.
+- Het minimaal aantal trajecten wat wordt meegenomen moet genoeg kunnen zijn om alle connecties te berijden. Dat is gebaseerd op de maximaal mogelijke lengte van een traject.
+- Een traject is hetzelfde als dat traject in omgekeerde volgorde.
+- We berekenen de mogelijkheden waarbij elk traject van mimimaal 1 tot de maximaal bepaalde lengte aan connecties moet hebben. Daarbij zitten dus ook scenario's waarbij niet alle verbindingen worden bereden. Bijvoorbeeld: als er in totaal 10 connecties zijn, nemen we ook scenario's mee waarin er 2 trajecten zijn waarin er bij beide 4 connecties meegenomen worden, waardoor dus nooit alle 10 trajecten kunnen worden bereden. 
+- Het is niet mogelijk om in één scenario 2 of meer exact dezelfde trajecten te hebben. Er is dus geen herhaling mogelijk.
+
+Formule:
+Onze formule is opgesplitst in twee delen:
+1. We berekenen eerst hoeveel trajecten er in totaal mogelijk zijn.
+2. Daarna berekenen we hoeveel combinaties van deze trajecten er mogelijk zijn.
+
+Deel 1: aantal mogelijke trajecten
+Er is herhaling, want dezelfde connecties kunnen vaker bereden worden.
+Volgorde is belangrijk, want het traject a-b-c is bijvoorbeeld anders dan b-c-a
+n is het maximale aantal verbindingen per station.
+r is het langst mogelijke traject binnen het tijdsframe.
+
+De berekening voor een traject t van r verbindingen is dan:
+t = n^r
+De berekening voor een traject van alle verbindingen kleiner dan of gelijk aan r verbindingen is:
+t = n^(r!)
+Uit al deze trajecten moeten we de trajecten die exact andersom zijn nog weghalen. De formule ziet er dan zo uit:
+t = ( n^(r!) ) / 2
+
+Deel 2: aantal mogelijke scenario's
+Hier is geen herhaling, want hetzelfde traject mag niet meer dan 1 keer voorkomen.
+Volgorde is ook niet belangrijk, want het maakt niet uit wanneer welk traject wordt geplaatst.
+N is hier het aantal mogelijke trajecten, dus:
+N = t
+R is het aantal trajecten in een scenario.
+
+De berekening voor het totaal aantal mogelijke scenario's T is dan:
+Wanneer het aantal trajecten vastgesteld is op een specifiek getal, ziet de formule er zo uit:
+T = (N!)/(R!(N-R)!)
+Het kan echter zo zijn dat de case een maximum aantal trajecten weergeeft. Daarnaast kan het aantal trajecten een minimum hebben, omdat met minder dan dat aantal niet alle verbindingen kunnen worden bereden.
+Dan ziet de formule er zo uit:
+T = Σ (i = m tot R) (N!) / (i!(N-i)!)
+waar m het minimum aantal trajecten is.
+
+
+Klein voorbeeld om te laten zien dat de formule klopt:
+In onze bedachte case zijn er 4 connecties, 2 mogelijkheden per station, en er is een tijdsframe van 60 minuten, waaruit volgt dat de maximale lengte van een traject 3 connecties is. Het maximaal aantal trajecten is 3. Het minimale aantal trajecten is 2, omdat anders niet alle 4 de connecties kunnen worden bereden.
+n = 2
+r = 3
+t = (2^(3!)) / 2 = 32
+N = t
+R = 3
+T = Σ (i = 2 tot 3) (32!) / (i!(32-i)!) = 5456
+
+
+Grootte van state-space voor één probleem-instantie:
+
+
