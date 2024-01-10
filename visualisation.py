@@ -35,9 +35,9 @@ def show_plot(lat, long, station_names):
 
 if __name__ == "__main__":
 
-    # make sure a .csv is given for both stations and routes
+    # make sure a .csv is given for both stations and connections
     assert len(
-        argv) == 3, "Usage: representation.py [file path stations.csv] [file path routes.csv]"
+        argv) == 3, "Usage: representation.py [file path stations.csv] [file path connections.csv]"
 
     # make Map object
     map = Map(argv[1], argv[2])

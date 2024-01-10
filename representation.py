@@ -5,9 +5,9 @@ import csv
 
 class Map():
     
-    def __init__(self, stations_file_path: str, routes_file_path: str):
+    def __init__(self, stations_file_path: str, connections_file_path: str):
         self.stations: list[object] = self.add_stations(stations_file_path)
-        self.routes: list[object] = self.add_routes(routes_file_path)
+        self.connections: list[object] = self.add_connections(connections_file_path)
 
     def add_stations(self, file_path: str) -> list:
         """pre: file path to stations.csv
@@ -15,6 +15,7 @@ class Map():
         with open(file_path) as stations:
             stations_reader: object = csv.DictReader(stations)
 
+            # add stations to the station list
             station_list: list = []
             for row in stations_reader:
                 # check if columns are right
@@ -25,26 +26,27 @@ class Map():
             return station_list
         
 
-    def add_routes(self, file_path: str) -> list:
-        """pre: file path to routes.csv
-        post: returns list of route objects and adds routes to stations"""
-        with open(file_path) as routes:
-            routes_reader: object = csv.DictReader(routes)
+    def add_connections(self, file_path: str) -> list:
+        """pre: file path to connections.csv
+        post: returns list of connection objects and adds connections to stations"""
+        with open(file_path) as connections:
+            connections_reader: object = csv.DictReader(connections)
 
-            routes_list: list[object] = []
-            for row in routes_reader:
-                assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(), "Routes csv should have station1, station2 and distance headers"
+            # add connections to connections list
+            connections_list: list[object] = []
+            for row in connections_reader:
+                assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(), "connections csv should have station1, station2 and distance headers"
 
-                new_route: object = Route(row["station1"], row["station2"], float(row["distance"]))
+                new_connection: object = Connection(row["station1"], row["station2"], float(row["distance"]))
 
-                # add route to route list
-                routes_list.append(new_route)
+                # add connection to connection list
+                connections_list.append(new_connection)
 
-                # add route to Station objects
+                # add connection to Station objects
                 for station in self.stations:
                     if station.name == row["station1"] or station.name == row["station2"]:
-                        station.add_route(new_route)
-            return routes_list
+                        station.add_connection(new_connection)
+            return connections_list
 
 class Station():
 
@@ -52,13 +54,13 @@ class Station():
         self.name = name
         self.x = x
         self.y = y
-        self.routes: list[object] = []
+        self.connections: list[object] = []
 
-    def add_route(self, route: object):
-        self.routes.append(route)
+    def add_connection(self, connection: object):
+        self.connections.append(connection)
 
 
-class Route():
+class Connection():
 
     def __init__(self, station_1: str, station_2: str, distance: float):
         self.station_1 = station_1
@@ -67,8 +69,8 @@ class Route():
 
 if __name__ == "__main__":
 
-    # make sure a .csv is given for both stations and routes
-    assert len(argv) == 3, "Usage: representation.py [file path stations.csv] [file path routes.csv]"
+    # make sure a .csv is given for both stations and connections
+    assert len(argv) == 3, "Usage: representation.py [file path stations.csv] [file path connections.csv]"
 
     # make Map object
     new_map: object = Map(argv[1], argv[2])
