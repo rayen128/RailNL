@@ -40,7 +40,7 @@ def show_plot(lat: list, long: list, station_names: list, info_dict: dict[str: l
     plt.scatter(long, lat, color='red')
 
     # add connections
-    for connection in map.routes:
+    for connection in map.connections:
 
         start_lat = info_dict[connection.station_1][0]
         start_long = info_dict[connection.station_1][1]
