@@ -3,6 +3,7 @@ import csv
 
 # classes
 
+
 class Map():
     
     def __init__(self, stations_file_path: str, connections_file_path: str):
@@ -19,12 +20,13 @@ class Map():
             station_list: list = []
             for row in stations_reader:
                 # check if columns are right
-                assert "station" in row.keys() and "x" in row.keys() and "y" in row.keys(), "Station csv should have station, y and x headers"
-                new_station: object = Station(row["station"], float(row["x"]), float(row["y"]))
+                assert "station" in row.keys() and "x" in row.keys() and "y" in row.keys(
+                ), "Station csv should have station, y and x headers"
+                new_station: object = Station(
+                    row["station"], float(row["x"]), float(row["y"]))
                 station_list.append(new_station)
-            
+
             return station_list
-        
 
     def add_connections(self, file_path: str) -> list:
         """pre: file path to connections.csv
@@ -48,6 +50,7 @@ class Map():
                         station.add_connection(new_connection)
             return connections_list
 
+
 class Station():
 
     def __init__(self, name: str, x: float, y: float):
@@ -67,13 +70,12 @@ class Connection():
         self.station_2 = station_2
         self.distance = distance
 
+
 if __name__ == "__main__":
 
-    # make sure a .csv is given for both stations and connections
-    assert len(argv) == 3, "Usage: representation.py [file path stations.csv] [file path connections.csv]"
+    # make sure a .csv is given for both stations and routes
+    assert len(
+        argv) == 3, "Usage: representation.py [file path stations.csv] [file path routes.csv]"
 
     # make Map object
     new_map: object = Map(argv[1], argv[2])
-    
-
-        
