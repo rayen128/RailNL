@@ -1,8 +1,9 @@
-from sys import argv
+from sys import argv, path
 import csv
-from .station import Station
-from .connection import Connection
-from .route import Route
+
+from station import Station
+from connection import Connection
+from route import Route
 
 class State():
     
@@ -12,8 +13,10 @@ class State():
         self.routes: list[object] = []
 
     def add_stations(self, file_path: str) -> list:
-        """pre: file path to stations.csv
-        post: returns list of station objects"""
+        """
+        pre: file path to stations.csv
+        post: returns list of station objects
+        """
         with open(file_path) as stations:
             stations_reader: object = csv.DictReader(stations)
 
@@ -66,3 +69,6 @@ class State():
     def write_output(self):
         """Post: writes all routes to a .csv file"""
         pass
+
+if __name__ == "main":
+    new_state = State()

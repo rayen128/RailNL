@@ -3,11 +3,13 @@ import csv
 
 # classes
 
+
 class Map():
-    
+
     def __init__(self, stations_file_path: str, connections_file_path: str):
         self.stations: list[object] = self.add_stations(stations_file_path)
-        self.connections: list[object] = self.add_connections(connections_file_path)
+        self.connections: list[object] = self.add_connections(
+            connections_file_path)
 
     def add_stations(self, file_path: str) -> list:
         """pre: file path to stations.csv
@@ -36,9 +38,11 @@ class Map():
             # add connections to connections list
             connections_list: list[object] = []
             for row in connections_reader:
-                assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(), "connections csv should have station1, station2 and distance headers"
+                assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(
+                ), "connections csv should have station1, station2 and distance headers"
 
-                new_connection: object = Connection(row["station1"], row["station2"], float(row["distance"]))
+                new_connection: object = Connection(
+                    row["station1"], row["station2"], float(row["distance"]))
 
                 # add connection to connection list
                 connections_list.append(new_connection)
@@ -69,6 +73,7 @@ class Connection():
         self.station_2 = station_2
         self.distance = distance
 
+
 class Timetable():
     def __init__(self):
         """Post: initiates the Timetable object"""
@@ -82,7 +87,7 @@ class Timetable():
         new_route = Route()
         self.routes.append(new_route)
 
-    def calculate_score(self, p: float, T: int, Min = int) -> float:
+    def calculate_score(self, p: float, T: int, Min=int) -> float:
         """Post: calculates and returns the quality score"""
 
         K = p * 10000 - (T * 100 + Min)
@@ -91,6 +96,7 @@ class Timetable():
     def write_output(self):
         """Post: writes all routes to a .csv file"""
         pass
+
 
 class Route():
     def __init__(self):
@@ -121,9 +127,6 @@ class Route():
     def is_valid_action(self):
         """Post: checks if an action is valid"""
         pass
-
-
-
 
 
 if __name__ == "__main__":
