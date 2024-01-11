@@ -2,35 +2,46 @@ from station import Station
 from connection import Connection
 
 class Route():
-    def __init__(self):
+    def __init__(self) -> None:
         """
+        initializes a Route class which maintains lists with information about a route
+        
         post: 
-            initiates Route object
+            makes empty lists for the stations and the connections in a route
+            sets the total time of a route at 0
         """
         self.route_stations: list = []
         self.route_connections: list = []
         self.total_time: int = 0
 
 
-    def get_start_station(self):
+    def get_start_station(self) -> object:
         """
+        returns the first station in the station list
+        
         pre: 
             list of stations is not empty.
         
-        post: 
-            gives first station in the station list
+        returns: 
+            first station in the station list
         """
+        assert self.route_stations != []
+        
         return self.route_stations[0]
 
 
-    def get_end_station(self):
+    def get_end_station(self) -> object:
         """
+        returns the last station in the station list
+        
         pre: 
             list of stations is not empty.
         
-        post: 
-            gives last station in the station list
+        returns: 
+            last station in the station list
         """
+        assert self.route_stations != []
+        
         return self.route_stations[-1]
 
 
@@ -47,6 +58,7 @@ class Route():
         post: 
             adds connection to begin or end of connections list 
             adds station to begin or end of stations list
+            adds the connection distance to the total route time
         """
         start_station =  self.get_start_station()
         end_station = self.get_end_station()
@@ -73,10 +85,10 @@ class Route():
     def get_other_station(self, connection: object, station: object):
         
         # TO DO: deze code veranderen wanneer de stationsobjecten opgeslagen liggen in de connection class
-        if station.name == connection.station_1
+        if station.name == connection.station_1:
             return connection.station_2
             
-        elif station.name == connection.station_2
+        elif station.name == connection.station_2:
             return connection.station_1
    
 
