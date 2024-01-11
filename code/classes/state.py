@@ -1,21 +1,24 @@
-from sys import argv
+from sys import argv, path
 import csv
-from .station import Station
-from .connection import Connection
-from .route import Route
+
+from station import Station
+from connection import Connection
+from route import Route
+
 
 class State():
-    
+
     def __init__(self, stations_file_path: str, connections_file_path: str):
         self.stations: list[object] = self.add_stations(stations_file_path)
-        self.connections: list[object] = self.add_connections(connections_file_path)
+        self.connections: list[object] = self.add_connections(
+            connections_file_path)
         self.routes: list[object] = []
 
     def add_stations(self, file_path: str) -> list:
         """
         pre: 
             file path to stations.csv
-            
+
         post: 
             returns list of station objects
         """
@@ -38,7 +41,7 @@ class State():
         """
         pre: 
             file path to connections.csv
-            
+
         post: 
             returns list of connection objects and adds connections to stations
         """
@@ -48,9 +51,11 @@ class State():
             # add connections to connections list
             connections_list: list[object] = []
             for row in connections_reader:
-                assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(), "connections csv should have station1, station2 and distance headers"
+                assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(
+                ), "connections csv should have station1, station2 and distance headers"
 
-                new_connection: object = Connection(row["station1"], row["station2"], float(row["distance"]))
+                new_connection: object = Connection(
+                    row["station1"], row["station2"], float(row["distance"]))
 
                 # add connection to connection list
                 connections_list.append(new_connection)
@@ -61,12 +66,12 @@ class State():
                         station.add_connection(new_connection)
             return connections_list
 
-    
+
     def add_route(self) -> None:
         """
         pre: 
             all data necessary for a Route object
-            
+
         post: 
             creates and adds Route object to routes list
         """

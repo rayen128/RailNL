@@ -1,10 +1,9 @@
-from state import State
 from sys import argv, path
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-
 path.append("../classes")
+from state import State
 
 
 def get_station_info(map: object) -> tuple[list[float], list[float], list[str], dict[str: list[float]]]:

@@ -1,5 +1,7 @@
-from sys import argv
-from code.classes.state import State
+from sys import argv, path
+
+path.append("code/classes")
+from state import State
 
 if __name__ == "__main__":
 
