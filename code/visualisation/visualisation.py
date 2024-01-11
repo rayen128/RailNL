@@ -111,11 +111,11 @@ if __name__ == "__main__":
 
     # make State object based on CL-input
     if argv[1].lower() == 'holland':
-        state = State('..\data\stations_holland.csv',
-                      '..\data\routes_holland.csv')
+        state = State('../../data/stations_holland.csv',
+                      '../../data/routes_holland.csv')
     elif argv[1].lower() == 'netherlands':
-        state = State('..\data\stations_netherlands.csv',
-                      '..\data\routes_netherlands.csv')
+        state = State('../../data/stations_netherlands.csv',
+                      '../../data/routes_netherlands.csv')
 
     # save coordinates and names
     station_names, info_dict = get_station_info(state)
