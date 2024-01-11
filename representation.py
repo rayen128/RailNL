@@ -11,7 +11,7 @@ class Map():
 
     def add_stations(self, file_path: str) -> list:
         """pre: file path to stations.csv
-        post: "returns list of station objects"""
+        post: returns list of station objects"""
         with open(file_path) as stations:
             stations_reader: object = csv.DictReader(stations)
 
