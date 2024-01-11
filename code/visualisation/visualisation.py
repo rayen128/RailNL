@@ -1,8 +1,12 @@
+from sys import argv, path
+import os
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-from representation import Map
-from sys import argv
+
+path.append("../classes")
+# os.chdir("../classes")
+from state import State
 
 
 def get_station_info(map: object) -> tuple[list[float], list[float], list[str], dict[str: list[float]]]:
