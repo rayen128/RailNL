@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 from representation import Map
 from sys import argv
 
@@ -38,25 +40,34 @@ def show_plot(station_names: list[str], info_dict: dict[str: list[float]]) -> No
         - 
     """
 
-    # make scatterplot
-    plt.scatter([info_dict[name][1] for name in station_names], [
-                info_dict[name][0] for name in station_names], color='red')
+    # Create a Cartopy map with a EuroPP projection
+    fig, ax = plt.subplots(subplot_kw={'projection': ccrs.EuroPP()})
 
-    # add connections
+    # Set the extent to zoom in on the Netherlands
+    # [min_longitude, max_longitude, min_latitude, max_latitude]
+    ax.set_extent([3.2, 7.5, 50.7, 53.7])
+
+    # Add country borders
+    ax.add_feature(cfeature.BORDERS, linestyle=':')
+
+    # Add land background
+    ax.add_feature(cfeature.LAND, edgecolor='black', facecolor='lightgray')
+
+    # Plot station locations
+    ax.scatter([info_dict[name][1] for name in station_names], [
+               info_dict[name][0] for name in station_names], color='red')
+
+    # Plot connections
     for connection in map.connections:
-
         start_coords = info_dict[connection.station_1]
         end_coords = info_dict[connection.station_2]
+        ax.plot([start_coords[1], end_coords[1]], [start_coords[0],
+                end_coords[0]], 'b--', transform=ccrs.PlateCarree())
 
-        plt.plot([start_coords[1], end_coords[1]], [
-                 start_coords[0], end_coords[0]], 'b--')
+    # Set title
+    ax.set_title('Stations')
 
-    # axis title
-    plt.title('Stations')
-
-    # hide the axis (values)
-    plt.axis('off')
-
+    # Save or display the plot
     plt.savefig('Map')
 
 
