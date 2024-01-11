@@ -8,7 +8,7 @@ from route import Route
 
 class State():
 
-    def __init__(self, stations_file_path: str, connections_file_path: str):
+    def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int = None):
         """
         Initiates State class.
         post:
@@ -21,6 +21,9 @@ class State():
         self.connections: list[object] = self._add_connections(
             connections_file_path)
         self.routes: list[object] = []
+
+        # set number of max routes (None if there is no max)
+        self.max__number_routes = max_number_routes
 
         # add parameters for quality score function
         self.quality: float = 0.0
@@ -69,12 +72,15 @@ class State():
             for row in connections_reader:
                 assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(
                 ), "connections csv should have station1, station2 and distance headers"
-
-                # TODO: add Station objects to connection, not the names
-                new_connection: object = Connection(
-                    row["station1"], row["station2"], float(row["distance"]))
+                # look up station object by name
+                station1: object = next(
+                    station for station in self.stations if station.name == row["station1"])
+                station2: object = next(
+                    station for station in self.stations if station.name == row["station2"])
 
                 # add connection to connection list
+                new_connection: object = Connection(
+                    station1, station2, float(row["distance"]))
                 connections_list.append(new_connection)
 
                 # add connection to Station objects
@@ -84,35 +90,51 @@ class State():
 
             return connections_list
 
+    def _check_number_routes(self) -> bool:
+        """
+        Checks if the maximum number of routes is reached.
+        returns:
+            True if number of routes is not reached
+            False otherwise    
+        """
+        if self.number_routes == self.max_number_routes:
+            return False
+        return True
+
     def add_route(self) -> None:
         """
         pre: 
             all data necessary for a Route object
-
         post: 
             creates and adds Route object to routes list
+        returns:
+            true if addition was succesful
+            false if addition was not succesful
         """
-        # TODO: add all information necessary for a Route object to the parameters
-        new_route = Route()
-        self.routes.append(new_route)
+        if self._check_number_routes():
+
+            # add new route to list
+            new_route = Route()
+            self.routes.append(new_route)
+
+            # update number of routes
+            self.number_routes += 1
+
+            return True
+        else:
+            return False
 
     def _calculate_fraction_used_connections(self) -> float:
         """
         Calculates the fraction of used connections
-        pre: 
-            pre-condition 1
-            pre-condition 2
-
         post:
-            post-condition 1
-            post-condition 2
+            updates fraction of used connections
 
         returns:
-            return_value 1
-            return_value 2       
+            newest fraction of used connections
         """
-        # TODO: add docstring
         # TODO: get number of unique connections
+
         # TODO: calculate fraction
         pass
 
@@ -148,3 +170,8 @@ class State():
         """
         # TODO: write to csv
         pass
+
+
+if __name__ == "__main__":
+    new_state = State("../../data/stations_netherlands.csv",
+                      "../../data/routes_netherlands.csv")
