@@ -60,6 +60,7 @@ class State():
                     if station.name == row["station1"] or station.name == row["station2"]:
                         station.add_connection(new_connection)
             return connections_list
+
     
     def add_route(self) -> None:
         """
@@ -72,6 +73,7 @@ class State():
         new_route = Route()
         self.routes.append(new_route)
 
+
     def calculate_score(self, p: float, T: int, Min = int) -> float:
         """
         post: 
@@ -79,7 +81,9 @@ class State():
         """
 
         K = p * 10000 - (T * 100 + Min)
+        
         return K
+
 
     def write_output(self):
         """
