@@ -18,9 +18,8 @@ This document holds and shows all the coding and style rules we've applied withi
 ``` 
 
 ## Doc-strings
-- Divide 
 
-*Example:*
+*Example/template:*
 ```python
 """
 pre: 
