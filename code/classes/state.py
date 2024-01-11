@@ -1,13 +1,15 @@
 from sys import argv
 import csv
+from .station import Station
+from .connection import Connection
+from .route import Route
 
-# classes
-
-class Map():
+class State():
     
     def __init__(self, stations_file_path: str, connections_file_path: str):
         self.stations: list[object] = self.add_stations(stations_file_path)
         self.connections: list[object] = self.add_connections(connections_file_path)
+        self.routes: list[object] = []
 
     def add_stations(self, file_path: str) -> list:
         """pre: file path to stations.csv
@@ -48,34 +50,7 @@ class Map():
                     if station.name == row["station1"] or station.name == row["station2"]:
                         station.add_connection(new_connection)
             return connections_list
-
-
-class Station():
-
-    def __init__(self, name: str, x: float, y: float):
-        self.name = name
-        self.x = x
-        self.y = y
-        self.connections: list[object] = []
-
-    def add_connection(self, connection: object):
-        self.connections.append(connection)
-
-
-class Connection():
-
-    def __init__(self, station_1: str, station_2: str, distance: float):
-        self.station_1 = station_1
-        self.station_2 = station_2
-        self.distance = distance
-
-class Timetable():
-    def __init__(self):
-        """Post: initiates the Timetable object"""
-
-        self.routes: list[object] = []
-        self.p
-
+    
     def add_route(self) -> None:
         """Pre: all data necessary for a Route object
         Post: creates and adds Route object to routes list"""
@@ -91,46 +66,3 @@ class Timetable():
     def write_output(self):
         """Post: writes all routes to a .csv file"""
         pass
-
-class Route():
-    def __init__(self):
-        """Post: initiates Route object"""
-        pass
-
-    def get_start_station(self):
-        """Pre: list of stations is not empty.
-        Post: gives first station in the station list"""
-        pass
-
-    def get_end_station(self):
-        """Pre: list of stations is not empty.
-        Post: gives last station in the station list"""
-        pass
-
-    def add_connection(self):
-        """Pre: -
-        Post: adds connection to begin or end of connections list 
-              adds station to begin or end of stations list"""
-        pass
-
-    def delete_connection(self):
-        """Pre: given connection exists at begin or end of connections list
-        Post: deletes given connection"""
-        pass
-
-    def is_valid_action(self):
-        """Post: checks if an action is valid"""
-        pass
-
-
-
-
-
-if __name__ == "__main__":
-
-    # make sure a .csv is given for both stations and routes
-    assert len(
-        argv) == 3, "Usage: representation.py [file path stations.csv] [file path routes.csv]"
-
-    # make Map object
-    new_map: object = Map(argv[1], argv[2])
