@@ -9,13 +9,28 @@ from route import Route
 class State():
 
     def __init__(self, stations_file_path: str, connections_file_path: str):
-        self.stations: list[object] = self.add_stations(stations_file_path)
-        self.connections: list[object] = self.add_connections(
+        """
+        Initiates State class.
+        post:
+            Creates list of stations, connections and routes
+            Fills list of stations and connections      
+        """
+
+        # add relations to all other objects
+        self.stations: list[object] = self._add_stations(stations_file_path)
+        self.connections: list[object] = self._add_connections(
             connections_file_path)
         self.routes: list[object] = []
 
-    def add_stations(self, file_path: str) -> list:
+        # add parameters for quality score function
+        self.quality: float = 0.0
+        self.fraction_used_connections: float = 0.0
+        self.number_routes: int = 0
+        self.total_minutes: int = 0
+
+    def _add_stations(self, file_path: str) -> list:
         """
+        Adds stations from stations.csv file to the list.
         pre: 
             file path to stations.csv
 
@@ -37,8 +52,9 @@ class State():
 
             return station_list
 
-    def add_connections(self, file_path: str) -> list:
+    def _add_connections(self, file_path: str) -> list:
         """
+        Adds connections from connections.csv to the list. 
         pre: 
             file path to connections.csv
 
@@ -54,6 +70,7 @@ class State():
                 assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(
                 ), "connections csv should have station1, station2 and distance headers"
 
+                # TODO: add Station objects to connection, not the names
                 new_connection: object = Connection(
                     row["station1"], row["station2"], float(row["distance"]))
 
@@ -64,8 +81,8 @@ class State():
                 for station in self.stations:
                     if station.name == row["station1"] or station.name == row["station2"]:
                         station.add_connection(new_connection)
-            return connections_list
 
+            return connections_list
 
     def add_route(self) -> None:
         """
@@ -75,24 +92,59 @@ class State():
         post: 
             creates and adds Route object to routes list
         """
+        # TODO: add all information necessary for a Route object to the parameters
         new_route = Route()
         self.routes.append(new_route)
 
+    def _calculate_fraction_used_connections(self) -> float:
+        """
+        Calculates the fraction of used connections
+        pre: 
+            pre-condition 1
+            pre-condition 2
 
-    def calculate_score(self, p: float, T: int, Min = int) -> float:
+        post:
+            post-condition 1
+            post-condition 2
+
+        returns:
+            return_value 1
+            return_value 2       
+        """
+        # TODO: add docstring
+        # TODO: get number of unique connections
+        # TODO: calculate fraction
+        pass
+
+    def _update_number_routes(self) -> None:
+        # TODO: add docstring
+        # TODO: get length of list of routes
+        pass
+
+    def _calculate_total_minutes(self) -> int:
+        # TODO: add docstring
+        # TODO: get number of minutes from all routes
+        # TODO: add numbers of minutes
+        pass
+
+    def calculate_score(self, p: float, T: int, Min=int) -> float:
         """
         post: 
-            calculates and returns the quality score
+            calculates and updates the quality score
+        returns:
+            the quality score
         """
-
-        K = p * 10000 - (T * 100 + Min)
-        
-        return K
-
+        # TODO: update all variables with methods written above
+        self.quality = self.fraction_used_connections * 10000 - \
+            (self.number_routes * 100 + self.total_minutes)
+        return self.quality
 
     def write_output(self):
         """
+        Writes output to output.csv according to given standard
         post: 
             writes all routes to a .csv file
+            adds score to .csv file
         """
+        # TODO: write to csv
         pass
