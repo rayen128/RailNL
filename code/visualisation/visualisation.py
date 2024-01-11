@@ -1,11 +1,9 @@
 from sys import argv, path
-import os
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
 path.append("../classes")
-# os.chdir("../classes")
 from state import State
 
 
