@@ -1,23 +1,23 @@
+from state import State
 from sys import argv, path
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
 path.append("../classes")
-from state import State
 
 
 def get_station_info(map: object) -> tuple[list[float], list[float], list[str], dict[str: list[float]]]:
     """ 
     pre: 
-        - map input is map object
-        - map.stations exists and contains stations 
-        - every station has a name, x and y
+        map input is map object
+        map.stations exists and contains stations 
+        every station has a name, x and y
 
 
     returns: 
-        - 3 list containing the latitude, longitude and names of all stations 
-        - 1 dict containing all this info
+        3 lists containing the latitude, longitude and names of all stations 
+        1 dict containing all this info
     """
     station_names = []
     info_dict = {}
