@@ -26,10 +26,13 @@ def get_station_info(map: object) -> tuple[list[float], list[float], list[str], 
     return station_names, info_dict
 
 
-def show_plot(station_names: list, info_dict: dict[str: list[float]]) -> None:
+def show_plot(station_names: list[str], info_dict: dict[str: list[float]]) -> None:
     """
-    pre:
-        - 
+    pre: 
+        - station_names is a list of strings
+        - info_dict is a dict:
+            - the keys are 
+            - the values are lists of 
 
     post:
         - 
