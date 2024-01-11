@@ -12,8 +12,13 @@ class State():
         self.routes: list[object] = []
 
     def add_stations(self, file_path: str) -> list:
-        """pre: file path to stations.csv
-        post: returns list of station objects"""
+        """
+        pre: 
+            file path to stations.csv
+            
+        post: 
+            returns list of station objects
+        """
         with open(file_path) as stations:
             stations_reader: object = csv.DictReader(stations)
 
@@ -30,8 +35,13 @@ class State():
             return station_list
 
     def add_connections(self, file_path: str) -> list:
-        """pre: file path to connections.csv
-        post: returns list of connection objects and adds connections to stations"""
+        """
+        pre: 
+            file path to connections.csv
+            
+        post: 
+            returns list of connection objects and adds connections to stations
+        """
         with open(file_path) as connections:
             connections_reader: object = csv.DictReader(connections)
 
@@ -52,17 +62,28 @@ class State():
             return connections_list
     
     def add_route(self) -> None:
-        """Pre: all data necessary for a Route object
-        Post: creates and adds Route object to routes list"""
+        """
+        pre: 
+            all data necessary for a Route object
+            
+        post: 
+            creates and adds Route object to routes list
+        """
         new_route = Route()
         self.routes.append(new_route)
 
     def calculate_score(self, p: float, T: int, Min = int) -> float:
-        """Post: calculates and returns the quality score"""
+        """
+        post: 
+            calculates and returns the quality score
+        """
 
         K = p * 10000 - (T * 100 + Min)
         return K
 
     def write_output(self):
-        """Post: writes all routes to a .csv file"""
+        """
+        post: 
+            writes all routes to a .csv file
+        """
         pass
