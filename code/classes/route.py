@@ -12,8 +12,8 @@ class Route():
             sets the total time of a route at 0
         """
         self.name: str = name
-        self.route_stations: list = []
-        self.route_connections: list = []
+        self.route_stations: list['Station'] = []
+        self.route_connections: list['Connection'] = []
         self.total_time: float = 0
 
     def get_start_station(self: 'Route') -> 'Station':
@@ -139,9 +139,10 @@ class Route():
             deletes last station from slef.route_stations
             substracts deleted connections distance from self.total_time
         """
-        assert self.route_connections != [] and self.route_stations != [] and \
-        self.total_time > 0 and self.route_stations[-1]._has_connection(self.route_connections[-1]),\
-        "delete last connection is not possible"
+        assert self.route_connections != [], "connections list is empty"
+        assert self.route_stations != [], "stations list is empty"
+        assert self.route_stations[-1]._has_connection(self.route_connections[-1]),\
+        "the last station in stations list has not the last connection in the connections list"
 
         connection = self.route_connections.pop()
         self.route_stations.pop()
@@ -160,9 +161,10 @@ class Route():
             deletes first station from slef.route_stations
             substracts deleted connections distance from self.total_time
         """
-        assert self.route_connections != [] and self.route_stations != [] and \
-        self.total_time > 0 and self.route_stations[0]._has_connection(self.route_connections[0]),\
-        "delete first connection is not possible"
+        assert self.route_connections != [], "connections list is empty"
+        assert self.route_stations != [], "stations list is empty"
+        assert self.route_stations[0]._has_connection(self.route_connections[0]),\
+        "the first station in stations list has not the first connection in the connections list"
 
         connection = self.route_connections.pop(0)
         self.route_connections.pop(0)
