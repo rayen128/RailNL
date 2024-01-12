@@ -60,9 +60,11 @@ class Station():
         return connection in self.connections
 
     def get_connections(self) -> list['Connection']:
-
-        # TO DO: doc-string
         """
+        returns all the connections from this station
+
+        returns: 
+            a list with all the connections
         """
 
         return self.connections
