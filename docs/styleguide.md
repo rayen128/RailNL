@@ -18,7 +18,7 @@ This document holds and shows all the coding and style rules we've applied withi
 - Does **not** end with a period
 - Does **not** has a whiteline beneath it
 - Does has a whiteline above it
-- comments are imperative sentences
+- Comments are imperative sentences
 
 *Example:*
 

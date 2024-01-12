@@ -9,7 +9,7 @@ class Connection():
             distance is a float
 
         post:
-            Connection-object
+            Connection-object is created
         """
 
         assert isinstance(

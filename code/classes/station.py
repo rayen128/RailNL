@@ -41,7 +41,7 @@ class Station():
 
         self.connections.append(connection)
 
-    def _has_connection(self, connection: 'Connection') -> bool:
+    def has_connection(self, connection: 'Connection') -> bool:
         """
         checks if a given connection is connected to the current station   
 
