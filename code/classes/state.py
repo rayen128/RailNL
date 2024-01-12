@@ -119,7 +119,7 @@ class State():
             return False
         return True
 
-    def add_route(self) -> None:
+    def add_route(self, connection: 'Connection') -> None:
         """
         Adds a new route.
         pre: 
@@ -134,8 +134,11 @@ class State():
         """
         if self._check_number_routes():
 
+            # determine route name
+            name = f"train_{len(self.routes) + 1}"
+
             # add new route to list
-            new_route = Route()
+            new_route = Route(name, connection)
             self.routes.append(new_route)
 
             # update number of routes
