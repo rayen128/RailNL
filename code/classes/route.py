@@ -152,7 +152,7 @@ class Route():
         """
         assert len(self.route_connections) >= 1, "not enough connections in list"
         assert len(self.route_stations) >= 2, "not enough stations in list"
-        assert self.route_stations[-1]._has_connection(self.route_connections[-1]), \
+        assert self.route_stations[-1].has_connection(self.route_connections[-1]), \
             "the last station in stations list has not the last connection in the connections list"
 
         connection = self.route_connections.pop()
@@ -174,7 +174,7 @@ class Route():
         """
         assert len(self.route_connections) >= 1, "not enough connections in list"
         assert len(self.route_stations) >= 2, "not enough stations in list"
-        assert self.route_stations[0]._has_connection(self.route_connections[0]), \
+        assert self.route_stations[0].has_connection(self.route_connections[0]), \
             "the first station in stations list has not the first connection in the connections list"
 
         connection = self.route_connections.pop(0)
@@ -211,7 +211,7 @@ class Route():
 
         return False
 
-    def is_valid_time(self: 'Route', timeframe: int) -> bool:
+    def is_valid_time(self: 'Route', time_frame: int) -> bool:
         """
         checks if the time of the route is under the time frame and 
 
@@ -221,9 +221,9 @@ class Route():
         returns:
             true if route is valid false if route is invalid
         """
-        assert isinstance(timeframe, int), "timeframe is not a integer"
+        assert isinstance(time_frame, int), "timeframe is not a integer"
 
-        if self.total_time >= timeframe:
+        if self.total_time >= time_frame:
             return False
 
         return True

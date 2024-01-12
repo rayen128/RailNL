@@ -1,13 +1,12 @@
 from sys import argv, path
-from code.algorithms.random_algorithm import random_algorithm_1
+from code.algorithms.random_algorithm import random_algorithm_2
 
 path.append("code/classes")
 from state import State
 
 if __name__ == "__main__":
-
     # make sure a .csv is given for both stations and routes
-    if (len(argv) != 2 or (argv[1].lower() != "holland" or argv[1].lower() != "netherlands")) and len(argv) != 4:
+    if (len(argv) != 2 or (argv[1].lower() != "holland" and argv[1].lower() != "netherlands")) and len(argv) != 4:
         print(
             "Usage: main.py [case name] [max number of routes] [time frame]")
         exit()
@@ -31,7 +30,7 @@ if __name__ == "__main__":
     state: object = State(file_path_stations,
                           file_path_routes, max_number_routes, time_frame)
 
-    score, route, description = random_algorithm_1(state)
+    score, route, description = random_algorithm_2(state)
 
     state.write_output("data/output.csv")
     print(f"Score: {score}")
