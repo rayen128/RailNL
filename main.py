@@ -1,5 +1,5 @@
 from sys import argv, path
-from code.algorithms.random_algorithm import random_algorithm_1
+from code.algorithms.random_algorithm import random_algorithm_2
 
 path.append("code/classes")
 from state import State
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     state: object = State(file_path_stations,
                           file_path_routes, max_number_routes, time_frame)
 
-    score, route, description = random_algorithm_1(state)
+    score, route, description = random_algorithm_2(state)
 
     state.write_output("data/output_random_algorithm.csv")
     print(f"Score: {score}")
