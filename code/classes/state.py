@@ -243,15 +243,15 @@ class State():
             # write score
             writer.writerow(["score", self.calculate_score()])
 
-    def routes_valid(self) -> bool:
+    def routes_valid_time_frame(self) -> bool:
         """
-        checks if all routes are valid
+        checks if all routes are within the given timeframe
 
         returns:
             true if all stations are valid      
         """
         for route in self.routes:
-            if not route.is_valid():
+            if not route.is_valid_time(self.time_frame):
                 return False
             return True
 
@@ -283,7 +283,7 @@ class State():
                 all_connections_used = False
         return all_connections_used
 
-    def is_valid_solution(self, relaxed_routes_valid: bool = False, relaxed_max_routes: bool = False, relaxed_all_connections: bool = False) -> dict:
+    def is_valid_solution(self, relaxed_time_frame: bool = False, relaxed_max_routes: bool = False, relaxed_all_connections: bool = False) -> dict:
         """
         Gives information about satisfaction of all constraints
 
@@ -293,7 +293,7 @@ class State():
         returns:
             bool for overall constraint satisfaction     
         """
-        if not relaxed_routes_valid and not self.routes_valid():
+        if not relaxed_time_frame and not self.routes_valid_time_frame():
             return False
         if not relaxed_max_routes and not self.less_than_max_routes():
             return False
