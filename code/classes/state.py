@@ -9,7 +9,7 @@ from route import Route
 
 class State():
 
-    def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int = None, time_frame: int = None):
+    def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int, time_frame: int):
         """
         Initiates State class.
 
