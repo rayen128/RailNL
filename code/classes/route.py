@@ -71,7 +71,7 @@ class Route():
             self.add_station_end(
                 self.get_other_station(connection, end_station))
             self.total_time += connection.distance
-            
+
         # check if start station has the connection, if true add connection
         elif start_station._has_connection(connection):
             self.route_connections.insert(0, connection)
@@ -126,7 +126,7 @@ class Route():
     def delete_connection_end(self: 'Route') -> None:
         """
         deletes the last connection
-        
+
         pre: 
             the stations and connections lists are not empty
             the last station in stations list has the last connection in de connections list
@@ -138,8 +138,8 @@ class Route():
         """
         assert self.route_connections != [], "connections list is empty"
         assert self.route_stations != [], "stations list is empty"
-        assert self.route_stations[-1]._has_connection(self.route_connections[-1]),\
-        "the last station in stations list has not the last connection in the connections list"
+        assert self.route_stations[-1]._has_connection(self.route_connections[-1]), \
+            "the last station in stations list has not the last connection in the connections list"
 
         connection = self.route_connections.pop()
         self.route_stations.pop()
@@ -148,7 +148,7 @@ class Route():
     def delete_connection_start(self: 'Route', connection: 'Connection') -> None:
         """
         deletes the first connection
-        
+
         pre: 
             the stations and connections lists are not empty
             the first station in stations list has the first connection in de connections list
@@ -160,8 +160,8 @@ class Route():
         """
         assert self.route_connections != [], "connections list is empty"
         assert self.route_stations != [], "stations list is empty"
-        assert self.route_stations[0]._has_connection(self.route_connections[0]),\
-        "the first station in stations list has not the first connection in the connections list"
+        assert self.route_stations[0]._has_connection(self.route_connections[0]), \
+            "the first station in stations list has not the first connection in the connections list"
 
         connection = self.route_connections.pop(0)
         self.route_connections.pop(0)
