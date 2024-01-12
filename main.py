@@ -1,5 +1,5 @@
 from sys import argv, path
-from code.algorithms.random_algorithm import random_algorithm_2
+from code.algorithms.random_algorithm import random_algorithm_1, random_algorithm_2, random_algorithm_3
 
 path.append("code/classes")
 from state import State

@@ -6,6 +6,8 @@ path.append("../classes")
 from state import State
 import os
 
+# DIT WERKT NOG NIET GOED D:
+
 
 def get_station_info(state: object) -> tuple[list[str], dict[str: list[float]]]:
     """ 
