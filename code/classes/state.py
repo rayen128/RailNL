@@ -1,5 +1,7 @@
 import csv
 
+from typing import Union
+
 from station import Station
 from connection import Connection
 from route import Route
@@ -7,9 +9,10 @@ from route import Route
 
 class State():
 
-    def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int = None):
+    def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int = None, time_frame: int = None):
         """
         Initiates State class.
+
         post:
             Creates list of stations, connections and routes
             Fills list of stations and connections      
@@ -22,8 +25,8 @@ class State():
             connections_file_path)
         self.routes: list[object] = []
 
-        # set number of max routes (None if there is no max)
-        self.max__number_routes = max_number_routes
+        self.max__number_routes: Union(int, None) = max_number_routes
+        self.time_frame: Union(int, None) = time_frame
 
         # add parameters for quality score function
         self.quality: float = 0.0
@@ -43,6 +46,7 @@ class State():
     def _add_stations(self, file_path: str) -> list:
         """
         Adds stations from stations.csv file to the list.
+
         pre: 
             file path to stations.csv
 
@@ -66,7 +70,8 @@ class State():
 
     def _add_connections(self, file_path: str) -> list:
         """
-        Adds connections from connections.csv to the list. 
+        Adds connections from connections.csv to the list.
+
         pre: 
             file path to connections.csv
 
@@ -105,6 +110,7 @@ class State():
     def _check_number_routes(self) -> bool:
         """
         Checks if the maximum number of routes is reached.
+
         returns:
             True if number of routes is not reached
             False otherwise    
@@ -115,10 +121,13 @@ class State():
 
     def add_route(self) -> None:
         """
+        Adds a new route.
         pre: 
             all data necessary for a Route object
+
         post: 
             creates and adds Route object to routes list
+
         returns:
             true if addition was succesful
             false if addition was not succesful
@@ -231,16 +240,78 @@ class State():
             # write score
             writer.writerow(["score", self.calculate_score()])
 
-    def is_valid_solution(self):
-        # TODO: implement is_valid_solution method
-        raise NotImplementedError()
+    def routes_valid(self) -> bool:
+        """
+        checks if all routes are valid
+
+        returns:
+            true if all stations are valid      
+        """
+        for route in self.routes:
+            if not route.is_valid():
+                return False
+            return True
+
+    def more_than_max_routes(self) -> bool:
+        """
+        Checks if there are not more than the max number of routes
+
+        returns:
+            True if there are less routes than the max     
+        """
+        if self.number_routes > self.max__number_routes:
+            return False
+        return True
+
+    def all_connections_used(self) -> bool:
+        """
+        Checks if all connections are used.
+
+        returns:
+            True if all connections are used     
+        """
+        all_connections_used = True
+        for connection in self.connections:
+            connection_used = False
+            for route in self.routes:
+                if route.is_connection_in_route(connection):
+                    connection_used = True
+            if not connection_used:
+                all_connections_used = False
+        return all_connections_used
+
+    def is_valid_solution(self) -> dict:
+        """
+        Gives information about satisfaction of all constraints
+
+        returns:
+            bool for overall constraint satisfaction     
+        """
+
+        return any(not check for check in [self.routes_valid(), self.more_than_max_routes(), self.all_connections_used()])
 
     def show(self):
-        # TODO: implement show function
-        raise NotImplementedError()
+        """
+        Gives description of the current state.
+
+        returns:
+            description with:
+                all routes with their connections
+                score      
+        """
+        result_string: str = "Routes:\n"
+        for route in self.routes:
+            result_string += f"- {route.name}:\n"
+            for connection in route.connections:
+                result_string += f"  - {connection}\n"
+        result_string += f"Score: {self.calculate_score()}\n"
+        if self.is_valid_solution():
+            result_string += "The current solution is valid."
+        else:
+            result_string += "The current solution is not valid."
 
 
 if __name__ == "__main__":
     new_state = State("../../data/stations_netherlands.csv",
                       "../../data/routes_netherlands.csv")
-    print(new_state)
+    print(new_state.show())
