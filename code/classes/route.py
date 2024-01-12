@@ -43,7 +43,7 @@ class Route():
 
         return self.route_stations[-1]
 
-    def add_connection(self, connection: object):
+    def add_connection(self, connection: object) -> None:
         """
         adds connection to route if the end station or start station 
             has this connection
@@ -58,6 +58,7 @@ class Route():
             adds station to begin or end of stations list
             adds the connection distance to the total route time
         """
+        #
         start_station = self.get_start_station()
         end_station = self.get_end_station()
 
@@ -73,7 +74,7 @@ class Route():
                 connection, start_station))
             self.total_time += connection.distance
 
-    def add_station_end(self, station: object):
+    def add_station_end(self, station: object) -> None:
         self.route_stations.append(station)
 
     def add_station_start(self, station: object):
@@ -81,7 +82,7 @@ class Route():
 
     def get_other_station(self, connection: object, station: object):
 
-        # TO DO: deze code veranderen wanneer de stationsobjecten opgeslagen liggen in de connection class
+        # TODO: deze code veranderen wanneer de stationsobjecten opgeslagen liggen in de connection class
         if station.name == connection.station_1:
             return connection.station_2
 

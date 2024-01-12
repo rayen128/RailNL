@@ -16,6 +16,8 @@ This document holds and shows all the coding and style rules we've applied withi
 - After # there is a space
 - Does **not** start with a (or contain) a capital letter
 - Does **not** end with a period
+- Does **not** has a whiteline beneath it
+- Does has a whiteline above it
 
 *Example:*
 
