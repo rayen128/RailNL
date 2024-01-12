@@ -26,6 +26,9 @@ class Station():
         self.y = y
         self.connections: list['Connection'] = []
 
+    def __str__(self):
+        return f"Station {self.name}"
+
     def add_connection(self: 'Station', connection: 'Connection') -> None:
         """
         adds a connection to station  

@@ -8,10 +8,10 @@ if __name__ == "__main__":
 
     # make sure a .csv is given for both stations and routes
     if (len(argv) != 2 or (argv[1].lower() != "holland" or argv[1].lower() != "netherlands")) and len(argv) != 4:
-        print("Usage: representation.py [filename] [max number of routes] [time frame]")
+        print(
+            "Usage: main.py [case name] [max number of routes] [time frame]")
         exit()
-    
-    
+
     file_path_stations = f"data/stations_{argv[1]}.csv"
     file_path_routes = f"data/routes_{argv[1]}.csv"
 
@@ -28,7 +28,12 @@ if __name__ == "__main__":
         time_frame = argv[3]
 
     # make State object
-    state: object = State(file_path_stations, file_path_routes, max_number_routes, time_frame)
+    state: object = State(file_path_stations,
+                          file_path_routes, max_number_routes, time_frame)
 
-    random_algorithm_1(state)
+    score, route, description = random_algorithm_1(state)
 
+    state.write_output("data/output_random_algorithm.csv")
+    print(f"Score: {score}")
+    print(f"Route: {route}")
+    print(f"Description:\n{description}")
