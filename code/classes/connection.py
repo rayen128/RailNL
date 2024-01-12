@@ -1,6 +1,6 @@
 class Connection():
 
-    def __init__(self, station_1: str, station_2: str, distance: float) -> None:
+    def __init__(self, station_1: object, station_2: object, distance: float) -> None:
         """
         initializes Connection-class
 
@@ -12,8 +12,11 @@ class Connection():
             Connection-object       
         """
 
-        assert isinstance(station_1, str) and isinstance(
-            station_2, str), 'First (station_1) and second argument (station_2) should both be strings'
+        assert isinstance(
+            station_1, object), 'station_1 should be a string'
+
+        assert isinstance(
+            station_2, object), 'station_2 should be a string'
 
         self.station_1 = station_1
         self.station_2 = station_2

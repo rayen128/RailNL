@@ -182,6 +182,10 @@ class State():
         # TODO: write to csv
         pass
 
+    def __str__(self):
+        # TODO: write way of printing
+        pass
+
 
 if __name__ == "__main__":
     new_state = State("../../data/stations_netherlands.csv",

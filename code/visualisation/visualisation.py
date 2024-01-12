@@ -64,12 +64,9 @@ def show_plot(station_names: list[str], info_dict: dict[str: list[float]], direc
     # assertion for directory
     assert isinstance(directory, str), "directory must be a string."
 
-    # create a Cartopy map with a EuroPP projection
-    fig, ax = plt.subplots(subplot_kw={'projection': ccrs.EuroPP()})
-
-    # set the extent to zoom in on the Netherlands
-    # [min_longitude, max_longitude, min_latitude, max_latitude]
-    ax.set_extent([3.2, 7.5, 50.7, 53.7])
+    # create a Cartopy map with a Mercator projection
+    fig, ax = plt.subplots(
+        subplot_kw={'projection': ccrs.PlateCarree()})
 
     # add country borders
     ax.add_feature(cfeature.BORDERS, linestyle=':')
@@ -79,21 +76,33 @@ def show_plot(station_names: list[str], info_dict: dict[str: list[float]], direc
 
     # plot station locations
     ax.scatter([info_dict[name][1] for name in station_names], [
-               info_dict[name][0] for name in station_names], color='red')
+        info_dict[name][0] for name in station_names], color='red')
+
+    # Initialize variables to keep track of the largest and smallest values
+    max_lat, min_lat = float('-inf'), float('inf')
+    max_lon, min_lon = float('-inf'), float('inf')
 
     # plot connections
-    for connection in map.connections:
-        start_coords = info_dict[connection.station_1]
-        end_coords = info_dict[connection.station_2]
+    for connection in state.connections:
+        start_coords = info_dict[connection.station_1.name]
+        end_coords = info_dict[connection.station_2.name]
+
+        # update maximum and minimum latitude values
+        max_lat = max(max_lat, start_coords[0], end_coords[0])
+        min_lat = min(min_lat, start_coords[0], end_coords[0])
+
+        # update maximum and minimum longitude values
+        max_lon = max(max_lon, start_coords[1], end_coords[1])
+        min_lon = min(min_lon, start_coords[1], end_coords[1])
+
         ax.plot([start_coords[1], end_coords[1]], [start_coords[0],
-                end_coords[0]], 'b--', transform=ccrs.PlateCarree())
+                end_coords[0]], 'b--')
+
+    # # Set the extent to cover all stations
+    # ax.set_extent([min_lon, max_lon, min_lat, max_lat])
 
     # set title
     ax.set_title('Stations')
-
-    # save and check validity of (the potentially) specified directory
-    directory = directory
-    assert os.path.exists(directory), 'Given directory does not exist'
 
     # save or display the plot
     plt.savefig(f'{directory}/Map.png')
@@ -107,15 +116,15 @@ if __name__ == "__main__":
 
     # check if first argument is proper input
     assert argv[1].lower() == 'holland' or argv[
-        1].lower == 'netherlands', "Usage: python3 representation.py [holland/netherlands] (optional) [directory]"
+        1].lower() == 'netherlands', "Usage: python3 representation.py [holland/netherlands] (optional) [directory]"
 
     # make State object based on CL-input
     if argv[1].lower() == 'holland':
-        state = State('..\data\stations_holland.csv',
-                      '..\data\routes_holland.csv')
+        state = State('../../data/stations_holland.csv',
+                      '../../data/routes_holland.csv')
     elif argv[1].lower() == 'netherlands':
-        state = State('..\data\stations_netherlands.csv',
-                      '..\data\routes_netherlands.csv')
+        state = State('../../data/stations_netherlands.csv',
+                      '../../data/routes_netherlands.csv')
 
     # save coordinates and names
     station_names, info_dict = get_station_info(state)
