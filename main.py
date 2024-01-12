@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     score, route, description = random_algorithm_2(state)
 
-    state.write_output("data/output_random_algorithm.csv")
+    state.write_output("data/output.csv")
     print(f"Score: {score}")
     print(f"Route: {route}")
     print(f"Description:\n{description}")
