@@ -297,15 +297,23 @@ class State():
         returns:
             bool for overall constraint satisfaction     
         """
+        # DEBUGGING
+        print(f"Time frame valid? {self.routes_valid_time_frame()}")
+        print(f"Max routes reached? {self.less_than_max_routes()}")
+        print(f"All connections used? {self.all_connections_used()}")
+
         if not relaxed_time_frame and not self.routes_valid_time_frame():
+            print(
+                f"time frame constraint is not relaxed and a route exceeds the time frame.")
             return False
         if not relaxed_max_routes and not self.less_than_max_routes():
             return False
         if not relaxed_all_connections and not self.all_connections_used():
             return False
+        print("returning True")
         return True
 
-    def show(self):
+    def show(self, relaxed_time_frame: bool = False, relaxed_max_routes: bool = False, relaxed_all_connections: bool = False):
         """
         Gives description of the current state.
 
@@ -320,7 +328,7 @@ class State():
             for connection in route.route_connections:
                 result_string += f"  - {connection}\n"
         result_string += f"Score: {self.calculate_score()}\n"
-        if self.is_valid_solution():
+        if self.is_valid_solution(relaxed_time_frame, relaxed_max_routes, relaxed_all_connections):
             result_string += "The current solution is valid."
         else:
             result_string += "The current solution is not valid."
