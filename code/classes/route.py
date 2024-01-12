@@ -3,7 +3,7 @@ from connection import Connection
 
 
 class Route():
-    def __init__(self) -> None:
+    def __init__(self: 'Route') -> None:
         """
         initializes a Route class which maintains lists with information about a route
 
@@ -13,9 +13,9 @@ class Route():
         """
         self.route_stations: list = []
         self.route_connections: list = []
-        self.total_time: int = 0
+        self.total_time: float = 0
 
-    def get_start_station(self) -> object:
+    def get_start_station(self: 'Route') -> 'Station':
         """
         returns the first station in the station list
 
@@ -29,7 +29,7 @@ class Route():
 
         return self.route_stations[0]
 
-    def get_end_station(self) -> object:
+    def get_end_station(self: 'Route') -> 'Station':
         """
         returns the last station in the station list
 
@@ -43,7 +43,7 @@ class Route():
 
         return self.route_stations[-1]
 
-    def add_connection(self, connection: object) -> None:
+    def add_connection(self: 'Route', connection: 'Connection') -> None:
         """
         adds connection to route if the end station or start station 
             has this connection
@@ -58,29 +58,32 @@ class Route():
             adds station to begin or end of stations list
             adds the connection distance to the total route time
         """
-        #
+
+        # get start and end station
         start_station = self.get_start_station()
         end_station = self.get_end_station()
 
-        if end_station.has_connection(connection):
+        # check if end station has the connection, if true add connection
+        if end_station._has_connection(connection):
             self.route_connections.append(connection)
             self.add_station_end(
                 self.get_other_station(connection, end_station))
             self.total_time += connection.distance
 
-        elif start_station.has_connection(connection):
+        # check if start station has the connection, if true add connection
+        elif start_station._has_connection(connection):
             self.route_connections.insert(0, connection)
             self.add_station_start(self.get_other_station(
                 connection, start_station))
             self.total_time += connection.distance
 
-    def add_station_end(self, station: object) -> None:
+    def add_station_end(self: 'Route', station: 'Station') -> None:
         self.route_stations.append(station)
 
-    def add_station_start(self, station: object):
+    def add_station_start(self: 'Route', station: 'Station') -> None:
         self.route_connections.insert(0, station)
 
-    def get_other_station(self, connection: object, station: object):
+    def get_other_station(self: 'Route', connection: 'Connection', station: 'Station') -> 'Station':
 
         # TODO: deze code veranderen wanneer de stationsobjecten opgeslagen liggen in de connection class
         if station.name == connection.station_1:
@@ -88,8 +91,10 @@ class Route():
 
         elif station.name == connection.station_2:
             return connection.station_1
+        
+        return None
 
-    def delete_connection_end(self, connection: object):
+    def delete_connection_end(self: 'Route', connection: 'Connection') -> None:
         """
         pre: 
             given connection exists at begin or end of connections list
@@ -101,7 +106,7 @@ class Route():
         self.route_connections.pop()
         self.total_time -= connection.distance
 
-    def delete_connection_start(self, connection: object):
+    def delete_connection_start(self: 'Route', connection: 'Connection') -> None:
         """
         pre: 
             given connection exists at begin or end of connections list
@@ -113,7 +118,7 @@ class Route():
         self.route_connections.pop(0)
         self.total_time -= connection.distance
 
-    def is_station_in_route(self, station: object) -> bool:
+    def is_station_in_route(self: 'Route', station: 'Station') -> bool:
         """
         checks if station is already in this route
 
@@ -128,7 +133,7 @@ class Route():
 
         return False
 
-    def is_connection_in_route(self, connection: object) -> bool:
+    def is_connection_in_route(self: 'Route', connection: 'Connection') -> bool:
         """
         checks if connection is already in this route
 
