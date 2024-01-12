@@ -7,6 +7,7 @@ from route import Route
 
 
 class State():
+    # TODO: add "constraints satisfied" method
 
     def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int = None):
         """
@@ -15,6 +16,7 @@ class State():
             Creates list of stations, connections and routes
             Fills list of stations and connections      
         """
+        self.total_number_connections: int = 0
 
         # add relations to all other objects
         self.stations: list[object] = self._add_stations(stations_file_path)
@@ -62,6 +64,7 @@ class State():
             file path to connections.csv
 
         post: 
+            updates total number of connections
             returns list of connection objects and adds connections to stations
         """
         with open(file_path) as connections:
@@ -87,6 +90,8 @@ class State():
                 for station in self.stations:
                     if station.name == row["station1"] or station.name == row["station2"]:
                         station.add_connection(new_connection)
+
+                self.total_number_connections += 1
 
             return connections_list
 
@@ -133,10 +138,16 @@ class State():
         returns:
             newest fraction of used connections
         """
-        # TODO: get number of unique connections
+        # get number of unique connections
+        unique_connections = set(
+            route_connection for route in self.routes for route_connection in route.route_connections)
+        number_unique_connections = len(unique_connections)
 
-        # TODO: calculate fraction
-        pass
+        # calculate fraction
+        self.fraction_used_connections = number_unique_connections / \
+            self.total_number_connections
+
+        return self.fraction_used_connections
 
     def _update_number_routes(self) -> None:
         # TODO: add docstring
