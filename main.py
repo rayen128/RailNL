@@ -5,9 +5,9 @@ path.append("code/classes")
 from state import State
 
 if __name__ == "__main__":
-
+    print(argv[1])
     # make sure a .csv is given for both stations and routes
-    if (len(argv) != 2 or (argv[1].lower() != "holland" or argv[1].lower() != "netherlands")) and len(argv) != 4:
+    if (len(argv) != 2 or (argv[1].lower() != "holland" and argv[1].lower() != "netherlands")) and len(argv) != 4:
         print(
             "Usage: main.py [case name] [max number of routes] [time frame]")
         exit()
