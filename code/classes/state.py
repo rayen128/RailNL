@@ -1,7 +1,9 @@
 import csv
+import sys
 
 from typing import Union
 
+sys.path.append("code/classes")
 from station import Station
 from connection import Connection
 from route import Route
@@ -25,7 +27,7 @@ class State():
             connections_file_path)
         self.routes: list[object] = []
 
-        self.max__number_routes: Union(int, None) = max_number_routes
+        self.max_number_routes: Union(int, None) = max_number_routes
         self.time_frame: Union(int, None) = time_frame
 
         # add parameters for quality score function
@@ -195,7 +197,7 @@ class State():
 
         # calculate number of minutes
         self.total_minutes = sum(
-            connection.distance for route in self.routes for connection in route.connections)
+            connection.distance for route in self.routes for connection in route.route_connections)
 
         return self.total_minutes
 
@@ -236,7 +238,7 @@ class State():
                 new_row.append(route.name)
 
                 # possible FIXME: not the correct format for output csv
-                stations_str: str = f"\"[{[', '.join(station.name) for station in route.stations]}]\""
+                stations_str: str = f"\"[{[', '.join(station.name) for station in route.route_stations]}]\""
                 new_row.append(stations_str)
                 writer.writerow(new_row)
 
@@ -262,7 +264,7 @@ class State():
         returns:
             True if there are less routes than the max     
         """
-        if self.max__number_routes and self.number_routes > self.max__number_routes:
+        if self.max_number_routes and self.number_routes > self.max_number_routes:
             return False
         return True
 
@@ -313,7 +315,7 @@ class State():
         result_string: str = "Routes:\n"
         for route in self.routes:
             result_string += f"- {route.name}:\n"
-            for connection in route.connections:
+            for connection in route.route_connections:
                 result_string += f"  - {connection}\n"
         result_string += f"Score: {self.calculate_score()}\n"
         if self.is_valid_solution():

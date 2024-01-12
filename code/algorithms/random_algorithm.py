@@ -1,8 +1,8 @@
-# TODO: import state
+# from ..classes.state import state
 import random
 
 
-def random_algorithm_1(state: 'State') -> tuple(float, 'Route'):
+def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
     """
     pick random starting location/connection 
     then pick random follow-up 
@@ -25,6 +25,5 @@ def random_algorithm_1(state: 'State') -> tuple(float, 'Route'):
     score = state.calculate_score()
     route = state.routes[0]
     description = state.show()
-    state.write_output("../../data/output_random_algorithm.csv")
 
     return score, route, description

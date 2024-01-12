@@ -19,9 +19,13 @@ class Route():
         assert isinstance(name, str), "name is no string"
 
         self.name: str = name
-        self.route_stations: list['Station'] = [connection.station]
-        self.route_connections: list['Connection'] = [connection.station_1, connection.station_2]
+        self.route_stations: list['Station'] = [
+            connection.station_1, connection.station_2]
+        self.route_connections: list['Connection'] = [connection]
         self.total_time: float = 0
+
+    def __str__(self):
+        return f"Route with name {self.name}"
 
     def get_start_station(self: 'Route') -> 'Station':
         """
@@ -130,7 +134,7 @@ class Route():
 
         elif station == connection.station_2:
             return connection.station_1
-        
+
         return False
 
     def delete_connection_end(self: 'Route') -> None:
@@ -148,7 +152,7 @@ class Route():
         """
         assert len(self.route_connections) >= 1, "not enough connections in list"
         assert len(self.route_stations) >= 2, "not enough stations in list"
-        assert self.route_stations[-1]._has_connection(self.route_connections[-1]),\
+        assert self.route_stations[-1]._has_connection(self.route_connections[-1]), \
             "the last station in stations list has not the last connection in the connections list"
 
         connection = self.route_connections.pop()
@@ -170,7 +174,7 @@ class Route():
         """
         assert len(self.route_connections) >= 1, "not enough connections in list"
         assert len(self.route_stations) >= 2, "not enough stations in list"
-        assert self.route_stations[0]._has_connection(self.route_connections[0]),\
+        assert self.route_stations[0]._has_connection(self.route_connections[0]), \
             "the first station in stations list has not the first connection in the connections list"
 
         connection = self.route_connections.pop(0)
@@ -206,7 +210,7 @@ class Route():
             return True
 
         return False
-    
+
     def is_valid_time(self: 'Route', timeframe: int) -> bool:
         """
         checks if the time of the route is under the time frame and 
@@ -218,12 +222,12 @@ class Route():
             true if route is valid false if route is invalid
         """
         assert isinstance(timeframe, int), "timeframe is not a integer"
-        
+
         if self.total_time >= timeframe:
             return False
-        
+
         return True
-    
+
     def is_valid_lists(self: 'Route') -> bool:
         """
         checks if consecutive stations has a connection
@@ -237,11 +241,5 @@ class Route():
                 return False
             if self.route_stations[number].get_other_station(self.route_connections[number]) != self.route_stations[number + 1]:
                 return False
-            
+
         return True
-
-
-            
-        
-        
-
