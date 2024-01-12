@@ -1,20 +1,26 @@
-from typing import Optional
 from station import Station
 from connection import Connection
 
 
 class Route():
-    def __init__(self: 'Route', name: str) -> None:
+    def __init__(self: 'Route', name: str, connection: 'Connection') -> None:
         """
         initializes a Route class which maintains lists with information about a route
+
+        pre: 
+            connection is a Connection object with a station_1 and a station_2
+            name is a string
 
         post: 
             makes empty lists for the stations and the connections in a route
             sets the total time of a route at 0
         """
+        assert connection.station_1 != None and connection.station_2 != None, "connections has no stations"
+        assert isinstance(name, str), "name is no string"
+
         self.name: str = name
-        self.route_stations: list['Station'] = []
-        self.route_connections: list['Connection'] = []
+        self.route_stations: list['Station'] = [connection.station]
+        self.route_connections: list['Connection'] = [connection.station_1, connection.station_2]
         self.total_time: float = 0
 
     def get_start_station(self: 'Route') -> 'Station':
@@ -22,12 +28,12 @@ class Route():
         returns the first station in the station list
 
         pre: 
-            list of stations is not empty.
+            list of stations has two or more stations
 
         returns: 
             first station in the station list
         """
-        assert self.route_stations != []
+        assert len(self.route_stations) >= 2, "not enough stations in list"
 
         return self.route_stations[0]
 
@@ -36,12 +42,12 @@ class Route():
         returns the last station in the station list
 
         pre: 
-            list of stations is not empty.
+            list of stations has two or more stations
 
         returns: 
             last station in the station list
         """
-        assert self.route_stations != []
+        assert len(self.route_stations) >= 2, "not enough stations in list"
 
         return self.route_stations[-1]
 
@@ -66,18 +72,20 @@ class Route():
         end_station = self.get_end_station()
 
         # check if end station has the connection, if true add connection
-        if end_station._has_connection(connection):
+        if end_station.has_connection(connection):
             self.route_connections.append(connection)
             self.add_station_end(
                 self.get_other_station(connection, end_station))
             self.total_time += connection.distance
             
         # check if start station has the connection, if true add connection
-        elif start_station._has_connection(connection):
+        elif start_station.has_connection(connection):
             self.route_connections.insert(0, connection)
             self.add_station_start(self.get_other_station(
                 connection, start_station))
             self.total_time += connection.distance
+
+        return False
 
     def add_station_end(self: 'Route', station: 'Station') -> None:
         """
@@ -122,6 +130,8 @@ class Route():
 
         elif station == connection.station_2:
             return connection.station_1
+        
+        return False
 
     def delete_connection_end(self: 'Route') -> None:
         """
@@ -136,8 +146,8 @@ class Route():
             deletes last station from slef.route_stations
             substracts deleted connections distance from self.total_time
         """
-        assert self.route_connections != [], "connections list is empty"
-        assert self.route_stations != [], "stations list is empty"
+        assert len(self.route_connections) >= 1, "not enough connections in list"
+        assert len(self.route_stations) >= 2, "not enough stations in list"
         assert self.route_stations[-1]._has_connection(self.route_connections[-1]),\
         "the last station in stations list has not the last connection in the connections list"
 
@@ -158,8 +168,8 @@ class Route():
             deletes first station from slef.route_stations
             substracts deleted connections distance from self.total_time
         """
-        assert self.route_connections != [], "connections list is empty"
-        assert self.route_stations != [], "stations list is empty"
+        assert len(self.route_connections) >= 1, "not enough connections in list"
+        assert len(self.route_stations) >= 2, "not enough stations in list"
         assert self.route_stations[0]._has_connection(self.route_connections[0]),\
         "the first station in stations list has not the first connection in the connections list"
 
@@ -196,3 +206,42 @@ class Route():
             return True
 
         return False
+    
+    def is_valid_time(self: 'Route', timeframe: int) -> bool:
+        """
+        checks if the time of the route is under the time frame and 
+
+        pre:
+            timeframe is integer
+
+        returns:
+            true if route is valid false if route is invalid
+        """
+        assert isinstance(timeframe, int), "timeframe is not a integer"
+        
+        if self.total_time >= timeframe:
+            return False
+        
+        return True
+    
+    def is_valid_lists(self: 'Route') -> bool:
+        """
+        checks if consecutive stations has a connection
+
+        returns: 
+            false if stations or connections list is invalid
+            true if stations and connections lists are valid
+        """
+        for number in range(len(self.route_stations) - 1):
+            if not self.route_stations[number].has_connection(self.route_connections[number]):
+                return False
+            if self.route_stations[number].get_other_station(self.route_connections[number]) != self.route_stations[number + 1]:
+                return False
+            
+        return True
+
+
+            
+        
+        
+
