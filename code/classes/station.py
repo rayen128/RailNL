@@ -3,7 +3,7 @@ from connection import Connection
 
 class Station():
 
-    def __init__(self, name: str, y: float, x: float) -> None:
+    def __init__(self: 'Station', name: str, y: float, x: float) -> None:
         """
         initializes Station-class  
 
@@ -24,9 +24,9 @@ class Station():
         self.name = name
         self.x = x
         self.y = y
-        self.connections: list[object] = []
+        self.connections: list['Connection'] = []
 
-    def add_connection(self, connection: object) -> None:
+    def add_connection(self: 'Station', connection: 'Connection') -> None:
         """
         adds a connection to station  
 
@@ -41,7 +41,7 @@ class Station():
 
         self.connections.append(connection)
 
-    def _has_connection(self, connection: object) -> bool:
+    def _has_connection(self, connection: 'Connection') -> bool:
         """
         checks if a given connection is connected to the current station   
 
