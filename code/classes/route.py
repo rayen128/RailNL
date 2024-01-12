@@ -211,7 +211,7 @@ class Route():
 
         return False
 
-    def is_valid_time(self: 'Route', timeframe: int) -> bool:
+    def is_valid_time(self: 'Route', time_frame: int) -> bool:
         """
         checks if the time of the route is under the time frame and 
 
@@ -221,9 +221,9 @@ class Route():
         returns:
             true if route is valid false if route is invalid
         """
-        assert isinstance(timeframe, int), "timeframe is not a integer"
+        assert isinstance(time_frame, int), "timeframe is not a integer"
 
-        if self.total_time >= timeframe:
+        if self.total_time >= time_frame:
             return False
 
         return True
