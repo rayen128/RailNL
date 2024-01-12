@@ -252,14 +252,14 @@ class State():
                 return False
             return True
 
-    def more_than_max_routes(self) -> bool:
+    def less_than_max_routes(self) -> bool:
         """
         Checks if there are not more than the max number of routes
 
         returns:
             True if there are less routes than the max     
         """
-        if self.number_routes > self.max__number_routes:
+        if self.max__number_routes and self.number_routes > self.max__number_routes:
             return False
         return True
 
@@ -280,15 +280,23 @@ class State():
                 all_connections_used = False
         return all_connections_used
 
-    def is_valid_solution(self) -> dict:
+    def is_valid_solution(self, relaxed_routes_valid: bool = False, relaxed_max_routes: bool = False, relaxed_all_connections: bool = False) -> dict:
         """
         Gives information about satisfaction of all constraints
+
+        pre:
+            constraint relaxation parameters (default: False) relax the three specific constraints if True
 
         returns:
             bool for overall constraint satisfaction     
         """
-
-        return any(not check for check in [self.routes_valid(), self.more_than_max_routes(), self.all_connections_used()])
+        if not relaxed_routes_valid and not self.routes_valid():
+            return False
+        if not relaxed_max_routes and not self.less_than_max_routes():
+            return False
+        if not relaxed_all_connections and not self.all_connections_used():
+            return False
+        return True
 
     def show(self):
         """
@@ -309,6 +317,7 @@ class State():
             result_string += "The current solution is valid."
         else:
             result_string += "The current solution is not valid."
+        return result_string
 
 
 if __name__ == "__main__":
