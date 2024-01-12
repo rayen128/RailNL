@@ -1,5 +1,5 @@
 from sys import argv, path
-from random_algorithm import random_algorithm_1
+from code.algorithms.random_algorithm import random_algorithm_1
 
 path.append("code/classes")
 from state import State
@@ -31,3 +31,4 @@ if __name__ == "__main__":
     state: object = State(file_path_stations, file_path_routes, max_number_routes, time_frame)
 
     random_algorithm_1(state)
+
