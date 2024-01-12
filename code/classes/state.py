@@ -238,7 +238,9 @@ class State():
                 new_row.append(route.name)
 
                 # possible FIXME: not the correct format for output csv
-                stations_str: str = f"\"[{[', '.join(station.name) for station in route.route_stations]}]\""
+                stations_str: str = "[" + ", ".join(
+                    station.name for station in route.route_stations) + "]"
+
                 new_row.append(stations_str)
                 writer.writerow(new_row)
 
