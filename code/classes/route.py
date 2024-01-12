@@ -152,7 +152,7 @@ class Route():
         """
         assert len(self.route_connections) >= 1, "not enough connections in list"
         assert len(self.route_stations) >= 2, "not enough stations in list"
-        assert self.route_stations[-1]._has_connection(self.route_connections[-1]), \
+        assert self.route_stations[-1].has_connection(self.route_connections[-1]), \
             "the last station in stations list has not the last connection in the connections list"
 
         connection = self.route_connections.pop()
@@ -174,7 +174,7 @@ class Route():
         """
         assert len(self.route_connections) >= 1, "not enough connections in list"
         assert len(self.route_stations) >= 2, "not enough stations in list"
-        assert self.route_stations[0]._has_connection(self.route_connections[0]), \
+        assert self.route_stations[0].has_connection(self.route_connections[0]), \
             "the first station in stations list has not the first connection in the connections list"
 
         connection = self.route_connections.pop(0)
