@@ -55,3 +55,11 @@ class Station():
             connection, Connection), 'Input should be an Connection-object'
 
         return connection in self.connections
+
+    def get_connections(self) -> list['Connection']:
+
+        # TO DO: doc-string
+        """
+        """
+
+        return self.connections
