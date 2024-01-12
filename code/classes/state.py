@@ -1,4 +1,3 @@
-from sys import argv, path
 import csv
 
 from station import Station
@@ -7,7 +6,6 @@ from route import Route
 
 
 class State():
-    # TODO: add "constraints satisfied" method
 
     def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int = None):
         """
@@ -32,6 +30,15 @@ class State():
         self.fraction_used_connections: float = 0.0
         self.number_routes: int = 0
         self.total_minutes: int = 0
+
+    def __str__(self):
+        """
+        Gives description of the state object
+
+        returns:
+            description of the state object
+        """
+        return ("State object")
 
     def _add_stations(self, file_path: str) -> list:
         """
@@ -129,7 +136,7 @@ class State():
         else:
             return False
 
-    def _calculate_fraction_used_connections(self) -> float:
+    def _update_fraction_used_connections(self) -> float:
         """
         Calculates the fraction of used connections
         post:
@@ -149,44 +156,91 @@ class State():
 
         return self.fraction_used_connections
 
-    def _update_number_routes(self) -> None:
-        # TODO: add docstring
-        # TODO: get length of list of routes
-        pass
+    def _update_number_routes(self) -> int:
+        """
+        Updates the number of routes.
 
-    def _calculate_total_minutes(self) -> int:
-        # TODO: add docstring
-        # TODO: get number of minutes from all routes
-        # TODO: add numbers of minutes
-        pass
+        post:
+            updates number of routes
 
-    def calculate_score(self, p: float, T: int, Min=int) -> float:
+        returns:
+            number of routes
+        """
+        updated_routes = len(self.routes)
+        self.number_routes = updated_routes
+        return updated_routes
+
+    def _update_total_minutes(self) -> int:
+        """
+        Calculates total number of minutes of all routes.
+
+        post:
+            updates total number of minutes
+
+        returns:
+            total number of minutes     
+        """
+
+        # calculate number of minutes
+        self.total_minutes = sum(
+            connection.distance for route in self.routes for connection in route.connections)
+
+        return self.total_minutes
+
+    def calculate_score(self) -> float:
         """
         post: 
             calculates and updates the quality score
         returns:
             the quality score
         """
-        # TODO: update all variables with methods written above
+        # update all variables with methods written above
+        self._update_number_routes()
+        self._update_fraction_used_connections()
+        self._update_total_minutes()
+
         self.quality = self.fraction_used_connections * 10000 - \
             (self.number_routes * 100 + self.total_minutes)
         return self.quality
 
-    def write_output(self):
+    def write_output(self, file_path: str):
         """
         Writes output to output.csv according to given standard
         post: 
             writes all routes to a .csv file
             adds score to .csv file
         """
-        # TODO: write to csv
-        pass
 
-    def __str__(self):
-        # TODO: write way of printing
-        pass
+        # code source: https://www.scaler.com/topics/how-to-create-a-csv-file-in-python/
+        with open(file_path, 'w') as file:
+            writer = csv.writer(file)
+
+            # write headers
+            writer.writerow(['train', 'stations'])
+
+            # write stations
+            for route in self.routes:
+                new_row: list = []
+                new_row.append(route.name)
+
+                # possible FIXME: not the correct format for output csv
+                stations_str: str = f"\"[{[', '.join(station.name) for station in route.stations]}]\""
+                new_row.append(stations_str)
+                writer.writerow(new_row)
+
+            # write score
+            writer.writerow(["score", self.calculate_score()])
+
+    def is_valid_solution(self):
+        # TODO: implement is_valid_solution method
+        raise NotImplementedError()
+
+    def show(self):
+        # TODO: implement show function
+        raise NotImplementedError()
 
 
 if __name__ == "__main__":
     new_state = State("../../data/stations_netherlands.csv",
                       "../../data/routes_netherlands.csv")
+    print(new_state)
