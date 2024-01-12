@@ -1,3 +1,4 @@
+from typing import Optional
 from station import Station
 from connection import Connection
 
@@ -102,7 +103,7 @@ class Route():
         post: 
             the station object is added to the list of stations
         """
-        self.route_connections.insert(0, station)
+        self.route_stations.insert(0, station)
 
     def get_other_station(self: 'Route', connection: 'Connection', station: 'Station') -> 'Station':
         """
@@ -116,15 +117,11 @@ class Route():
             the other station in the connection than the given station if the given station is in connection
             none if the given station is not in connection
         """
-       
-        # TODO: deze code veranderen wanneer de stationsobjecten opgeslagen liggen in de connection class
-        if station.name == connection.station_1:
+        if station == connection.station_1:
             return connection.station_2
 
-        elif station.name == connection.station_2:
+        elif station == connection.station_2:
             return connection.station_1
-        
-        return None
 
     def delete_connection_end(self: 'Route') -> None:
         """
