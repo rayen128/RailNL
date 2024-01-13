@@ -21,7 +21,7 @@ def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
     # save return variables
     score = state.calculate_score()
     route = state.routes[0]
-    description = state.show()
+    description = state.show(relaxed_time_frame=True)
 
     return score, route, description
 
