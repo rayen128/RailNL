@@ -82,7 +82,7 @@ def random_algorithm_3(state: 'State') -> tuple[float, 'Route', str]:
         state.add_route(random.choice(state.connections))
 
         # add routes until time_frame is exceeded
-        while route.is_valid_time():
+        while state.routes[current_route_index].is_valid_time(state.time_frame):
 
             # choose random new route
             new_connection = random.choice(
