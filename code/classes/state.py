@@ -361,7 +361,8 @@ class State():
 
         post:
             empties list of routes
-            resets score and score parameters    
+            resets score and score parameters
+            resets relaxations     
         """
 
         # empty list of routes
