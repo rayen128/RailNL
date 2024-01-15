@@ -243,7 +243,6 @@ class State():
                 new_row: list = []
                 new_row.append(route.name)
 
-                # possible FIXME: not the correct format for output csv
                 stations_str: str = "[" + ", ".join(
                     station.name for station in route.route_stations) + "]"
 
