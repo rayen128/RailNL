@@ -372,7 +372,7 @@ class State():
             - routes
                 - name
                 - stations
-            the first delimiter is \t, the second is ;, the third is -
+            the first delimiter is \t, the second is ;, the third is : and the fourth is -
         """
         sleeper_string: str = ""
 
@@ -383,14 +383,59 @@ class State():
         sleeper_string += f"{self.relaxed_all_connections};{self.relaxed_time_frame};{self.relaxed_max_routes}\t"
 
         # add routes
-        for index, route in enumerate(self.routes):
-            sleeper_string += f"{route.name};"
-            for station in route.stations:
+        for route in self.routes:
+            sleeper_string += f"{route.name}:"
+            for index, station in enumerate(route.route_stations):
                 sleeper_string += station.name
-                if index < len(self.routes):
+                if index < len(route.route_stations) - 1:
                     sleeper_string += "-"
+            sleeper_string += ";"
 
         return sleeper_string
+
+    def awaken_state(self, sleeper_string: str):
+        """
+        'awakens' a certain state, using a sleeper string
+
+        pre: 
+            sleeper_string is string with:
+            - quality score
+            - fraction of used connections
+            - number of routes
+            - total distance driven 
+            - constraint relaxation values
+                - all connections used
+                - in time frame
+                - max routes
+            - routes
+                - name
+                - stations
+            the first delimiter is \t, the second is ;, the third is -
+
+        post:
+            updates routes, quality score and score parameter and constraint relaxation value attributes      
+        """
+        sleeper_data = sleeper_string.split("\t")
+
+        # add quality score and quality score parameters
+        self.quality = float(sleeper_data[0])
+        self.fraction_used_connections = float(sleeper_data[1])
+        self.number_routes = int(sleeper_data[2])
+        self.total_minutes = int(sleeper_data[3])
+
+        # add constraint relaxation values
+        constraint_relaxation_data: list = sleeper_data[4].split(";")
+        self.relaxed_all_connections = bool(constraint_relaxation_data[0])
+        self.relaxed_time_frame = bool(constraint_relaxation_data[1])
+        self.relaxed_max_routes = bool(constraint_relaxation_data[2])
+
+        # add routes
+        routes_data: list = sleeper_data[5].split(";")
+        for route_data in routes_data:
+            stations_list = route_data.split(":")[1]
+            connections_list: list = []
+            for i in range(len(stations_list)):
+                pass
 
     def reset(self):
         """
