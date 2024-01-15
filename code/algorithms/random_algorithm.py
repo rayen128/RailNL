@@ -137,8 +137,13 @@ def random_algorithm_4(state: 'State') -> tuple[float, 'Route', str]:
     connection_list = copy.copy(state.connections)
 
     while connection_list:
+        # print(state.show())
         random_connection = random.choice(connection_list)
-        shuffled_routes = random.shuffle(state.routes)
+        # print(random_connection)
+        if state.routes:
+            shuffled_routes = random.sample(state.routes, len(state.routes))
+        else:
+            shuffled_routes = []
         connection_added = False
         for route in shuffled_routes:
             if route.add_connection(random_connection):
@@ -146,6 +151,7 @@ def random_algorithm_4(state: 'State') -> tuple[float, 'Route', str]:
                 break
         if not connection_added:
             if not state.add_route(random_connection):
+                print(shuffled_routes)
                 route_deleted = random.choice(shuffled_routes)
                 connection_list += route_deleted.route_connections
                 state.delete_route(route_deleted)
