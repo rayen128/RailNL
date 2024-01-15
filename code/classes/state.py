@@ -123,7 +123,7 @@ class State():
             True if number of routes is not reached
             False otherwise    
         """
-        if self.number_routes == self.max_number_routes:
+        if not self.relaxed_max_routes and self.number_routes == self.max_number_routes:
             return False
         return True
 
