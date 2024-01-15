@@ -1,5 +1,5 @@
 from sys import argv, path
-from code.algorithms.random_algorithm import random_algorithm_1, random_algorithm_2, random_algorithm_3
+from code.algorithms.random_algorithm import *
 
 path.append("code/classes")
 from state import State
@@ -30,9 +30,10 @@ if __name__ == "__main__":
     state: object = State(file_path_stations,
                           file_path_routes, max_number_routes, time_frame)
 
-    score, route, description = random_algorithm_3(state)
+    score, route, description = random_algorithm_2(state)
 
     state.write_output("data/output.csv")
     print(f"Score: {score}")
     print(f"Route: {route}")
     print(f"Description:\n{description}")
+    print(f"Sleeper string:\n {state.show_sleeper_string()}")
