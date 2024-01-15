@@ -30,7 +30,7 @@ if __name__ == "__main__":
     state: object = State(file_path_stations,
                           file_path_routes, max_number_routes, time_frame)
 
-    score, route, description = random_algorithm_2(state)
+    score, route, description = random_algorithm_3(state)
 
     state.write_output("data/output.csv")
     print(f"Score: {score}")
