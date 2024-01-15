@@ -11,13 +11,14 @@ from route import Route
 
 class State():
 
-    def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int, time_frame: int):
+    def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int, time_frame: int, relaxed_all_connections: bool = False, relaxed_max_routes: bool = False, relaxed_time_frame: bool = False):
         """
         Initiates State class.
 
         post:
             Creates list of stations, connections and routes
-            Fills list of stations and connections      
+            Fills list of stations and connections 
+            Creates constraint relaxation variables     
         """
         self.total_number_connections: int = 0
 
@@ -35,6 +36,11 @@ class State():
         self.fraction_used_connections: float = 0.0
         self.number_routes: int = 0
         self.total_minutes: int = 0
+
+        # variables for constraint relaxation
+        self.relaxed_all_connections = relaxed_all_connections
+        self.relaxed_time_frame = relaxed_time_frame
+        self.relaxed_max_routes = relaxed_max_routes
 
     def __str__(self):
         """
@@ -117,7 +123,7 @@ class State():
             True if number of routes is not reached
             False otherwise    
         """
-        if self.number_routes == self.max_number_routes:
+        if not self.relaxed_max_routes and self.number_routes == self.max_number_routes:
             return False
         return True
 
@@ -287,7 +293,7 @@ class State():
                 all_connections_used = False
         return all_connections_used
 
-    def is_valid_solution(self, relaxed_time_frame: bool = False, relaxed_max_routes: bool = False, relaxed_all_connections: bool = False) -> dict:
+    def is_valid_solution(self) -> dict:
         """
         Gives information about satisfaction of all constraints
 
@@ -298,15 +304,15 @@ class State():
             bool for overall constraint satisfaction     
         """
 
-        if not relaxed_time_frame and not self.routes_valid_time_frame():
+        if not self.relaxed_time_frame and not self.routes_valid_time_frame():
             return False
-        if not relaxed_max_routes and not self.less_than_max_routes():
+        if not self.relaxed_max_routes and not self.less_than_max_routes():
             return False
-        if not relaxed_all_connections and not self.all_connections_used():
+        if not self.relaxed_all_connections and not self.all_connections_used():
             return False
         return True
 
-    def show(self, relaxed_time_frame: bool = False, relaxed_max_routes: bool = False, relaxed_all_connections: bool = False):
+    def show(self):
         """
         Gives description of the current state.
 
@@ -321,11 +327,29 @@ class State():
             for connection in route.route_connections:
                 result_string += f"  - {connection}\n"
         result_string += f"Score: {self.calculate_score()}\n"
-        if self.is_valid_solution(relaxed_time_frame, relaxed_max_routes, relaxed_all_connections):
+        if self.is_valid_solution():
             result_string += "The current solution is valid."
         else:
             result_string += "The current solution is not valid."
         return result_string
+
+    def reset(self):
+        """
+        Resets the state.
+
+        post:
+            empties list of routes
+            resets score and score parameters    
+        """
+
+        # empty list of routes
+        self.routes = []
+
+        # reset score and score parameters
+        self.quality = 0.0
+        self.fraction_used_connections = 0.0
+        self.number_routes = 0
+        self.total_minutes = 0
 
 
 if __name__ == "__main__":
