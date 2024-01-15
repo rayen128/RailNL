@@ -146,7 +146,7 @@ class State():
         if self._check_number_routes():
 
             # determine route name
-            name = f"train_{len(self.route_id_tracker) + 1}"
+            name = f"train_{self.route_id_tracker}"
             self.route_id_tracker += 1
 
             # add new route to list
