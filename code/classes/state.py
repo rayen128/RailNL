@@ -355,6 +355,43 @@ class State():
             result_string += "The current solution is not valid."
         return result_string
 
+    def show_sleeper_string(self) -> str:
+        """
+        Gives string that can 'awake' the current state at any later moment
+
+        returns:
+            string with:
+            - quality score
+            - fraction of used connections
+            - number of routes
+            - total distance driven 
+            - constraint relaxation values
+                - all connections used
+                - in time frame
+                - max routes
+            - routes
+                - name
+                - stations
+            the first delimiter is \t, the second is ;, the third is -
+        """
+        sleeper_string: str = ""
+
+        # add quality score and parameters
+        sleeper_string += f"{self.quality}\t{self.fraction_used_connections}\t{self.number_routes}\t{self.total_minutes}\t"
+
+        # add constraint relaxation values
+        sleeper_string += f"{self.relaxed_all_connections};{self.relaxed_time_frame};{self.relaxed_max_routes}\t"
+
+        # add routes
+        for index, route in enumerate(self.routes):
+            sleeper_string += f"{route.name};"
+            for station in route.stations:
+                sleeper_string += station.name
+                if index < len(self.routes):
+                    sleeper_string += "-"
+
+        return sleeper_string
+
     def reset(self):
         """
         Resets the state.
