@@ -1,5 +1,6 @@
 # from ..classes.state import state
 import random
+import copy
 
 
 def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
@@ -126,6 +127,33 @@ def random_algorithm_3(state: 'State') -> tuple[float, 'Route', str]:
         state.routes[current_route_index].delete_connection_end()
         current_route_index += 1
 
+    # save return variables
+    score = state.calculate_score()
+    route = state.routes[0]
+    description = state.show()
+
+    return score, route, description
+
+def random_algorithm_4(state: 'State') -> tuple[float, 'Route', str]:
+    
+    connection_list = copy.copy(state.connections)
+    
+    while connection_list:
+        random_connection = random.choice(connection_list)
+        shuffled_routes = random.shuffle(state.routes)
+        connection_added = False
+        for route in shuffled_routes:
+            if route.add_connection(random_connection):
+                connection_added = True
+                break
+        if not connection_added:
+            if not state.add_route(random_connection):
+                route_deleted = random.choice(shuffled_routes)
+                connection_list += route_deleted.route_connections
+                state.delete_route(route_deleted)
+                state.add_route(random_connection)
+        connection_list.remove(random_connection)
+                    
     # save return variables
     score = state.calculate_score()
     route = state.routes[0]
