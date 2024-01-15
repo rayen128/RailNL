@@ -369,6 +369,11 @@ class State():
 
         self.route_id_tracker += 1
 
+        # reset relaxations
+        self.relaxed_all_connections = False
+        self.relaxed_max_routes = False
+        self.relaxed_time_frame = False
+
         # reset score and score parameters
         self.quality = 0.0
         self.fraction_used_connections = 0.0
