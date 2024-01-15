@@ -42,6 +42,9 @@ class State():
         self.relaxed_time_frame = relaxed_time_frame
         self.relaxed_max_routes = relaxed_max_routes
 
+        # route id tracker for defining the name of a route
+        self.route_id_tracker: int = 1
+
     def __str__(self):
         """
         Gives description of the state object
@@ -131,7 +134,7 @@ class State():
         """
         Adds a new route.
         pre: 
-            all data necessary for a Route object
+            first connection for a route
 
         post: 
             creates and adds Route object to routes list
@@ -143,7 +146,8 @@ class State():
         if self._check_number_routes():
 
             # determine route name
-            name = f"train_{len(self.routes) + 1}"
+            name = f"train_{len(self.route_id_tracker) + 1}"
+            self.route_id_tracker += 1
 
             # add new route to list
             new_route = Route(name, connection)
@@ -152,6 +156,25 @@ class State():
             # update number of routes
             self.number_routes += 1
 
+            return True
+        else:
+            return False
+
+    def delete_route(self, route: 'Route'):
+        """
+        Deletes given route
+
+        pre: 
+            route to be deleted exists
+
+        post:
+            removes route from routes list
+
+        returns:
+            True if operation was succesful    
+        """
+        if route in self.routes:
+            self.routes.remove(route)
             return True
         else:
             return False
@@ -243,7 +266,6 @@ class State():
                 new_row: list = []
                 new_row.append(route.name)
 
-                # possible FIXME: not the correct format for output csv
                 stations_str: str = "[" + ", ".join(
                     station.name for station in route.route_stations) + "]"
 
@@ -344,6 +366,8 @@ class State():
 
         # empty list of routes
         self.routes = []
+
+        self.route_id_tracker += 1
 
         # reset score and score parameters
         self.quality = 0.0

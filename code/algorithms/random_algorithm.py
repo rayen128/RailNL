@@ -57,7 +57,7 @@ def random_algorithm_2(state: 'State') -> tuple[float, 'Route', str]:
     """
     # make sure state allows to go over the max amount of routes
     state.relaxed_max_routes = True
-    
+
     # variable to keep track of current route
     current_route_index = 0
 
