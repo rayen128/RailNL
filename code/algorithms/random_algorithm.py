@@ -42,7 +42,7 @@ def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
 
 def random_algorithm_2(state: 'State') -> tuple[float, 'Route', str]:
     """
-    makes unlimited routes with a limited timeframe and with all connections involved
+    makes unlimited routes with a limited timeframe until all are connections used
 
     pre:
         state is a State object 
@@ -89,7 +89,7 @@ def random_algorithm_2(state: 'State') -> tuple[float, 'Route', str]:
 
 def random_algorithm_3(state: 'State') -> tuple[float, 'Route', str]:
     """
-    makes route(s) with not all the connections necessary
+    makes 7 route(s) with with the time_frame constraint but not all the connections necessary
 
     pre:
         state is a State object 
@@ -103,19 +103,18 @@ def random_algorithm_3(state: 'State') -> tuple[float, 'Route', str]:
         the description of the state
     """
 
-    # make sure state allows to go over the max amount of routes
-    state.relaxed_all_connections = True
-
     # variable to keep track of current route
     current_route_index = 0
 
-    # do loop until there is a valid solution (while max routes can be exceeded)
-    while not state.is_valid_solution():
+    # loop until 7 routes routes are created
+    while len(state.routes) < 7:
 
         # pick random connection and create route
         state.add_route(random.choice(state.connections))
 
-        # add routes until time_frame is exceeded
+        print(current_route_index)
+
+        # add connections to route until time_frame is exceeded
         while state.routes[current_route_index].is_valid_time(state.time_frame):
 
             # choose random new route
@@ -134,10 +133,11 @@ def random_algorithm_3(state: 'State') -> tuple[float, 'Route', str]:
 
     return score, route, description
 
+
 def random_algorithm_4(state: 'State') -> tuple[float, 'Route', str]:
-    
+
     connection_list = copy.copy(state.connections)
-    
+
     while connection_list:
         # print(state.show())
         random_connection = random.choice(connection_list)
@@ -159,7 +159,7 @@ def random_algorithm_4(state: 'State') -> tuple[float, 'Route', str]:
                 state.delete_route(route_deleted)
                 state.add_route(random_connection)
         connection_list.remove(random_connection)
-                    
+
     # save return variables
     score = state.calculate_score()
     route = state.routes[0]
