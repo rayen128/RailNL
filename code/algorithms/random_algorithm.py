@@ -4,7 +4,18 @@ import random
 
 def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
     """
-    # TODO: doc-string
+    makes one route with a unlimited timeframe, but with all connections involved
+
+    pre:
+        state is a State object 
+
+    post:
+        makes one big route with all the connections
+
+    returns:
+        the score of the state
+        the made route
+        the description of the state
     """
     # make sure state allows to go over the timeframe
     state.relaxed_time_frame = True
@@ -30,7 +41,18 @@ def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
 
 def random_algorithm_2(state: 'State') -> tuple[float, 'Route', str]:
     """
-    # TODO: doc-string    
+    makes unlimited routes with a limited timeframe and with all connections involved
+
+    pre:
+        state is a State object 
+
+    post:
+        makes several routes with all the connections
+
+    returns:
+        the score of the state
+        the made route
+        the description of the state  
     """
     # make sure state allows to go over the max amount of routes
     state.relaxed_max_routes = True
@@ -66,7 +88,18 @@ def random_algorithm_2(state: 'State') -> tuple[float, 'Route', str]:
 
 def random_algorithm_3(state: 'State') -> tuple[float, 'Route', str]:
     """
-    # TODO: doc-string    
+    makes route(s) with not all the connections necessary
+
+    pre:
+        state is a State object 
+
+    post:
+        makes route(s)
+
+    returns:
+        the score of the state
+        the made route
+        the description of the state
     """
 
     # make sure state allows to go over the max amount of routes
