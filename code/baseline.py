@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm 
 
-def make_histogram(values: list) -> None:
+def make_histogram(values: list, title_histogram: str) -> None:
     mu, std = norm.fit(values) 
     plt.hist(values, bins=50, density=True, edgecolor='black', color='#000066')
 
@@ -11,8 +11,7 @@ def make_histogram(values: list) -> None:
     p = norm.pdf(x, mu, std) 
     
     plt.plot(x, p, 'k', linewidth=2) 
-    title = "Fit Values: {:.2f} and {:.2f}".format(mu, std) 
-    plt.title(title) 
+    plt.title(title_histogram) 
     plt.savefig(f'../docs/histogram.png')
 
 if __name__ == "__main__":
