@@ -327,6 +327,24 @@ class State():
             result_string += "The current solution is not valid."
         return result_string
 
+    def reset(self):
+        """
+        Resets the state.
+
+        post:
+            empties list of routes
+            resets score and score parameters    
+        """
+
+        # empty list of routes
+        self.routes = []
+
+        # reset score and score parameters
+        self.quality = 0.0
+        self.fraction_used_connections = 0.0
+        self.number_routes = 0
+        self.total_minutes = 0
+
 
 if __name__ == "__main__":
     new_state = State("../../data/stations_netherlands.csv",
