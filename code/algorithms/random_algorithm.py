@@ -107,10 +107,12 @@ def random_algorithm_3(state: 'State') -> tuple[float, 'Route', str]:
     current_route_index = 0
 
     # loop until 7 routes routes are created
-    while len(state.routes) <= 7:
+    while len(state.routes) < 7:
 
         # pick random connection and create route
         state.add_route(random.choice(state.connections))
+
+        print(current_route_index)
 
         # add connections to route until time_frame is exceeded
         while state.routes[current_route_index].is_valid_time(state.time_frame):
