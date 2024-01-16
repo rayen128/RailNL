@@ -1,12 +1,9 @@
 from sys import argv, path
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
 path.append("../classes")
 from state import State
 import os
 
-from bokeh.models import GeoJSONDataSource
+from bokeh.models import GeoJSONDataSource, HoverTool
 from bokeh.plotting import figure, show
 from bokeh.sampledata.sample_geojson import geojson
 import json
@@ -45,6 +42,9 @@ def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None
                      for city, [lon, lat] in station_dict.items()]
     }
 
+    # Create a GeoJSONDataSource
+    station_geo_source = GeoJSONDataSource(geojson=json.dumps(station_data))
+
     # Create GeoJSON-like structure for connections
     connection_data = {
         'type': 'FeatureCollection',
@@ -52,16 +52,18 @@ def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None
                       'geometry': {'type': 'LineString', 'coordinates': [[start_lon, start_lat], [end_lon, end_lat]]},
                       'properties': {'Station1': station_1, 'Station2': station_2}}
                      for (station_1, [start_lat, start_lon]), (station_2, [end_lat, end_lon]) in zip(station_dict.items(), station_dict.items())]
+
     }
 
     print(connection_data)
 
+    # Create a GeoJSONDataSource for connections
+    connection_geo_source = GeoJSONDataSource(
+        geojson=json.dumps(connection_data))
+
     # Add the created GeoJSON-like data
     for i in range(len(station_data['features'])):
         station_data['features'][i]['properties']['Color'] = 'red'
-
-    # Create a GeoJSONDataSource
-    geo_source = GeoJSONDataSource(geojson=json.dumps(station_data))
 
     # Create a Bokeh figure
     p = figure(background_fill_color="lightgrey", tooltips=[
@@ -69,15 +71,15 @@ def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None
 
     # Plot the cities
     p.circle(x='x', y='y', size=15, color='Color',
-             alpha=0.7, source=geo_source)
+             alpha=0.7, source=station_geo_source)
 
     # Plot connections
-    for connection in state.connections:
-        start_coords = station_dict[connection.station_1.name]
-        end_coords = station_dict[connection.station_2.name]
+    p.multi_line('xs', 'ys', line_color='black', source=connection_geo_source)
 
-        p.segment(x0=start_coords[0], y0=start_coords[1],
-                  x1=end_coords[0], y1=end_coords[1], line_color='black')
+    # Add HoverTool for connections
+    hover_connections = HoverTool(
+        tooltips=[('Station 1', '@Station1'), ('Station 2', '@Station2')])
+    p.add_tools(hover_connections)
 
     # Show the plot
     show(p)
