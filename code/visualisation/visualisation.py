@@ -4,7 +4,7 @@ from state import State
 import os
 
 from bokeh.models import GeoJSONDataSource, HoverTool
-from bokeh.plotting import figure, show
+from bokeh.plotting import figure, show, Figure
 from bokeh.sampledata.sample_geojson import geojson
 from itertools import product
 import json
@@ -33,8 +33,7 @@ def get_station_info(state: object) -> tuple[list[str], dict[str: list[float]]]:
     return station_names, station_dict
 
 
-def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None:
-
+def plot_stations(p: Figure, station_dict: dict[str: list[float]]) -> None:
     # create GeoJSON-like structure
     station_data = {
         'type': 'FeatureCollection',
@@ -47,6 +46,12 @@ def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None
     # create a GeoJSONDataSource
     station_geo_source = GeoJSONDataSource(geojson=json.dumps(station_data))
 
+    # plot the cities
+    p.circle(x='x', y='y', size=15, color='Color',
+             alpha=0.7, source=station_geo_source)
+
+
+def plot_connections(p: Figure, state: 'State', station_dict: dict[str: list[float]]) -> None:
     connection_data = {
         'type': 'FeatureCollection',
         'features': []
@@ -60,7 +65,7 @@ def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None
             'type': 'Feature',
                     'geometry': {
                         'type': 'LineString',
-                        'coordinates': [f"{start_coords}, {end_coords}"]
+                        'coordinates': [start_coords, end_coords]
                     },
             'properties': {
                         'Station1': f'{connection.station_1}',
@@ -74,17 +79,37 @@ def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None
     connection_geo_source = GeoJSONDataSource(
         geojson=json.dumps(connection_data))
 
+    # plot connections
+    p.multi_line(xs='xs', ys='ys', line_color='black',
+                 source=connection_geo_source)
+
+
+def plot_map(p: Figure) -> None:
+    # Read GeoJSON file
+    with open('../../data/nl_regions.geojson', 'r') as geojson_file:
+        geojson_data = json.load(geojson_file)
+
+    # Create GeoJSONDataSource
+    map_geo_source = GeoJSONDataSource(geojson=json.dumps(geojson_data))
+
+    # Plot the map using patches (polygons)
+    p.patches('xs', 'ys', source=map_geo_source,
+              line_color='black', fill_alpha=0.5)
+
+
+def show_plot(station_dict: dict[str: list[float]], state: object) -> None:
+
     # create a Bokeh figure
     p = figure(background_fill_color="lightgrey", tooltips=[
-               ('Station', '@StationName')])
+               ('Region', '@RegionName')])
 
-    # plot the cities
-    p.circle(x='x', y='y', size=15, color='Color',
-             alpha=0.7, source=station_geo_source)
+    plot_stations(p, station_dict)
+    plot_connections(p, state, station_dict)
+    plot_map(p)
 
-    # plot connections
-    p.multi_line(x='x', y='y', line_color='black',
-                 source=connection_geo_source)
+    # TODO: Hovers fixen regio's, connecties en stations allemaal hun losse hovers hebben
+    # TODO: 'Lege connecties' in stations verwijderen (mogelijk al opgelost als hierboven gefixt is)
+    # TODO: Optie voor Holland/Netherlands toevoegen
 
     # add HoverTool for connections
     hover_connections = HoverTool(
@@ -92,7 +117,7 @@ def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None
     p.add_tools(hover_connections)
 
     # show the plot
-    # show(p)
+    show(p)
 
 
 if __name__ == "__main__":
@@ -117,4 +142,4 @@ if __name__ == "__main__":
     station_names, station_dict = get_station_info(state)
 
     # create and show plot
-    show_plot_bokeh(station_dict, state)
+    show_plot(station_dict, state)
