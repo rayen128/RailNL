@@ -3,7 +3,16 @@ import numpy as np
 from scipy.stats import norm 
 
 def make_histogram(values: list, title_histogram: str) -> None:
-    
+    """
+    creates and saves a histogram with normal distribution line with the given values
+
+    pre:
+        values is a list with values
+        title_histogram is a string
+
+    post:
+        a png file is saved with a histogram
+    """
     
     # make the histogram
     plt.hist(values, bins=50, density=True, edgecolor='black', color='#000066')
@@ -14,7 +23,7 @@ def make_histogram(values: list, title_histogram: str) -> None:
     linespace = np.linspace(xmin, xmax, 100) 
     line = norm.pdf(linespace, mean, std) 
     
-    # create plot
+    # create and save plot
     plt.plot(linespace, line, 'r', linewidth=2) 
     plt.title(title_histogram) 
     plt.savefig(f'../docs/{title_histogram}.png')
@@ -59,6 +68,6 @@ if __name__ == "__main__":
     y = np.random.normal(170, 10, 250)
     p = np.random.normal(170, 10, 250)
     q = np.random.normal(170, 10, 250)
-    values = [x, y, p, q]
-    #make_boxplot(values, 'boxplot')
+    
+    #make_boxplot([x, y, p, q], 'boxplot')
     make_histogram(x, 'histogram')
