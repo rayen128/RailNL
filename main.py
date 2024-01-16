@@ -44,7 +44,7 @@ if __name__ == "__main__":
     with open(f"data/baseline_data_{argv[1]}.csv", "w") as file:
         writer = csv.writer(file)
         writer.writerow(["state_id", "algorithm", "score", "fraction_used_connections",
-                        "number_routes", "total_minutes", "sleeper_string"])
+                        "number_routes", "total_minutes", "is_solution", "sleeper_string"])
 
         for i in range(10000):
             state.reset()

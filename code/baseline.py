@@ -1,3 +1,4 @@
+import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm 
@@ -63,6 +64,43 @@ def make_boxplot(values: list, title_boxplot: str) -> None:
     # save the plot in a png
     plt.savefig(f'../docs/{title_boxplot}.png')
 
+def read_csv(csv_filepath: str) -> dict:
+    states_dict: dict = {}
+    
+    with open(csv_filepath) as states:
+        csv_reader = csv.DictReader(states)
+        for row in csv_reader:
+            states_dict[row["station"]] = row
+
+    ranking(states_dict, True, 8)
+
+"""
+def all_scores(states_dict: dict) -> list:
+    scores = []
+
+    for state in states_dict:
+        scores.append(state[score])
+
+    return scores
+
+def scores_algorithm(states_dict: dict, algorithm: str) -> list:
+    scores = []
+
+    for state in states_dict:
+        if states_dict['algorithm'] == algorithm:
+            scores.append(state[score])
+    
+    return scores
+"""
+
+def ranking(states_dict: dict, solved: bool, amount: int):
+    sorted_states = sorted(states_dict.items()["x"], key=lambda x:x[1])
+    print(sorted_states)
+
+
+
+
+
 if __name__ == "__main__":
     x = np.random.normal(170, 10, 250)
     y = np.random.normal(170, 10, 250)
@@ -70,4 +108,5 @@ if __name__ == "__main__":
     q = np.random.normal(170, 10, 250)
     
     #make_boxplot([x, y, p, q], 'boxplot')
-    make_histogram(x, 'histogram')
+    #make_histogram(x, 'histogram')
+    read_csv("../data/stations_holland.csv")
