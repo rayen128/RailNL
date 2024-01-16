@@ -6,6 +6,7 @@ import os
 from bokeh.models import GeoJSONDataSource, HoverTool
 from bokeh.plotting import figure, show
 from bokeh.sampledata.sample_geojson import geojson
+from itertools import product
 import json
 
 
@@ -33,56 +34,65 @@ def get_station_info(state: object) -> tuple[list[str], dict[str: list[float]]]:
 
 
 def show_plot_bokeh(station_dict: dict[str: list[float]], state: object) -> None:
-    # Create GeoJSON-like structure
+
+    # create GeoJSON-like structure
     station_data = {
         'type': 'FeatureCollection',
         'features': [{'type': 'Feature',
                       'geometry': {'type': 'Point', 'coordinates': [lon, lat]},
-                      'properties': {'StationName': city, 'Color': 'blue'}}
+                      'properties': {'StationName': city, 'Color': 'red'}}
                      for city, [lon, lat] in station_dict.items()]
     }
 
-    # Create a GeoJSONDataSource
+    # create a GeoJSONDataSource
     station_geo_source = GeoJSONDataSource(geojson=json.dumps(station_data))
 
-    # Create GeoJSON-like structure for connections
     connection_data = {
         'type': 'FeatureCollection',
-        'features': [{'type': 'Feature',
-                      'geometry': {'type': 'LineString', 'coordinates': [[start_lon, start_lat], [end_lon, end_lat]]},
-                      'properties': {'Station1': station_1, 'Station2': station_2}}
-                     for (station_1, [start_lat, start_lon]), (station_2, [end_lat, end_lon]) in zip(station_dict.items(), station_dict.items())]
-
+        'features': []
     }
 
-    print(connection_data)
+    for connection in state.connections:
+        start_coords = station_dict[connection.station_1.name]
+        end_coords = station_dict[connection.station_2.name]
 
-    # Create a GeoJSONDataSource for connections
+        current_connection = {
+            'type': 'Feature',
+                    'geometry': {
+                        'type': 'LineString',
+                        'coordinates': [f"{start_coords}, {end_coords}"]
+                    },
+            'properties': {
+                        'Station1': f'{connection.station_1}',
+                        'Station2': f'{connection.station_2}'
+                    }
+        }
+
+        connection_data['features'].append(current_connection)
+
+    # create a GeoJSONDataSource for connections
     connection_geo_source = GeoJSONDataSource(
         geojson=json.dumps(connection_data))
 
-    # Add the created GeoJSON-like data
-    for i in range(len(station_data['features'])):
-        station_data['features'][i]['properties']['Color'] = 'red'
-
-    # Create a Bokeh figure
+    # create a Bokeh figure
     p = figure(background_fill_color="lightgrey", tooltips=[
                ('Station', '@StationName')])
 
-    # Plot the cities
+    # plot the cities
     p.circle(x='x', y='y', size=15, color='Color',
              alpha=0.7, source=station_geo_source)
 
-    # Plot connections
-    p.multi_line('xs', 'ys', line_color='black', source=connection_geo_source)
+    # plot connections
+    p.multi_line(x='x', y='y', line_color='black',
+                 source=connection_geo_source)
 
-    # Add HoverTool for connections
+    # add HoverTool for connections
     hover_connections = HoverTool(
         tooltips=[('Station 1', '@Station1'), ('Station 2', '@Station2')])
     p.add_tools(hover_connections)
 
-    # Show the plot
-    show(p)
+    # show the plot
+    # show(p)
 
 
 if __name__ == "__main__":
