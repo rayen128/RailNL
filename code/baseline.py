@@ -14,6 +14,7 @@ def make_histogram(values: list, title_histogram: str) -> None:
     post:
         a png file is saved with a histogram
     """
+    plt.clf()
     
     # make the histogram
     plt.hist(values, bins=50, density=True, edgecolor='black', color='#000066')
@@ -22,7 +23,7 @@ def make_histogram(values: list, title_histogram: str) -> None:
     mean, std = norm.fit(values) 
     xmin, xmax = plt.xlim() 
     linespace = np.linspace(xmin, xmax, 100) 
-    line = norm.pdf(linespace, mean, std) 
+    line = norm.pdf(linespace, mean, std)
     
     # create and save plot
     plt.plot(linespace, line, 'r', linewidth=2) 
@@ -46,7 +47,7 @@ def make_boxplot(values: list, title_boxplot: str) -> None:
     fig, ax = plt.subplots(figsize=(10, 10))
  
     # creating axes instance
-    bp = ax.boxplot(values, patch_artist = True, notch ='True', vert = True)
+    bp = ax.boxplot(values, patch_artist = True, vert = True)
 
     # set colors subplots
     colors = ['#5e747f', '#7b9e87', 
@@ -70,43 +71,52 @@ def read_csv(csv_filepath: str) -> dict:
     with open(csv_filepath) as states:
         csv_reader = csv.DictReader(states)
         for row in csv_reader:
-            states_dict[row["station"]] = row
+            states_dict[row["state_id"]] = row
 
-    ranking(states_dict, True, 8)
+    return states_dict
 
-"""
 def all_scores(states_dict: dict) -> list:
     scores = []
 
-    for state in states_dict:
-        scores.append(state[score])
+    for state in states_dict.values():
+        scores.append(int(round(float(state["score"]), 0)))
 
     return scores
 
 def scores_algorithm(states_dict: dict, algorithm: str) -> list:
     scores = []
 
-    for state in states_dict:
-        if states_dict['algorithm'] == algorithm:
-            scores.append(state[score])
+    for state in states_dict.values():
+        if state['algorithm'] == algorithm:
+            scores.append(int(round(float(state['score']), 0)))
     
     return scores
-"""
 
+"""
 def ranking(states_dict: dict, solved: bool, amount: int):
     sorted_states = sorted(states_dict.items()["x"], key=lambda x:x[1])
     print(sorted_states)
+    """
 
 
 
 
 
 if __name__ == "__main__":
-    x = np.random.normal(170, 10, 250)
-    y = np.random.normal(170, 10, 250)
-    p = np.random.normal(170, 10, 250)
-    q = np.random.normal(170, 10, 250)
     
     #make_boxplot([x, y, p, q], 'boxplot')
     #make_histogram(x, 'histogram')
-    read_csv("../data/stations_holland.csv")
+    states_results = read_csv("../data/baseline_data_holland.csv")
+    total_scores = all_scores(states_results)
+    make_histogram(total_scores, 'Scores van alle algoritmes')
+    scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
+    make_histogram(scores_algorithm_1, 'Scores van algoritme 1')
+    scores_algorithm_2 = scores_algorithm(states_results, 'random_algorithm_2')
+    make_histogram(scores_algorithm_2, 'Scores van algoritme 2')
+    scores_algorithm_3 = scores_algorithm(states_results, 'random_algorithm_3')
+    make_histogram(scores_algorithm_3, 'Scores van algoritme 3')
+    make_boxplot([scores_algorithm_1, scores_algorithm_2, scores_algorithm_3, total_scores], 'Boxplot')
+
+    min_score = min(total_scores)
+    max_score = max(total_scores)
+
