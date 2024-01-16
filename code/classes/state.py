@@ -334,6 +334,22 @@ class State():
             return False
         return True
 
+    def is_valid_solution_non_relaxed(self) -> dict:
+        """
+        Gives information about satisfaction of all constraints, without constraint relaxation
+
+        returns:
+            bool for overall constraint satisfaction     
+        """
+
+        if not self.routes_valid_time_frame():
+            return False
+        if not self.less_than_max_routes():
+            return False
+        if not self.all_connections_used():
+            return False
+        return True
+
     def show(self):
         """
         Gives description of the current state.
@@ -462,6 +478,7 @@ class State():
             - fraction_used_connections
             - number_routes
             - total_minutes
+            - is_solution
             - sleeper_string       
         """
 
@@ -472,6 +489,7 @@ class State():
             self.fraction_used_connections,
             self.number_routes,
             self.total_minutes,
+            self.is_valid_solution_non_relaxed(),
             self.show_sleeper_string()]
 
         return csv_line
