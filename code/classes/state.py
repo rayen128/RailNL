@@ -372,7 +372,7 @@ class State():
             - routes
                 - name
                 - stations
-            the first delimiter is \t, the second is ;, the third is : and the fourth is -
+            the first delimiter is \t, the second is ;, the third is : and the fourth is >
         """
         sleeper_string: str = ""
 
@@ -383,13 +383,14 @@ class State():
         sleeper_string += f"{self.relaxed_all_connections};{self.relaxed_time_frame};{self.relaxed_max_routes}\t"
 
         # add routes
-        for route in self.routes:
+        for r_index, route in enumerate(self.routes):
             sleeper_string += f"{route.name}:"
             for index, station in enumerate(route.route_stations):
                 sleeper_string += station.name
                 if index < len(route.route_stations) - 1:
-                    sleeper_string += "-"
-            sleeper_string += ";"
+                    sleeper_string += ">"
+            if r_index < len(self.routes) - 1:
+                sleeper_string += ";"
 
         return sleeper_string
 
@@ -421,7 +422,7 @@ class State():
         self.quality = float(sleeper_data[0])
         self.fraction_used_connections = float(sleeper_data[1])
         self.number_routes = int(sleeper_data[2])
-        self.total_minutes = int(sleeper_data[3])
+        self.total_minutes = float(sleeper_data[3])
 
         # add constraint relaxation values
         constraint_relaxation_data: list = sleeper_data[4].split(";")
@@ -431,11 +432,23 @@ class State():
 
         # add routes
         routes_data: list = sleeper_data[5].split(";")
-        for route_data in routes_data:
-            stations_list = route_data.split(":")[1]
+        for index, route_data in enumerate(routes_data):
+            stations_list = route_data.split(":")[1].split(">")
             connections_list: list = []
-            for i in range(len(stations_list)):
-                pass
+            for i in range(len(stations_list) - 1):
+                for connection in self.connections:
+                    if (
+                        i + 1 < len(stations_list) and
+                        (
+                            (connection.station_1.name == stations_list[i] and connection.station_2.name == stations_list[i + 1]) or
+                            (connection.station_2.name ==
+                             stations_list[i] and connection.station_1.name == stations_list[i + 1])
+                        )
+                    ):
+                        connections_list.append(connection)
+            self.add_route(connections_list.pop(0))
+            for connection in connections_list:
+                self.routes[index].add_connection(connection)
 
     def reset(self):
         """
