@@ -1,3 +1,5 @@
+import csv
+
 from sys import argv, path
 from code.algorithms.random_algorithm import *
 
@@ -37,3 +39,24 @@ if __name__ == "__main__":
     print(f"Route: {route}")
     print(f"Description:\n{description}")
     print(f"Sleeper string:\n {state.show_sleeper_string()}")
+    print(f"csv line: {state.show_csv_line(0, 'random_algorithm_2')}")
+
+    with open(f"data/baseline_data_{argv[1]}.csv", "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(["state_id", "algorithm", "score", "fraction_used_connections",
+                        "number_routes", "total_minutes", "sleeper_string"])
+
+        for i in range(10000):
+            state.reset()
+            random_algorithm_1(state)
+            writer.writerow(state.show_csv_line(i, "random_algorithm_1"))
+
+        for j in range(10001, 20000):
+            state.reset()
+            random_algorithm_2(state)
+            writer.writerow(state.show_csv_line(j, "random_algorithm_2"))
+
+        for k in range(20001, 30000):
+            state.reset()
+            random_algorithm_3(state)
+            writer.writerow(state.show_csv_line(k, "random_algorithm_3"))

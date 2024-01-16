@@ -450,6 +450,32 @@ class State():
             for connection in connections_list:
                 self.routes[index].add_connection(connection)
 
+    def show_csv_line(self, state_id: int, algorithm: str):
+        """
+        makes a line that can be added to data csv
+
+        returns:
+            list with:
+            - state_id
+            - algorithm
+            - score
+            - fraction_used_connections
+            - number_routes
+            - total_minutes
+            - sleeper_string       
+        """
+
+        csv_line: list = [
+            state_id,
+            algorithm,
+            self.calculate_score(),
+            self.fraction_used_connections,
+            self.number_routes,
+            self.total_minutes,
+            self.show_sleeper_string()]
+
+        return csv_line
+
     def reset(self):
         """
         Resets the state.
@@ -463,7 +489,7 @@ class State():
         # empty list of routes
         self.routes = []
 
-        self.route_id_tracker += 1
+        self.route_id_tracker = 1
 
         # reset relaxations
         self.relaxed_all_connections = False
@@ -479,5 +505,8 @@ class State():
 
 if __name__ == "__main__":
     new_state = State("../../data/stations_netherlands.csv",
-                      "../../data/routes_netherlands.csv")
+                      "../../data/routes_netherlands.csv",
+                      20,
+                      180)
     print(new_state.show())
+    print(new_state.show_csv_line(1, "algorithm_x"))
