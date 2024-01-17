@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
 from itertools import islice
-
+import statistics
 
 def make_histogram(values: list, title_histogram: str) -> None:
     """
@@ -73,8 +73,10 @@ def make_boxplot(values: list, title_boxplot: str) -> None:
 
 
 def read_csv(csv_filepath: str) -> dict:
+    
+    # make dictionary for saving the states
     states_dict: dict = {}
-
+    
     with open(csv_filepath) as states:
         csv_reader = csv.DictReader(states)
         for row in csv_reader:
@@ -110,28 +112,44 @@ def ranking(states_dict: dict, solved: bool, amount: int):
         if not solved or (solved and state['is_solution'] == 'True'):
             print(f"{state['state_id']} \t \t {state['algorithm']} \t \t {state['score']} \t \t"
                   f"{state['fraction_used_connections']} \t \t \t {state['number_routes']} \t \t"
-                  f"{state['total_minutes']} \t \t")
+                  f"{state['total_minutes']} \t \t") 
 
+def statistics_scores(scores: list) -> dict:
+    min_score = min(scores)
+    max_score = max(scores)
+    mean = sum(scores)/len(scores)
+    stdev = statistics.stdev(scores)
+    
+    statistics_scores_dict = {} 
+    statistics_scores_dict['min_score'] = min_score
+    statistics_scores_dict['max_score'] = max_score
+    statistics_scores_dict['mean'] = mean
+    statistics_scores_dict['stdev'] = stdev
+
+    return statistics_scores_dict
 
 if __name__ == "__main__":
-
-    # make_boxplot([x, y, p, q], 'boxplot')
-    # make_histogram(x, 'histogram')
+    
     states_results = read_csv("../data/baseline_data_holland.csv")
+    
     total_scores = all_scores(states_results)
-    make_histogram(total_scores, 'Scores van alle algoritmes')
     scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
-    make_histogram(scores_algorithm_1, 'Scores van algoritme 1')
+    
+    #make_histogram(total_scores, 'Scores van alle algoritmes')
+    
+    #make_histogram(scores_algorithm_1, 'Scores van algoritme 1')
     scores_algorithm_2 = scores_algorithm(states_results, 'random_algorithm_2')
-    make_histogram(scores_algorithm_2, 'Scores van algoritme 2')
+    #make_histogram(scores_algorithm_2, 'Scores van algoritme 2')
     scores_algorithm_3 = scores_algorithm(states_results, 'random_algorithm_3')
-    make_histogram(scores_algorithm_3, 'Scores van algoritme 3')
-    make_boxplot([scores_algorithm_1, scores_algorithm_2,
-                 scores_algorithm_3, total_scores], 'Boxplot')
+    #make_histogram(scores_algorithm_3, 'Scores van algoritme 3')
+    #make_boxplot([scores_algorithm_1, scores_algorithm_2, scores_algorithm_3, total_scores], 'Boxplot')
+    #ranking(states_results, False, 20)
+    stats_total, stats_1, stats_2, stats_3 = statistics_scores(total_scores), \
+        statistics_scores(scores_algorithm_1), statistics_scores(scores_algorithm_2), \
+        statistics_scores(scores_algorithm_3)
 
-    # min_score = min(total_scores)
-    # max_score = max(total_scores)
-    ranking(states_results, False, 8)
+    print(f"statistics total: {stats_total} \nstatistics 1: {stats_1} \n"
+          f"statistics 2: {stats_2} \nstatistics 3: {stats_3}")
 
     states_results = read_csv("../data/baseline_data_netherlands.csv")
     total_scores = all_scores(states_results)
