@@ -165,14 +165,18 @@ def ranking(states_dict: dict, solved: bool, algorithm: str | None, amount: int)
         sorted(states_dict.items(), key=lambda x: float(x[1]['score']), reverse=True))
 
     # print the column names
-    print("state id \t algorithm \t \t \t score\t\t\tused connections \t routes \ttotal minutes")
+    print("state id \t algorithm \t \t \t score\t\t\tused connections \t routes \ttotal minutes \tis solution")
 
     # print the states
-    for state in islice(sorted_states.values(), amount):
-        if (not solved or (solved and state['is_solution'] == 'True')) or (algorithm and state['algorithm'] == algorithm):
+    counter: int = 0
+    for state in sorted_states.values():
+        if counter == amount:
+            break
+        if (not solved and not algorithm) or (solved and state['is_solution'] == 'True') or (algorithm and state['algorithm'] == algorithm):
             print(f"{state['state_id']} \t \t {state['algorithm']} \t \t {state['score']} \t \t"
                   f"{state['fraction_used_connections']} \t \t \t {state['number_routes']} \t \t"
-                  f"{state['total_minutes']} \t \t")
+                  f"{state['total_minutes']} \t \t{state['is_solution']}")
+            counter += 1
 
 
 def statistics_scores(scores: list) -> dict:
@@ -192,6 +196,7 @@ def statistics_scores(scores: list) -> dict:
     mean = sum(scores) / len(scores)
     stdev = statistics.stdev(scores)
 
+    # add statistics to dictionary
     statistics_scores_dict = {}
     statistics_scores_dict['min_score'] = min_score
     statistics_scores_dict['max_score'] = max_score
@@ -205,23 +210,19 @@ if __name__ == "__main__":
 
     states_results = read_csv("../data/baseline_data_holland.csv")
 
-    total_scores = all_scores(states_results)
-    scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
+    # total_scores = all_scores(states_results)
+    # scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
+    # scores_algorithm_2 = scores_algorithm(states_results, 'random_algorithm_2')
+    # scores_algorithm_3 = scores_algorithm(states_results, 'random_algorithm_3')
+    # make_histogram(total_scores, 'Scores van alle algoritmes Holland', 'holland')
 
-    make_histogram(
-        total_scores, 'Scores van alle algoritmes Holland', 'holland')
+    # make_histogram(scores_algorithm_1, 'Scores van algoritme 1 Holland', 'holland')
 
-    make_histogram(scores_algorithm_1,
-                   'Scores van algoritme 1 Holland', 'holland')
-    scores_algorithm_2 = scores_algorithm(states_results, 'random_algorithm_2')
-    make_histogram(scores_algorithm_2,
-                   'Scores van algoritme 2 Holland', 'holland')
-    scores_algorithm_3 = scores_algorithm(states_results, 'random_algorithm_3')
-    make_histogram(scores_algorithm_3,
-                   'Scores van algoritme 3 Holland', 'holland')
-    make_boxplot([scores_algorithm_1, scores_algorithm_2,
-                 scores_algorithm_3, total_scores], 'Boxplot', 'holland')
-    # ranking(states_results, False, 20)
+    # make_histogram(scores_algorithm_2, 'Scores van algoritme 2 Holland', 'holland')
+
+    # make_histogram(scores_algorithm_3, 'Scores van algoritme 3 Holland', 'holland')
+    # make_boxplot([scores_algorithm_1, scores_algorithm_2, scores_algorithm_3, total_scores], 'Boxplot', 'holland')
+    ranking(states_results, True, None, 10000)
     # stats_total, stats_1, stats_2, stats_3 = statistics_scores(total_scores), \
     # statistics_scores(scores_algorithm_1), statistics_scores(scores_algorithm_2), \
     # statistics_scores(scores_algorithm_3)
