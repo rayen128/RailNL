@@ -224,6 +224,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object) -> None:
     # TODO: Hovers fixen regio's, connecties en stations allemaal hun losse hovers hebben
     # TODO: 'Lege connecties' in stations verwijderen (mogelijk al opgelost als hierboven gefixt is)
     # TODO: Optie voor Holland/Netherlands of andere (totaal nieuwe) optie toevoegen
+    # TODO: Zorgen dat (gemaakte) routes er op komen (Denk legenda, verschillende kleurjes, RIJDENDE TREINEN?!?!?!)
 
     # add HoverTool for connections
     hover_connections = HoverTool(
