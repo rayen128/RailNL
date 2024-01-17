@@ -182,6 +182,7 @@ class State():
     def _update_fraction_used_connections(self) -> float:
         """
         Calculates the fraction of used connections
+
         post:
             updates fraction of used connections
 
