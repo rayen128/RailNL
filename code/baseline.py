@@ -98,7 +98,7 @@ def scores_algorithm(states_dict: dict, algorithm: str) -> list:
 
 def ranking(states_dict: dict, solved: bool, amount: int):
     sorted_states = dict(sorted(states_dict.items(), key=lambda x: float(x[1]['score']), reverse=True))
-    print("state id \t algorithm \t \t score \t used connections \t routes \t total minutes")
+    print("state id \t algorithm \t \t \t score\t\t\tused connections \t routes \ttotal minutes")
     for state in islice(sorted_states.values(), amount):
         if not solved or (solved and state['is_solution'] == 'True'):
             print(f"{state['state_id']} \t \t {state['algorithm']} \t \t {state['score']} \t \t" 
