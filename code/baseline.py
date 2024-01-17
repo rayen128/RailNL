@@ -33,7 +33,8 @@ def make_histogram(values: list, title_histogram: str) -> None:
     plt.xlabel("scores", labelpad=10)
     plt.ylabel("relative frequency", labelpad=10)
     plt.subplots_adjust(left=0.17, right=0.9, top=0.9, bottom=0.15)
-    plt.savefig(f'../docs/{title_histogram}.png')
+    filename = title_boxplot.replace(" ", "_").lower()
+    plt.savefig(f'../docs/{filename}.png')
 
 
 def make_boxplot(values: list, title_boxplot: str) -> None:
@@ -69,14 +70,29 @@ def make_boxplot(values: list, title_boxplot: str) -> None:
                         'algoritme 3', 'totaal'])
 
     # save the plot in a png
-    plt.savefig(f'../docs/{title_boxplot}.png')
+    filename = title_boxplot.replace(" ", "_").lower()
+    plt.savefig(f'../docs/{filename}.png')
 
 
 def read_csv(csv_filepath: str) -> dict:
+    """
+    reads csv file with states and saves every state in a dictionary
+    saves a dictionary with all the states dictionaries with state id as key
+
+    pre: 
+        csv_filepath is a string with a excisting csv file
+
+    post:
+        makes a dictionary with all the states in dictionaries
+
+    returns:
+        the dictionary with all the states
     
+    """
     # make dictionary for saving the states
     states_dict: dict = {}
     
+    # add every row to the dictionary with state id as key
     with open(csv_filepath) as states:
         csv_reader = csv.DictReader(states)
         for row in csv_reader:
@@ -86,8 +102,20 @@ def read_csv(csv_filepath: str) -> dict:
 
 
 def all_scores(states_dict: dict) -> list:
+    """
+    makes a list with all the scores from every state
+
+    pre: 
+        states_dict is a dict with which maintains state dictionaries  
+
+    returns:
+        the list with scores
+    """
+
+    # make an empty list to save the scores into
     scores = []
 
+    # add all the scores from every state to the list
     for state in states_dict.values():
         scores.append(int(round(float(state["score"]), 0)))
 
@@ -95,8 +123,19 @@ def all_scores(states_dict: dict) -> list:
 
 
 def scores_algorithm(states_dict: dict, algorithm: str) -> list:
-    scores = []
+    """
+    makes a list with all the scores from the states from a certain algorithm
 
+    pre: 
+        states_dict is a dict with which maintains state dictionaries  
+
+    returns:
+        the list with scores
+    """
+    # make an empty list to save the scores into
+    scores = []
+    
+    # add the score to the list from the states with the given algorithm
     for state in states_dict.values():
         if state['algorithm'] == algorithm:
             scores.append(int(round(float(state['score']), 0)))
@@ -105,6 +144,9 @@ def scores_algorithm(states_dict: dict, algorithm: str) -> list:
 
 
 def ranking(states_dict: dict, solved: bool, amount: int):
+    """
+    prints a ranking with 
+    """
     sorted_states = dict(
         sorted(states_dict.items(), key=lambda x: float(x[1]['score']), reverse=True))
     print("state id \t algorithm \t \t \t score\t\t\tused connections \t routes \ttotal minutes")
