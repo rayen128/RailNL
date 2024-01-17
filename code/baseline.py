@@ -177,13 +177,13 @@ if __name__ == "__main__":
     total_scores = all_scores(states_results)
     scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
     
-    #make_histogram(total_scores, 'Scores van alle algoritmes')
+    #make_histogram(total_scores, 'Scores van alle algoritmes Holland')
     
-    #make_histogram(scores_algorithm_1, 'Scores van algoritme 1')
+    #make_histogram(scores_algorithm_1, 'Scores van algoritme 1 Holland')
     scores_algorithm_2 = scores_algorithm(states_results, 'random_algorithm_2')
-    #make_histogram(scores_algorithm_2, 'Scores van algoritme 2')
+    #make_histogram(scores_algorithm_2, 'Scores van algoritme 2 Holland')
     scores_algorithm_3 = scores_algorithm(states_results, 'random_algorithm_3')
-    #make_histogram(scores_algorithm_3, 'Scores van algoritme 3')
+    #make_histogram(scores_algorithm_3, 'Scores van algoritme 3 Holland')
     #make_boxplot([scores_algorithm_1, scores_algorithm_2, scores_algorithm_3, total_scores], 'Boxplot')
     #ranking(states_results, False, 20)
     stats_total, stats_1, stats_2, stats_3 = statistics_scores(total_scores), \
