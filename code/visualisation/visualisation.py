@@ -12,6 +12,8 @@ import json
 
 def get_station_info(state: object) -> tuple[list[str], dict[str: list[float]]]:
     """ 
+    gets all info regarding the stations in a state-object
+
     pre: 
         state input is State-object
         state.stations exists and contains Station-objects 
@@ -50,7 +52,7 @@ def get_station_info(state: object) -> tuple[list[str], dict[str: list[float]]]:
 
 def plot_stations(p: figure, station_dict: dict[str: list[float]]) -> None:
     """
-    explanation of method/function
+    plots all stations based on related coordinates
 
     pre: 
         p is a (bokeh) figure
@@ -98,7 +100,7 @@ def plot_stations(p: figure, station_dict: dict[str: list[float]]) -> None:
 
 def plot_connections(p: figure, state: 'State', station_dict: dict[str: list[float]]) -> None:
     """
-    explanation of method/function
+    plots all stations based on related coordinates
 
     pre: 
         p is a (bokeh) figure
@@ -165,59 +167,49 @@ def plot_connections(p: figure, state: 'State', station_dict: dict[str: list[flo
                  source=connection_geo_source)
 
 
-def plot_map(p: figure) -> None:
+def plot_map(p: figure, map: str) -> None:
     """
-    TODO: doc-string
-    explanation of method/function
+    plots the outline of a map based on a GeoJSON-file
 
     pre: 
-        pre-condition 1
-        pre-condition 2
+        valid map string or GeoJSON-file adres is provided
 
     post:
-        post-condition 1
-        post-condition 2
-
-    returns:
-        return_value 1
-        return_value 2       
+        netherlands map is plotted on the given figure
     """
 
-    # Read GeoJSON file
-    with open('../../data/nl_regions.geojson', 'r') as geojson_file:
-        geojson_data = json.load(geojson_file)
+    if map == 'holland' or map == 'netherlands':
+        # Read GeoJSON file
+        with open('../../data/nl_regions.geojson', 'r') as geojson_file:
+            geojson_data = json.load(geojson_file)
 
-    # Create GeoJSONDataSource
-    map_geo_source = GeoJSONDataSource(geojson=json.dumps(geojson_data))
+        # Create GeoJSONDataSource
+        map_geo_source = GeoJSONDataSource(geojson=json.dumps(geojson_data))
 
-    # Plot the map using patches (polygons)
-    p.patches('xs', 'ys', source=map_geo_source,
-              line_color='black', fill_alpha=0.5)
+        # Plot the map using patches (polygons)
+        p.patches('xs', 'ys', source=map_geo_source,
+                  line_color='black', fill_alpha=0.5)
 
 
-def show_plot(station_dict: dict[str: list[float]], state: object) -> None:
+def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> None:
     """
-    TODO: doc-string
-    explanation of method/function
+    completely plots the current state with stations, connections, routes and maps.
 
     pre: 
-        pre-condition 1
-        pre-condition 2
+        station_dict is correctly initialized using the get_station_info function
+        state is correctly intialized
+        map is either holland or netherlands
 
     post:
-        post-condition 1
-        post-condition 2
-
-    returns:
-        return_value 1
-        return_value 2       
+        visualisation.html is created in the current map
+        plot will automatically be opened 
     """
 
     # create a Bokeh figure
     p = figure(background_fill_color="lightgrey", tooltips=[
                ('Region', '@RegionName')])
 
-    plot_map(p)
+    plot_map(p, map)
     plot_connections(p, state, station_dict)
     plot_stations(p, station_dict)
 
@@ -225,6 +217,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object) -> None:
     # TODO: 'Lege connecties' in stations verwijderen (mogelijk al opgelost als hierboven gefixt is)
     # TODO: Optie voor Holland/Netherlands of andere (totaal nieuwe) optie toevoegen
     # TODO: Zorgen dat (gemaakte) routes er op komen (Denk legenda, verschillende kleurjes, RIJDENDE TREINEN?!?!?!)
+    # TODO: Zorg dat het openen van de html goed en automatisch gaat
 
     # add HoverTool for connections
     hover_connections = HoverTool(
@@ -239,17 +232,18 @@ if __name__ == "__main__":
 
     # make sure a .csv is given for both stations and connections
     assert len(
-        argv) == 2 or len(argv) == 3, "Usage: python3 representation.py [holland/netherlands] (optional) [directory]"
+        argv) == 2 or len(argv) == 3, "Usage: python3 representation.py [holland/netherlands]"
+
+    case_name = argv[1].lower()
 
     # check if first argument is proper input
-    assert argv[1].lower() == 'holland' or argv[
-        1].lower() == 'netherlands', "Usage: python3 representation.py [holland/netherlands] (optional) [directory]"
+    assert case_name == 'holland' or case_name == 'netherlands', "Usage: python3 visualisation.py [holland/netherlands]"
 
     # make State object based on CL-input
-    if argv[1].lower() == 'holland':
+    if case_name == 'holland':
         state = State('../../data/stations_holland.csv',
                       '../../data/routes_holland.csv', 7, 120)
-    elif argv[1].lower() == 'netherlands':
+    elif case_name == 'netherlands':
         state = State('../../data/stations_netherlands.csv',
                       '../../data/routes_netherlands.csv', 7, 120)
 
@@ -257,4 +251,4 @@ if __name__ == "__main__":
     station_names, station_dict = get_station_info(state)
 
     # create and show plot
-    show_plot(station_dict, state)
+    show_plot(station_dict, state, case_name)
