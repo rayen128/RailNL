@@ -12,43 +12,49 @@ Wij hebben 3 random algoritmes geschreven. Elk van deze kiest willekeurig een st
 
 ## Results
 
---> Afgerond op 2 decimalen
+(Afgerond op 2 decimalen)
+
+| Alg 1              | Alg 2 | Alg 3 |
+| :---------------- | :------: | ----: |
+| <img alt='Histogram Algoritme 1 (Holland)' src='figures_baseline_holland/scores_van_algoritme_1_holland.png' width=350>        |   <img alt='Histogram Algoritme 2 (Holland)' src='figures_baseline_holland/scores_van_algoritme_2_holland.png' width=350>   | <img alt='Histogram Algoritme 3 (Holland)' src='figures_baseline_holland/scores_van_algoritme_3_holland.png' width=350> |
 
 - **Algoritme 1**
-    - *Mean*= 5975
-    - *Standard Deviation*= 2101.81
-    - *Min score*= -13600
-    - *Max score*= 9025
-
-<img alt='Histogram Algoritme 1 (Holland)' scr='/figures_baseline_holland/scores_van_algoritme_1_holland.png'>
+    - *Mean*= ``5975``
+    - *Standard Deviation*= ``2101.81``
+    - *Min score*= ``-13600``
+    - *Max score*= ``9025``
 
 - **Algoritme 2**
-    - *Mean*= 5373.78
-    - *Standard Deviation*= 1804.368479607147
-    - *Min score*= -12228
-    - *Max score*= 8636
-
-![Histogram Algoritme 2 (Holland)](/AHRailNL/docs/assignments/baseline/figures_baseline_holland/Scores%20van%20algoritme%202%20Holland.png)
+    - *Mean*= ``5373.78``
+    - *Standard Deviation*= ``1804.37``
+    - *Min score*= ``-12228``
+    - *Max score*= ``8636``
 
 - **Algoritme 3**
-    - *Mean*= 6017.65
-    - *Standard Deviation*= 928.35
-    - *Min score*= 1616
-    - *Max score*= 8463
-
-![Histogram Algoritme 3 (Holland)](/AHRailNL/docs/assignments/baseline/figures_baseline_holland/Scores%20van%20algoritme%203%20Holland.png)
+    - *Mean*= ``6017.65``
+    - *Standard Deviation*= ``928.35``
+    - *Min score*= ``1616``
+    - *Max score*= ``8463``
 
 - **Totaal**
-    - *Mean*= 5788.94
-    - *Standard Deviation*= 1712.13
-    - *Min score*= -13600
-    - *Max score*= 9025
+    - *Mean*= ``5788.94``
+    - *Standard Deviation*= ``1712.13``
+    - *Min score*= `-13600`
+    - *Max score*= ``9025``
 
-![Histogram alle Algoritmes  (Holland)](/AHRailNL/docs/assignments/baseline/figures_baseline_holland/Scores%20van%20alle%20algoritmes%20Holland.png)
+Histogram             |  Boxplot
+:-------------------------:|:-------------------------:
+  <img alt='Histogram Algoritme 2 (Holland)' src='figures_baseline_holland/scores_van_alle_algoritmes_holland.png' width=350> |  <img alt='Boxplot (Holland)' src='figures_baseline_holland/boxplot_holland.png' width=350>
 
-![Boxplot alle Algoritmes (Holland)](/AHRailNL/docs/assignments/baseline/figures_baseline_holland/Boxplot.png)
 
-## Hoe Uniform is onze sample?
+## Conclusies
+
+### 'Wat is goed'?
+
+Het gemiddelde van totale scores is ``5788.95``. Dit is in ieder geval een goede graadmeter om te bepalen wat ons (toekomstige) algoritme *MINIMAAL* moet gaan behalen. 
+
+### Hoe Uniform?
+
 Punten te benoemen:
 -	We hebben bias (doormiddel van wel/niet toegevoegde constraints) dus niet compleet uniform.
 
