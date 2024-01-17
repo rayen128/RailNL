@@ -73,12 +73,8 @@ def make_boxplot(values: list, title_boxplot: str, area: str) -> None:
 
     # save the plot in a png
     filename = title_boxplot.replace(" ", "_").lower()
-<<<<<<< HEAD
-    plt.savefig(f'../docs/assignments/baseline/figures_baseline_{area}/{filename}.png')
-=======
     plt.savefig(
         f'../docs/assignments/baseline/figures_baseline_{area}/{filename}.png')
->>>>>>> ab1db630115553eb8454471013548bae38eb10f7
 
 
 def read_csv(csv_filepath: str) -> dict:
@@ -172,12 +168,16 @@ def ranking(states_dict: dict, solved: bool, algorithm: str|None, amount: int):
     print("state id \t algorithm \t \t \t score\t\t\tused connections \t routes \ttotal minutes")
 
     # print the states
-    for state in islice(sorted_states.values(), amount):
-        if (not solved or (solved and state['is_solution'] == 'True')) or (algorithm and state['algorithm'] == algorithm):
+    counter: int = 0
+    for state in sorted_states.values():
+        if counter == amount:
+            break
+        if (not solved and not algorithm) or (solved and state['is_solution'] == 'True') or (algorithm and state['algorithm'] == algorithm):
             print(f"{state['state_id']} \t \t {state['algorithm']} \t \t {state['score']} \t \t"
                   f"{state['fraction_used_connections']} \t \t \t {state['number_routes']} \t \t"
                   f"{state['total_minutes']} \t \t")
-
+            counter += 1
+            
 
 def statistics_scores(scores: list) -> dict:
     """
@@ -195,14 +195,9 @@ def statistics_scores(scores: list) -> dict:
     max_score = max(scores)
     mean = sum(scores) / len(scores)
     stdev = statistics.stdev(scores)
-<<<<<<< HEAD
     
     # add statistics to dictionary
     statistics_scores_dict = {} 
-=======
-
-    statistics_scores_dict = {}
->>>>>>> ab1db630115553eb8454471013548bae38eb10f7
     statistics_scores_dict['min_score'] = min_score
     statistics_scores_dict['max_score'] = max_score
     statistics_scores_dict['mean'] = mean
@@ -214,7 +209,6 @@ def statistics_scores(scores: list) -> dict:
 if __name__ == "__main__":
 
     states_results = read_csv("../data/baseline_data_holland.csv")
-<<<<<<< HEAD
     
     #total_scores = all_scores(states_results)
     #scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
@@ -228,33 +222,10 @@ if __name__ == "__main__":
     
     #make_histogram(scores_algorithm_3, 'Scores van algoritme 3 Holland', 'holland')
     #make_boxplot([scores_algorithm_1, scores_algorithm_2, scores_algorithm_3, total_scores], 'Boxplot', 'holland')
-    ranking(states_results, False, 'random_algorithm_3' 10)
+    ranking(states_results, False, 'random_algorithm_3', 10)
     #stats_total, stats_1, stats_2, stats_3 = statistics_scores(total_scores), \
         #statistics_scores(scores_algorithm_1), statistics_scores(scores_algorithm_2), \
         #statistics_scores(scores_algorithm_3)
-=======
-
-    total_scores = all_scores(states_results)
-    scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
-
-    make_histogram(
-        total_scores, 'Scores van alle algoritmes Holland', 'holland')
-
-    make_histogram(scores_algorithm_1,
-                   'Scores van algoritme 1 Holland', 'holland')
-    scores_algorithm_2 = scores_algorithm(states_results, 'random_algorithm_2')
-    make_histogram(scores_algorithm_2,
-                   'Scores van algoritme 2 Holland', 'holland')
-    scores_algorithm_3 = scores_algorithm(states_results, 'random_algorithm_3')
-    make_histogram(scores_algorithm_3,
-                   'Scores van algoritme 3 Holland', 'holland')
-    make_boxplot([scores_algorithm_1, scores_algorithm_2,
-                 scores_algorithm_3, total_scores], 'Boxplot', 'holland')
-    # ranking(states_results, False, 20)
-    # stats_total, stats_1, stats_2, stats_3 = statistics_scores(total_scores), \
-    # statistics_scores(scores_algorithm_1), statistics_scores(scores_algorithm_2), \
-    # statistics_scores(scores_algorithm_3)
->>>>>>> ab1db630115553eb8454471013548bae38eb10f7
 
     # print(f"statistics total: {stats_total} \nstatistics 1: {stats_1} \n"
     # f"statistics 2: {stats_2} \nstatistics 3: {stats_3}")
