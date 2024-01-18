@@ -10,6 +10,8 @@ from route import Route
 
 
 class State():
+    # TODO: make list with used connections and list with unused connections
+    # TODO: add route minutes to show method
 
     def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int, time_frame: int, relaxed_all_connections: bool = False, relaxed_max_routes: bool = False, relaxed_time_frame: bool = False):
         """
@@ -523,9 +525,9 @@ class State():
 
 
 if __name__ == "__main__":
-    new_state = State("../../data/stations_netherlands.csv",
-                      "../../data/routes_netherlands.csv",
-                      20,
-                      180)
-    print(new_state.show())
-    print(new_state.show_csv_line(1, "algorithm_x"))
+    state = State("../../data/stations_holland.csv",
+                  "../../data/routes_holland.csv",
+                  7,
+                  120)
+    print(state.show())
+    print(state.show_csv_line(1, "algorithm_x"))
