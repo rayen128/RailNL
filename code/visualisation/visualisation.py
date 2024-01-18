@@ -4,7 +4,7 @@ from state import State
 import os
 
 from bokeh.models import GeoJSONDataSource, HoverTool
-from bokeh.plotting import figure, show
+from bokeh.plotting import figure, show 
 from bokeh.sampledata.sample_geojson import geojson
 from itertools import product
 import json
@@ -38,16 +38,14 @@ def get_station_info(state: object) -> tuple[list[str], dict[str: list[float]]]:
     # assert that 'x' and 'y' attributes of each station are numeric
     assert all(isinstance(station.x, (int, float)) and isinstance(station.y, (int, float))
                for station in state.stations), "The 'x' and 'y' attributes of each station must be numeric."
-
-    station_names = []
+    
     station_dict = {}
 
     # add information to the list(s) and/or dict(s)
     for station in state.stations:
-        station_names.append(station.name)
         station_dict[str(station.name)] = [float(station.y), float(station.x)]
 
-    return station_names, station_dict
+    return station_dict
 
 
 def plot_stations(p: figure, station_dict: dict[str: list[float]]) -> None:
@@ -77,7 +75,7 @@ def plot_stations(p: figure, station_dict: dict[str: list[float]]) -> None:
     assert all(isinstance(key, str) for key in station_dict.keys()
                ), "All keys in station_dict must be strings."
 
-    # Assuming the structure of the values in station_dict, assert that each value is a list of two floats
+    # assuming the structure of the values in station_dict, assert that each value is a list of two floats
     assert all(isinstance(coord, list) and len(coord) == 2 and all(isinstance(coord_value, float) for coord_value in coord)
                for coord in station_dict.values()), "Each value in station_dict must be a list of two floats."
 
@@ -164,7 +162,7 @@ def plot_connections(p: figure, state: 'State', station_dict: dict[str: list[flo
 
     # plot connections
     p.multi_line(xs='xs', ys='ys', line_color='black',
-                 source=connection_geo_source)
+                 source=connection_geo_source, name='Connections')
 
 
 def plot_map(p: figure, map: str) -> None:
@@ -206,8 +204,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
     """
 
     # create a Bokeh figure
-    p = figure(background_fill_color="lightgrey", tooltips=[
-               ('Region', '@RegionName')])
+    p = figure(background_fill_color="lightgrey")
 
     plot_map(p, map)
     plot_connections(p, state, station_dict)
@@ -221,6 +218,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
 
     # add HoverTool for connections
     hover_connections = HoverTool(
+        renderers=[p.select_one({'name': 'Connections'})],
         tooltips=[('Station 1', '@Station1'), ('Station 2', '@Station2')])
     p.add_tools(hover_connections)
 
@@ -243,12 +241,13 @@ if __name__ == "__main__":
     if case_name == 'holland':
         state = State('../../data/stations_holland.csv',
                       '../../data/routes_holland.csv', 7, 120)
+
     elif case_name == 'netherlands':
         state = State('../../data/stations_netherlands.csv',
-                      '../../data/routes_netherlands.csv', 7, 120)
+                      '../../data/routes_netherlands.csv', 20, 180)
 
     # save coordinates and names
-    station_names, station_dict = get_station_info(state)
+    station_dict = get_station_info(state)
 
     # create and show plot
     show_plot(station_dict, state, case_name)
