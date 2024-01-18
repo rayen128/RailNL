@@ -81,6 +81,7 @@ class Route():
             self.add_station_end(
                 self.get_other_station(connection, end_station))
             self.total_time += connection.distance
+            connection.used += 1
             return True
 
         # check if start station has the connection, if true add connection
@@ -89,6 +90,7 @@ class Route():
             self.add_station_start(self.get_other_station(
                 connection, start_station))
             self.total_time += connection.distance
+            connection.used += 1
             return True
 
         return False
@@ -160,8 +162,9 @@ class Route():
         connection = self.route_connections.pop()
         self.route_stations.pop()
         self.total_time -= connection.distance
+        connection.used -= 1
 
-    def delete_connection_start(self: 'Route', connection: 'Connection') -> None:
+    def delete_connection_start(self: 'Route') -> None:
         """
         deletes the first connection
 
@@ -182,6 +185,7 @@ class Route():
         connection = self.route_connections.pop(0)
         self.route_connections.pop(0)
         self.total_time -= connection.distance
+        connection.used -= 1
 
     def is_station_in_route(self: 'Route', station: 'Station') -> bool:
         """

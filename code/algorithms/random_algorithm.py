@@ -3,6 +3,94 @@ import random
 import copy
 
 
+class Algorithm():
+    def __init__(self, state: 'State') -> None:
+        self.state = state
+
+    def create_random_state(self, number_of_connections: int = 1):
+        """
+        # TODO: doc-string
+        """
+        for new_connection in range(number_of_connections):
+            # pick random connection and create route
+            self.state.add_route(random.choice(self.state.connections))
+
+    def add_random_route(self) -> None:
+        """
+        # TODO: doc-string
+        """
+        self.state.add_route(random.choice(self.state.connections))
+
+    def add_random_connection(self, route_index: int = 0) -> None:
+        """
+        # TODO: doc-string
+        """
+        choice = random.choice(['start', 'end'])
+
+        if choice == 'start':
+            new_connection = random.choice(
+                self.state.routes[route_index].get_start_station().get_connections())
+
+        elif choice == 'end':
+            new_connection = random.choice(
+                self.state.routes[route_index].get_end_station().get_connections())
+
+        self.state.routes[route_index].add_connection(new_connection)
+
+    def delete_random_connection(self) -> None:
+        """
+        # TODO: doc-string
+        """
+        choice = random.choice(['start', 'end'])
+
+        if choice == 'start':
+            random.choice(self.state.routes).delete_connection_start()
+
+        elif choice == 'end':
+            random.choice(self.state.routes).delete_connection_end
+
+    def delete_random_route(self) -> None:
+        route = random.choice(self.state.routes)
+
+        self.state.delete_route(route)
+
+    def return_score(self) -> tuple[float, str]:
+        """
+        # TODO: doc-string
+        """
+        # save return variables
+        score = self.state.calculate_score()
+        description = self.state.show()
+
+        return score, description
+
+    def load_state(self, new_state: object) -> None:
+        """
+        # TODO: doc-string
+        """
+        self.state = new_state
+
+    def read_sleeper_string(self, sleeper_string: str) -> None:
+        """
+        # TODO: doc-string
+        """
+        self.awaken_state(sleeper_string)
+
+
+class Baseline_Algorithm(Algorithm):
+    def __init__(self, state: 'State') -> None:
+        super().__init__(state)
+
+    def random_algorithm_1(self):
+        pass
+
+    def random_algorithm_2(self):
+        pass
+
+    def random_algorithm_3(self):
+        pass
+
+
 def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
     """
     makes one route with a unlimited timeframe, but with all connections involved

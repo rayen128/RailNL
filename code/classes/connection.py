@@ -21,6 +21,7 @@ class Connection():
         self.station_1 = station_1
         self.station_2 = station_2
         self.distance = distance
+        self.used = 0
 
     def __str__(self):
         return f"Connection from {self.station_1} to {self.station_2}"
