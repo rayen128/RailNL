@@ -1,6 +1,7 @@
 # from ..classes.state import state
 import random
 import copy
+from typing import Union
 
 
 class Algorithm():
@@ -13,7 +14,7 @@ class Algorithm():
         """
         for new_connection in range(number_of_connections):
             # pick random connection and create route
-            self.state.add_route(random.choice(self.state.connections))
+            self.state.add_random_route()
 
     def add_random_route(self) -> None:
         """
@@ -21,11 +22,14 @@ class Algorithm():
         """
         self.state.add_route(random.choice(self.state.connections))
 
-    def add_random_connection(self, route_index: int = 0) -> None:
+    def add_random_connection(self, route_index: int = 0, choice: Union[str, None] = None) -> str:
         """
         # TODO: doc-string
         """
-        choice = random.choice(['start', 'end'])
+
+        # determine choice if not prematurely done
+        if choice == None:
+            choice = random.choice(['start', 'end'])
 
         if choice == 'start':
             new_connection = random.choice(
@@ -37,17 +41,23 @@ class Algorithm():
 
         self.state.routes[route_index].add_connection(new_connection)
 
-    def delete_random_connection(self) -> None:
+        return choice
+
+    def delete_random_connection(self, route_index: int = 0, choice: Union[str, None] = None) -> str:
         """
         # TODO: doc-string
         """
-        choice = random.choice(['start', 'end'])
+        # determine choice if not prematurely done
+        if choice == None:
+            choice = random.choice(['start', 'end'])
 
         if choice == 'start':
             random.choice(self.state.routes).delete_connection_start()
 
         elif choice == 'end':
             random.choice(self.state.routes).delete_connection_end
+
+        return choice
 
     def delete_random_route(self) -> None:
         route = random.choice(self.state.routes)
@@ -78,17 +88,115 @@ class Algorithm():
 
 
 class Baseline_Algorithm(Algorithm):
-    def __init__(self, state: 'State') -> None:
+    def __init__(self, state: object) -> None:
         super().__init__(state)
+        self.current_route_index = 0
 
-    def random_algorithm_1(self):
-        pass
+    def baseline_algorithm_1(self):
+        """
+        makes one route with a unlimited timeframe, but with all connections involved
 
-    def random_algorithm_2(self):
-        pass
+        pre:
+            self.state is a State object 
 
-    def random_algorithm_3(self):
-        pass
+        post:
+            makes one big route with all the connections
+
+        returns:
+            the score of the state
+            the description of the state
+        """
+
+        # make sure state allows to go over the timeframe
+        self.state.relaxed_time_frame = True
+
+        self.create_random_state()
+
+        # do loop until there is a valid solution (while max time_frame per route can be exceeded)
+        while not self.state.is_valid_solution():
+            # choose random new route
+            self.add_random_connection(0)
+
+        self.return_score()
+
+    def baseline_algorithm_2(self):
+        """
+        makes unlimited routes with a limited timeframe until all are connections used
+
+        pre:
+            self.state is a State object 
+
+        post:
+            makes several routes with all the connections
+
+        returns:
+            the score of the state
+            the made route
+            the description of the state  
+        """
+        # make sure state allows to go over the max amount of routes
+        self.state.relaxed_max_routes = True
+
+        # do loop until there is a valid solution (while max routes can be exceeded)
+        while not self.state.is_valid_solution():
+
+            # pick random connection and create route
+            self.add_random_route()
+
+            # variable to keep track of current route
+            self.current_route_index = 0
+
+            # add routes until time_frame is exceeded
+            while self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
+
+                # add random connection (and save if this was at the end or beginning)
+                choice = self.add_random_connection(self.current_route_index)
+
+            # remove last-added connection
+            self.state.routes[self.current_route_index].delete_random_connection(
+                choice)
+            self.current_route_index += 1
+
+        self.return_score()
+
+    def baseline_algorithm_3(self):
+        """
+        makes 7 route(s) with with the time_frame constraint but not all the connections necessary
+
+        pre:
+            self.state is a State object 
+
+        post:
+            makes route(s)
+
+        returns:
+            the score of the state
+            the made route
+            the description of the state
+        """
+        # variable to keep track of current route
+        self.current_route_index = 0
+
+        # loop until 7 routes routes are created
+        while len(self.state.routes) < 7:
+
+            # create a new route
+            self.add_random_route()
+
+            # add routes until time_frame is exceeded
+            while self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
+
+                # add random connection (and save if this was at the end or beginning)
+                choice = self.add_random_connection(self.current_route_index)
+
+            # remove last-added connection
+            self.state.routes[self.current_route_index].delete_random_connection(
+                choice)
+
+            # set index to 1 higher
+            self.current_route_index += 1
+
+        self.return_score()
 
 
 def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
