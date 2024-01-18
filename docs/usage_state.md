@@ -118,3 +118,54 @@ state.reset()
 This method resets the state.
 
 ## Related objects
+### Route
+The route object also has some relevant attributes. The Routes are stored in a list in the State. A route is initialized with the `add_route` method.
+
+#### variables
+- **name**: name of the route.
+- **route_stations**: list of all stations in the route.
+- **route_connections**: list of all connections in the route.
+- **total_time**: time the route takes.
+
+#### methods
+##### get_start_station, get_end_station
+```python
+state.routes[index].get_start_station()
+```
+```python
+state.routes[index].get_end_station()
+```
+Gives Station object of the start or end of the route.
+
+##### add_connection
+```pyhton
+state.routes[index].add_connection(-connection-)
+```
+This method adds given connection to the route (if possible).
+
+##### delete_connection_start, delete_connection_end
+```python
+state.routes[index].delete_connection_start()
+```
+```python
+state.routes[index].delete_connection_end()
+```
+These methods delete the connection at the start or the end.
+
+##### is_station_in_route
+```python
+state.routes[index].is_station_in_route(-station-)
+```
+This method checks if given Station is in the route.
+
+##### is_connection_in_route
+```python
+state.routes[index].is_connection_in_route(-station-)
+```
+This method checks if given Connection is in the route.
+
+##### is_valid_time
+```python
+state.routes[index].is_valid_time(-time_frame-)
+```
+This method checks if the time of Route is smaller than the given timeframe
