@@ -1,5 +1,6 @@
 import csv
 import sys
+import copy
 
 from typing import Union
 
@@ -10,7 +11,6 @@ from route import Route
 
 
 class State():
-    # TODO: make list with used connections and list with unused connections
     # TODO: add route minutes to show method
 
     def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int, time_frame: int, relaxed_all_connections: bool = False, relaxed_max_routes: bool = False, relaxed_time_frame: bool = False):
@@ -46,6 +46,9 @@ class State():
 
         # route id tracker for defining the name of a route
         self.route_id_tracker: int = 1
+
+        self.used_connections: list = []
+        self.unused_connections: list = copy.copy(self.connections)
 
     def __str__(self):
         """
@@ -180,6 +183,35 @@ class State():
             return True
         else:
             return False
+
+    def set_used(self, connection: 'Connection'):
+        """
+        Moves connection from unused to used connections
+
+        post:
+            removes connection from unused connections list
+            adds connection to used connections list      
+        """
+        if connection in self.unused_connections:
+            self.unused_connections.remove(connection)
+            self.used_connections.append(connection)
+
+    def add_connection_to_route(self, route: 'Route', connection: 'Connection') -> bool:
+        """
+        Adds given connection to given route, if possible
+
+        post:
+            Given connection is added to given route
+            used_connections and unused_connections are updated
+
+        returns:
+            True if action is successfull,
+            False otherwise    
+        """
+        if route.add_connection(connection):
+            self.set_used(connection)
+            return True
+        return False
 
     def _update_fraction_used_connections(self) -> float:
         """
@@ -353,7 +385,7 @@ class State():
             return False
         return True
 
-    def show(self):
+    def show(self) -> str:
         """
         Gives description of the current state.
 
@@ -532,3 +564,5 @@ if __name__ == "__main__":
                   120)
     print(state.show())
     print(state.show_csv_line(1, "algorithm_x"))
+    print(state.connections)
+    print(state.unused_connections)
