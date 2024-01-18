@@ -435,6 +435,7 @@ class State():
         post:
             updates routes, quality score and score parameter and constraint relaxation value attributes      
         """
+        self.reset()
         sleeper_data = sleeper_string.split("\t")
 
         # add quality score and quality score parameters
