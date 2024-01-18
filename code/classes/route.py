@@ -55,7 +55,7 @@ class Route():
 
         return self.route_stations[-1]
 
-    def add_connection(self: 'Route', connection: 'Connection') -> None:
+    def add_connection(self: 'Route', connection: 'Connection') -> bool:
         """
         adds connection to route if the end station or start station 
             has this connection
@@ -81,6 +81,7 @@ class Route():
             self.add_station_end(
                 self.get_other_station(connection, end_station))
             self.total_time += connection.distance
+            return True
 
         # check if start station has the connection, if true add connection
         elif start_station.has_connection(connection):
@@ -88,6 +89,7 @@ class Route():
             self.add_station_start(self.get_other_station(
                 connection, start_station))
             self.total_time += connection.distance
+            return True
 
         return False
 
