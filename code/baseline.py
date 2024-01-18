@@ -132,28 +132,6 @@ def all_scores(states_dict: dict) -> list:
 
     return scores
 
-
-def scores_algorithm(states_dict: dict, algorithm: str) -> list:
-    """
-    makes a list with all the scores from the states from a certain algorithm
-
-    pre: 
-        states_dict is a dict with which maintains state dictionaries  
-
-    returns:
-        the list with scores
-    """
-    # make an empty list to save the scores into
-    scores = []
-
-    # add the score to the list from the states with the given algorithm
-    for state in states_dict.values():
-        if state['algorithm'] == algorithm:
-            scores.append(int(round(float(state['score']), 0)))
-
-    return scores
-
-
 def ranking(states_dict: dict, amount: int):
     """
     prints a ranking with the states with the highest scores
@@ -207,35 +185,3 @@ if __name__ == "__main__":
 
     states_results = read_csv("../data/baseline_data_holland.csv")
     
-    #total_scores = all_scores(states_results)
-    #scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
-    #scores_algorithm_2 = scores_algorithm(states_results, 'random_algorithm_2')
-    #scores_algorithm_3 = scores_algorithm(states_results, 'random_algorithm_3')
-    #make_histogram(total_scores, 'Scores van alle algoritmes Holland', 'holland')
-    
-    #make_histogram(scores_algorithm_1, 'Scores van algoritme 1 Holland', 'holland')
-    
-    #make_histogram(scores_algorithm_2, 'Scores van algoritme 2 Holland', 'holland')
-    
-    #make_histogram(scores_algorithm_3, 'Scores van algoritme 3 Holland', 'holland')
-    #make_boxplot([scores_algorithm_1, scores_algorithm_2, scores_algorithm_3, total_scores], 'Boxplot', 'holland')
-    filtered_states = filter_states(states_results, 'number_routes', '18')
-    ranking(filtered_states, 10)
-    #stats_total, stats_1, stats_2, stats_3 = statistics_scores(total_scores), \
-        #statistics_scores(scores_algorithm_1), statistics_scores(scores_algorithm_2), \
-        #statistics_scores(scores_algorithm_3)
-
-    # print(f"statistics total: {stats_total} \nstatistics 1: {stats_1} \n"
-    # f"statistics 2: {stats_2} \nstatistics 3: {stats_3}")
-
-    # states_results = read_csv("../data/baseline_data_netherlands.csv")
-    # total_scores = all_scores(states_results)
-    # make_histogram(total_scores, 'Scores van alle algoritmes Netherlands', 'netherlands')
-    # scores_algorithm_1 = scores_algorithm(states_results, 'random_algorithm_1')
-    # make_histogram(scores_algorithm_1, 'Scores van algoritme 1 Netherlands', 'netherlands')
-    # scores_algorithm_2 = scores_algorithm(states_results, 'random_algorithm_2')
-    # make_histogram(scores_algorithm_2, 'Scores van algoritme 2 Netherlands', 'netherlands')
-    # scores_algorithm_3 = scores_algorithm(states_results, 'random_algorithm_3')
-    # make_histogram(scores_algorithm_3, 'Scores van algoritme 3 Netherlands', 'netherlands')
-    # make_boxplot([scores_algorithm_1, scores_algorithm_2,
-    # scores_algorithm_3, total_scores], 'Boxplot Netherlands')
