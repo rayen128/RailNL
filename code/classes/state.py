@@ -399,6 +399,7 @@ class State():
             result_string += f"- {route.name}:\n"
             for connection in route.route_connections:
                 result_string += f"  - {connection}\n"
+            result_string += f"Total minutes: {route.total_time}\n\n"
         result_string += f"Score: {self.calculate_score()}\n"
         if self.is_valid_solution():
             result_string += "The current solution is valid."
