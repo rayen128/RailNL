@@ -1,5 +1,5 @@
 # Individueel plan Gert
-Als individueel onderdeel van ons project ga ik een aantal heuristieken uitwerken. Deze heuristieken worden een method van onze Algorithm class. 
+Als individueel onderdeel van ons project ga ik een aantal heuristieken uitwerken. Deze heuristieken worden een method van onze Algorithm class. Een groot deel van deze heuristieken past de score van de kwaliteitsfunctie aan. Ook daarvoor zal ik de methods schrijven. 
 
 ## Uiteindelijke functionaliteiten
 Zonder de pretentie maar met de ambitie alles te (kunnen) schrijven, hebben we een lijst met heuristieken:
@@ -29,4 +29,4 @@ Zonder de pretentie maar met de ambitie alles te (kunnen) schrijven, hebben we e
     - Method die pluspunten geeft voor alle bereden moeilijke connecties
 
 ## Aansluiting met werk van andere studenten
-We hebben al een Algorithm class geïmplenteerd. Alle andere algoritmes zullen deze class inheriten. In deze class zal ik al deze methods schrijven, die dan dus voor ieder die een algoritme schrijft beschikbaar zijn. 
+We hebben al een Algorithm class geïmplenteerd. Alle andere algoritmes zullen deze class inheriten. In deze class zal ik al deze methods schrijven, die dan dus voor ieder ander algoritme beschikbaar zijn. 
