@@ -8,6 +8,33 @@ class Algorithm():
     def __init__(self, state: 'State') -> None:
         self.state = state
 
+    def __str__(self):
+        return "Algorithm object"
+
+    # ----------------------------GENERAL METHODS---------------------------------------
+    def return_score(self) -> tuple[float, str]:
+        """
+        # TODO: doc-string
+        """
+        # save return variables
+        score = self.state.calculate_score()
+        description = self.state.show()
+
+        return score, description
+
+    def load_state(self, new_state: object) -> None:
+        """
+        # TODO: doc-string
+        """
+        self.state = new_state
+
+    def read_sleeper_string(self, sleeper_string: str) -> None:
+        """
+        # TODO: doc-string
+        """
+        self.state.awaken_state(sleeper_string)
+
+    # -----------------------------RANDOM METHODS--------------------------------------
     def add_random_route(self) -> None:
         """
         adds a random 1-length route to the state
@@ -76,25 +103,3 @@ class Algorithm():
         route = random.choice(self.state.routes)
 
         self.state.delete_route(route)
-
-    def return_score(self) -> tuple[float, str]:
-        """
-        # TODO: doc-string
-        """
-        # save return variables
-        score = self.state.calculate_score()
-        description = self.state.show()
-
-        return score, description
-
-    def load_state(self, new_state: object) -> None:
-        """
-        # TODO: doc-string
-        """
-        self.state = new_state
-
-    def read_sleeper_string(self, sleeper_string: str) -> None:
-        """
-        # TODO: doc-string
-        """
-        self.awaken_state(sleeper_string)
