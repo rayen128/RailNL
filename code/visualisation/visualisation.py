@@ -1,16 +1,18 @@
 from sys import argv, path
 path.append("../classes")
 from state import State
+from route import Route
 import os
 
 from bokeh.models import GeoJSONDataSource, HoverTool
 from bokeh.plotting import figure, show 
 from bokeh.sampledata.sample_geojson import geojson
-from itertools import product
+from bokeh.palettes import Dark2_5 as palette
+import itertools
 import json
 
 
-def get_station_info(state: object) -> tuple[list[str], dict[str: list[float]]]:
+def get_station_info(state: object) -> dict[str: list[float]]:
     """ 
     gets all info regarding the stations in a state-object
 
@@ -19,8 +21,7 @@ def get_station_info(state: object) -> tuple[list[str], dict[str: list[float]]]:
         state.stations exists and contains Station-objects 
         all station has a name, x and y
 
-    returns: 
-        a list containing the names of all stations 
+    returns:  
         a dict with key = station_name and value = list[y-coordinate, x-coordinate]
     """
     # assert that state is an instance of State
@@ -98,7 +99,7 @@ def plot_stations(p: figure, station_dict: dict[str: list[float]]) -> None:
 
 def plot_connections(p: figure, state: 'State', station_dict: dict[str: list[float]]) -> None:
     """
-    plots all stations based on related coordinates
+    plots all connections based on related coordinates
 
     pre: 
         p is a (bokeh) figure
@@ -164,6 +165,85 @@ def plot_connections(p: figure, state: 'State', station_dict: dict[str: list[flo
     p.multi_line(xs='xs', ys='ys', line_color='black',
                  source=connection_geo_source, name='Connections')
 
+def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> None:
+    """
+    plots all routes based on related coordinates
+
+    pre: 
+        p is a (bokeh) figure
+        coordinates are within display range of plot 
+        station_dict is a dictionary
+        all station_dict keys are strings
+        all station_dict values are floats
+
+    post:
+        GeoJSON-data structure containing all routes with given connections and stations is created 
+        all routes are plotted (and displayed) on the given figure       
+    """
+
+    # assert that p is an instance of Bokeh's Figure class
+    assert isinstance(
+        p, figure), "p must be an instance of Bokeh's Figure class."
+
+    # assert that station_dict is a dictionary
+    assert isinstance(station_dict, dict), "station_dict must be a dictionary."
+
+    # assert that all keys in station_dict are strings
+    assert all(isinstance(key, str) for key in station_dict.keys()
+               ), "All keys in station_dict must be strings."
+
+    # Assuming the structure of the values in station_dict, assert that each value is a list of two floats
+    assert all(isinstance(coord, list) and len(coord) == 2 and all(isinstance(coord_value, float) for coord_value in coord)
+               for coord in station_dict.values()), "Each value in station_dict must be a list of two floats."
+    
+    colors = itertools.cycle(palette)
+    
+    for route in state.routes:
+        # create basis of GeoJSON-like structure
+        connection_data = {
+        'type': 'FeatureCollection',
+        'features': []
+        }
+
+        for connection in route.route_connections:
+            # get connection coordinates
+            start_coords = station_dict[connection.station_1.name]
+            end_coords = station_dict[connection.station_2.name]
+
+            # generate connection JSON object
+            current_connection = {
+                'type': 'Feature',
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': [start_coords, end_coords]
+                        },
+                'properties': {
+                            'Station1': f'{connection.station_1}',
+                            'Station2': f'{connection.station_2}'
+                        }
+            }
+
+            # add to connection_data
+            connection_data['features'].append(current_connection)
+
+        # create a GeoJSONDataSource for connections
+        connection_geo_source = GeoJSONDataSource(
+            geojson=json.dumps(connection_data))
+
+        # plot connections
+        p.multi_line(xs='xs', ys='ys', legend_label=
+                     f"{route.name}: {route.route_stations[0]} - {route.route_stations[len(route.route_stations)-1]}",
+                     line_width=3, line_color=next(colors),
+                     source=connection_geo_source, name='Route')
+
+    
+    # display legend in top left corner (default is top right corner)
+    p.legend.location = "bottom_right"
+
+    # add a title to your legend
+    p.legend.title = "Routes"
+
+
 
 def plot_map(p: figure, map: str) -> None:
     """
@@ -208,10 +288,9 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
 
     plot_map(p, map)
     plot_connections(p, state, station_dict)
+    plot_routes(p, state, station_dict)
     plot_stations(p, station_dict)
 
-    # TODO: Hovers fixen regio's, connecties en stations allemaal hun losse hovers hebben
-    # TODO: 'Lege connecties' in stations verwijderen (mogelijk al opgelost als hierboven gefixt is)
     # TODO: Optie voor Holland/Netherlands of andere (totaal nieuwe) optie toevoegen
     # TODO: Zorgen dat (gemaakte) routes er op komen (Denk legenda, verschillende kleurjes, RIJDENDE TREINEN?!?!?!)
     # TODO: Zorg dat het openen van de html goed en automatisch gaat
@@ -245,7 +324,8 @@ if __name__ == "__main__":
     elif case_name == 'netherlands':
         state = State('../../data/stations_netherlands.csv',
                       '../../data/routes_netherlands.csv', 20, 180)
-
+    state.awaken_state('8438.0	1.0	7	862.0	False;False;True	train_1:Rotterdam Alexander>Gouda>Alphen a/d Rijn>Leiden Centraal>Schiphol Airport>Amsterdam Zuid>Amsterdam Sloterdijk>Zaandam>Amsterdam Sloterdijk>Amsterdam Centraal>Amsterdam Amstel>Amsterdam Centraal>Amsterdam Sloterdijk;train_2:Amsterdam Zuid>Schiphol Airport>Leiden Centraal>Den Haag Centraal>Gouda>Rotterdam Alexander>Gouda>Rotterdam Alexander>Rotterdam Centraal>Schiedam Centrum>Delft>Den Haag Centraal;train_3:Alkmaar>Hoorn>Zaandam>Beverwijk>Castricum>Alkmaar>Castricum>Zaandam>Castricum>Alkmaar;train_4:Delft>Den Haag Centraal>Leiden Centraal>Heemstede-Aerdenhout>Haarlem>Amsterdam Sloterdijk>Zaandam>Hoorn>Zaandam>Amsterdam Sloterdijk>Amsterdam Centraal;train_5:Amsterdam Zuid>Amsterdam Sloterdijk>Amsterdam Zuid>Schiphol Airport>Leiden Centraal>Heemstede-Aerdenhout>Haarlem>Amsterdam Sloterdijk>Amsterdam Zuid>Amsterdam Amstel>Amsterdam Zuid>Amsterdam Sloterdijk;train_6:Den Haag Centraal>Leiden Centraal>Alphen a/d Rijn>Leiden Centraal>Heemstede-Aerdenhout>Leiden Centraal>Den Haag Centraal>Delft>Schiedam Centrum>Rotterdam Centraal>Dordrecht;train_7:Amsterdam Sloterdijk>Haarlem>Beverwijk>Zaandam>Castricum>Alkmaar>Den Helder')
+    
     # save coordinates and names
     station_dict = get_station_info(state)
 
