@@ -39,6 +39,7 @@ class Baseline_Algorithm(Algorithm):
         self.return_score()
 
     def baseline_algorithm_2(self):
+        # FIXME: runs indefinitely, doesn't seem to know when to stop
         """
         makes unlimited routes with a limited timeframe until all are connections used
 
@@ -58,7 +59,7 @@ class Baseline_Algorithm(Algorithm):
 
         # do loop until there is a valid solution (while max routes can be exceeded)
         while not self.state.is_valid_solution():
-
+            print(self.state.calculate_score())
             # pick random connection and create route
             self.add_random_route()
 
@@ -72,8 +73,8 @@ class Baseline_Algorithm(Algorithm):
                 choice = self.add_random_connection(self.current_route_index)
 
             # remove last-added connection
-            self.state.routes[self.current_route_index].delete_random_connection(
-                choice)
+            self.delete_random_connection(self.current_route_index, choice)
+            # self.state.routes[self.current_route_index].delete_random_connection(choice)
             self.current_route_index += 1
 
         self.return_score()
@@ -109,8 +110,7 @@ class Baseline_Algorithm(Algorithm):
                 choice = self.add_random_connection(self.current_route_index)
 
             # remove last-added connection
-            self.state.routes[self.current_route_index].delete_random_connection(
-                choice)
+            self.delete_random_connection(self.current_route_index, choice)
 
             # set index to 1 higher
             self.current_route_index += 1
