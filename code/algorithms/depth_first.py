@@ -20,11 +20,11 @@ class DepthFirst:
         """
         return self.states.pop()
 
-    def build_children(self, state):
+    def build_children(self, state, route):
         """
         TODO: docstring
         """
-        # TODO: find a way to retrieve all possible values for a station
+        values = route.get_end_station().get_connections()
         values = None
 
         for value in values:
@@ -42,15 +42,28 @@ class DepthFirst:
             self.best_value = new_value
             print(f"New best value: {self.best_value}")
 
+    def get_smallest_connection(self, state, route):
+        raise NotImplementedError
+
+    def get_route(self, state):
+        if not state.routes:
+            state.add_route(state.unused_connections[0])
+        route_to_return = state.routes[-1]
+
+        if not route_to_return.connections or (state.time_frame - route_to_return.total_time < self.get_smallest_connection(state, route_to_return)):
+            return route_to_return
+        else:
+            state.add_route(state.unused_connections[0])
+
     def run(self):
         while self.states:
             new_state = self.get_next_state()
 
-            # TODO: find way to get next empty connection
-            connection = new_state.something()
+            # TODO: pick route to modify
+            route = self.get_route(new_state)
 
-            if connection is not None:
-                self.build_children(new_state, connection)
+            if route is not None:
+                self.build_children(new_state, route)
             else:
                 self.check_solution(new_state)
 
