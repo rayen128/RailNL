@@ -74,6 +74,28 @@ def make_boxplot(values: list, title_boxplot: str, filepath: str) -> None:
     plt.savefig(
         f'{filepath}.png')
     
+def make_line_diagram(scores: list, title_diagram: str, filepath: str) -> None:
+    """
+    makes a line diagram of the scores against the iterations
+
+    pre:
+        the scores in the list is in the same order as the amount of iterations
+        scores is a list with integers
+        title_diagram and filepath are strings
+
+    post:
+        saves a png file with the line diagram
+    """
+    
+    x = list(range(len(scores)))
+    
+    plt.plot(x, scores)
+    plt.xlabel("Iterations")
+    plt.ylabel("Scores")
+    plt.title(f"{title_diagram}")
+    plt.savefig(
+        f'{filepath}.png')
+    
 def ranking(states_dict: dict, amount: int):
     """
     prints a ranking with the states with the highest scores
@@ -125,5 +147,6 @@ def statistics_scores(scores: list) -> dict:
 if __name__ == "__main__":
 
     states_results = read_csv("../../data/baseline_data_holland.csv")
-    filtered_results = filter_states(states_results, 'is_solution', 'True')
+    filtered_results = filter_states(states_results, 'algorithm', 'random_algorithm_3')
     scores = all_scores(filtered_results)
+    make_line_diagram(scores, 'line-diagram algorithm 3', 'test')
