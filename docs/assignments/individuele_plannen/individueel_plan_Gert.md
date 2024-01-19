@@ -4,6 +4,7 @@ Als individueel onderdeel van ons project ga ik een aantal heuristieken uitwerke
 ## Uiteindelijke functionaliteiten
 Zonder de pretentie maar met de ambitie alles te (kunnen) schrijven, hebben we een lijst met heuristieken:
 - zgn. 'eindstations' (stations met nog één connectie over) definiëren, en nieuwe trajecten hiermee laten beginnen
+- een maximaal aantal keer dat een connectie in een route mag zitten.
 - een maximaal aantal keer dat een trein heen en weer kan gaan tussen twee stations
 - connecties die zijn 'ingesloten' verbieden/minpunten geven. Een ingesloten connectie heeft alleen maar bezette connecties om zich heen.
 - minpunten geven voor het aantal minuten dat een route onder het time_frame zit, oftewel: aantal connecties in een route maximaliseren
@@ -17,7 +18,7 @@ Zonder de pretentie maar met de ambitie alles te (kunnen) schrijven, hebben we e
     - Method die een lijst geeft met eindstations
     - Method die definieert of een station een eindstation is
 - Methods voor max aantal keer heen en weer gaan:
-    - Method die bekijkt hoe vaak een route voor het keuzepunt al bereden is
+    - Method die bekijkt hoe vaak een connectie vlak voor het keuzepunt al bereden is
     - Method die alle connecties van een keuzepunt geeft die niet verboden zijn. 
     - Method die minpunten geeft voor elke connectie die meer dan de max bereden is. 
 - Methods voor maximaliseren aantal connecties in route:
