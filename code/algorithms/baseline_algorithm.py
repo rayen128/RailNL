@@ -5,6 +5,22 @@ from ..classes.route import Route
 import random
 import copy
 
+# FIXME: random_algoritme_1 geeft 'solution is valid' als dat duidelijk niet zo is
+# FIXME: alg_3 loop tegen de volgende assert aan:
+
+"""
+Traceback (most recent call last):
+  File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/test.py", line 14, in <module>
+    baseline_alg.baseline_algorithm_3()
+  File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/code/algorithms/baseline_algorithm.py", line 115, in baseline_algorithm_3    
+    self.delete_random_connection(self.current_route_index, choice)
+  File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/code/algorithms/algorithm.py", line 95, in delete_random_connection
+    random.choice(self.state.routes).delete_connection_start()
+  File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/code/classes/route.py", line 182, in delete_connection_start
+    assert self.route_stations[0].has_connection(self.route_connections[0]), \
+AssertionError: the first station in stations list has not the first connection in the connections list
+"""
+
 
 class Baseline_Algorithm(Algorithm):
     def __init__(self, state: object) -> None:
@@ -59,7 +75,7 @@ class Baseline_Algorithm(Algorithm):
 
         # do loop until there is a valid solution (while max routes can be exceeded)
         while not self.state.is_valid_solution():
-            print(self.state.calculate_score())
+            print(self.state.show())
             # pick random connection and create route
             self.add_random_route()
 
