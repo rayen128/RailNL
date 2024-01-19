@@ -97,4 +97,4 @@ class Algorithm():
         """
         # TODO: doc-string
         """
-        self.awaken_state(sleeper_string)
+        self.state.awaken_state(sleeper_string)
