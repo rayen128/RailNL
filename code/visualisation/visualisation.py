@@ -4,7 +4,7 @@ from state import State
 from route import Route
 import os
 
-from bokeh.models import GeoJSONDataSource, HoverTool
+from bokeh.models import GeoJSONDataSource, HoverTool, Legend
 from bokeh.plotting import figure, show 
 from bokeh.sampledata.sample_geojson import geojson
 from bokeh.palettes import Dark2_5 as palette
@@ -227,21 +227,21 @@ def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> No
             connection_data['features'].append(current_connection)
 
         # create a GeoJSONDataSource for connections
-        connection_geo_source = GeoJSONDataSource(
+        current_route_geo_source = GeoJSONDataSource(
             geojson=json.dumps(connection_data))
 
         # plot connections
-        p.multi_line(xs='xs', ys='ys', legend_label=
-                     f"{route.name}: {route.route_stations[0]} - {route.route_stations[len(route.route_stations)-1]}",
+        p.multi_line(xs='xs', ys='ys', legend_label= f"{route.name}: {route.route_stations[0]} - {route.route_stations[len(route.route_stations)-1]}",
                      line_width=3, line_color=next(colors),
-                     source=connection_geo_source, name='Route')
+                     source=current_route_geo_source, name='Route')
 
     
-    # display legend in top left corner (default is top right corner)
-    p.legend.location = "bottom_right"
+    p.add_layout(p.legend[0], "right")
+    # # display legend in top left corner (default is top right corner)
+    # p.legend.location = "bottom_right"
 
-    # add a title to your legend
-    p.legend.title = "Routes"
+    # # add a title to your legend
+    # p.legend.title = "Routes"
 
 
 
@@ -284,7 +284,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
     """
 
     # create a Bokeh figure
-    p = figure(background_fill_color="lightgrey")
+    p = figure(background_fill_color="lightgrey", width=1000, height=600,)
 
     plot_map(p, map)
     plot_connections(p, state, station_dict)

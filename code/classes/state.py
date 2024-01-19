@@ -11,7 +11,6 @@ from route import Route
 
 
 class State():
-    # TODO: add route minutes to show method
 
     def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int, time_frame: int, relaxed_all_connections: bool = False, relaxed_max_routes: bool = False, relaxed_time_frame: bool = False):
         """

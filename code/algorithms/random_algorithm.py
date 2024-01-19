@@ -33,7 +33,7 @@ class Algorithm():
         """
         for new_connection in range(number_of_connections):
             # pick random connection and create route
-            self.state.add_random_route()
+            self.add_random_route()
 
     def add_random_connection(self, route_index: int = 0, choice: Union[str, None] = None) -> str:
         """
