@@ -300,7 +300,6 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
     plot_routes(p, state, station_dict)
     plot_stations(p, station_dict)
 
-    # TODO: Optie voor Holland/Netherlands optie toevoegen
     # TODO: Goed weergeven als 2 (of meer) routes dezelfde connectie gebruiken
     # TODO: Zorg dat het openen van de html goed en automatisch gaat
     # TODO: Totale Score (goed) weergeven in de Legenda
