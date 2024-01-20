@@ -24,14 +24,24 @@ class DepthFirst:
         """
         TODO: docstring
         """
-        values = route.get_end_station().get_connections()
-        values += route.get_start_station().get_connections()
-        print(f"Values: {values}")
+        values = set(route.get_end_station().get_connections())
+        values.update(route.get_start_station().get_connections())
+        print(f"Values: {[value.__str__() for value in values]}")
 
         for value in values:
-            new_state = copy.deepcopy(state)
 
-            new_state.routes[-1].add_connection(value)
+            new_state = copy.deepcopy(state)
+            print([connection for connection in new_state.connections
+                   if connection.__str__() == value.__str__()])
+            for connection in new_state.connections:
+                print(f"Connection: {connection}")
+                print(f"Value: {value}")
+            value_to_assign = next((connection for connection in new_state.routes[-1].route_connections
+                                    if connection.__str__() == value.__str__()), None)
+            print(f"Value to assign: {value_to_assign}")
+            new_state.routes[-1].add_connection(value_to_assign)
+            print(
+                f"New state, last route: {[connection.__str__() for connection in new_state.routes[-1].route_connections]}")
 
             if state.calculate_score() != new_state.calculate_score():
                 self.states.append(new_state)
@@ -48,9 +58,7 @@ class DepthFirst:
     def get_smallest_connection(self, state, route) -> int:
         # get all possible connections
         connections = route.get_end_station().get_connections()
-        print([connection for connection in connections])
         connections += route.get_start_station().get_connections()
-        print([connection for connection in connections])
 
         # code provided by ChatGPT
         def key_function(obj): return obj.distance
@@ -69,6 +77,7 @@ class DepthFirst:
             return route_to_return
         else:
             state.add_route(state.unused_connections[0])
+            return state.routes[-1]
 
     def run(self):
         while self.states:
