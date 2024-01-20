@@ -197,20 +197,20 @@ def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> No
     assert all(isinstance(coord, list) and len(coord) == 2 and all(isinstance(coord_value, float) for coord_value in coord)
                for coord in station_dict.values()), "Each value in station_dict must be a list of two floats."
 
-    colors = itertools.cycle(palette)
+    colors = ('#cc0000', '#cc0099', '#0033cc', '#009900', '#ffff00', '#00ffcc', '#ff99ff')
 
-    for route in state.routes:
+    for i, route in enumerate(state.routes):
         # create basis of GeoJSON-like structure
         route_data = {
             'type': 'FeatureCollection',
             'features': []
         }
-
+        
         for connection in route.route_connections:
             # get connection coordinates
             start_coords = station_dict[connection.station_1.name]
             end_coords = station_dict[connection.station_2.name]
-
+            
             # generate connection JSON object
             current_route = {
                 'type': 'Feature',
@@ -233,9 +233,10 @@ def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> No
 
         # plot connections
         p.multi_line(xs='xs', ys='ys', legend_label=f"{route.name}: {route.route_stations[0]} - {route.route_stations[len(route.route_stations)-1]}",
-                     line_width=3, line_color=next(colors),
+                     line_width=3, line_color=colors[i],
                      source=current_route_geo_source, name='Route')
-
+        
+        
     # display legend in top left corner (default is top right corner)
     p.add_layout(p.legend[0], "right")
 
