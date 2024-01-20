@@ -1,103 +1,25 @@
-# from ..classes.state import state
+from .algorithm import Algorithm
+from ..classes.state import State
+from ..classes.route import Route
+
 import random
 import copy
-from typing import Union
 
+# FIXME: random_algoritme_1 geeft 'solution is valid' als dat duidelijk niet zo is
+# FIXME: alg_3 loop tegen de volgende assert aan:
 
-class Algorithm():
-    def __init__(self, state: 'State') -> None:
-        self.state = state
-
-    def add_random_route(self) -> None:
-        """
-        adds a random 1-length route to the state
-
-        pre: 
-            self.state is a state object
-            self.state.connections contains connection objects
-
-        post:
-            added a 1-length route to self.state.routes
-        """
-        self.state.add_route(random.choice(self.state.connections))
-
-    def create_random_state(self, number_of_connections: int = 1) -> None:
-        """
-        randomly generates a state with random 1-length routes (default=1)
-
-        pre: 
-            number_of_connections is an integer
-
-        post:
-            self.state.routes contains specified number of 1-length routes
-        """
-        for new_connection in range(number_of_connections):
-            # pick random connection and create route
-            self.add_random_route()
-
-    def add_random_connection(self, route_index: int = 0, choice: Union[str, None] = None) -> str:
-        """
-        # TODO: doc-string
-        """
-
-        # determine choice if not prematurely done
-        if choice == None:
-            choice = random.choice(['start', 'end'])
-
-        if choice == 'start':
-            new_connection = random.choice(
-                self.state.routes[route_index].get_start_station().get_connections())
-
-        elif choice == 'end':
-            new_connection = random.choice(
-                self.state.routes[route_index].get_end_station().get_connections())
-
-        self.state.routes[route_index].add_connection(new_connection)
-
-        return choice
-
-    def delete_random_connection(self, route_index: int = 0, choice: Union[str, None] = None) -> str:
-        """
-        # TODO: doc-string
-        """
-        # determine choice if not prematurely done
-        if choice == None:
-            choice = random.choice(['start', 'end'])
-
-        if choice == 'start':
-            random.choice(self.state.routes).delete_connection_start()
-
-        elif choice == 'end':
-            random.choice(self.state.routes).delete_connection_end
-
-        return choice
-
-    def delete_random_route(self) -> None:
-        route = random.choice(self.state.routes)
-
-        self.state.delete_route(route)
-
-    def return_score(self) -> tuple[float, str]:
-        """
-        # TODO: doc-string
-        """
-        # save return variables
-        score = self.state.calculate_score()
-        description = self.state.show()
-
-        return score, description
-
-    def load_state(self, new_state: object) -> None:
-        """
-        # TODO: doc-string
-        """
-        self.state = new_state
-
-    def read_sleeper_string(self, sleeper_string: str) -> None:
-        """
-        # TODO: doc-string
-        """
-        self.awaken_state(sleeper_string)
+"""
+Traceback (most recent call last):
+  File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/test.py", line 14, in <module>
+    baseline_alg.baseline_algorithm_3()
+  File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/code/algorithms/baseline_algorithm.py", line 115, in baseline_algorithm_3    
+    self.delete_random_connection(self.current_route_index, choice)
+  File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/code/algorithms/algorithm.py", line 95, in delete_random_connection
+    random.choice(self.state.routes).delete_connection_start()
+  File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/code/classes/route.py", line 182, in delete_connection_start
+    assert self.route_stations[0].has_connection(self.route_connections[0]), \
+AssertionError: the first station in stations list has not the first connection in the connections list
+"""
 
 
 class Baseline_Algorithm(Algorithm):
@@ -133,6 +55,7 @@ class Baseline_Algorithm(Algorithm):
         self.return_score()
 
     def baseline_algorithm_2(self):
+        # FIXME: runs indefinitely, doesn't seem to know when to stop
         """
         makes unlimited routes with a limited timeframe until all are connections used
 
@@ -152,7 +75,7 @@ class Baseline_Algorithm(Algorithm):
 
         # do loop until there is a valid solution (while max routes can be exceeded)
         while not self.state.is_valid_solution():
-
+            print(self.state.show())
             # pick random connection and create route
             self.add_random_route()
 
@@ -166,8 +89,8 @@ class Baseline_Algorithm(Algorithm):
                 choice = self.add_random_connection(self.current_route_index)
 
             # remove last-added connection
-            self.state.routes[self.current_route_index].delete_random_connection(
-                choice)
+            self.delete_random_connection(self.current_route_index, choice)
+            # self.state.routes[self.current_route_index].delete_random_connection(choice)
             self.current_route_index += 1
 
         self.return_score()
@@ -203,8 +126,7 @@ class Baseline_Algorithm(Algorithm):
                 choice = self.add_random_connection(self.current_route_index)
 
             # remove last-added connection
-            self.state.routes[self.current_route_index].delete_random_connection(
-                choice)
+            self.delete_random_connection(self.current_route_index, choice)
 
             # set index to 1 higher
             self.current_route_index += 1

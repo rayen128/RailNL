@@ -1,7 +1,7 @@
 import csv
 
 from sys import argv, path
-from code.algorithms.random_algorithm import *
+from code.algorithms.baseline_algorithm import *
 
 path.append("code/classes")
 from state import State
