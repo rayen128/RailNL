@@ -21,6 +21,7 @@ class Route():
         self.name: str = name
         self.route_stations: list['Station'] = [
             connection.station_1, connection.station_2]
+        connection.used += 1
         self.route_connections: list['Connection'] = [connection]
         self.total_time: float = 0
 
