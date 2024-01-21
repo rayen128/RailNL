@@ -165,6 +165,7 @@ class State():
             return False
 
     def delete_route(self, route: 'Route'):
+        #TODO: de connecties uit deze route ook verwijderen uit used connections en 1 aftrekken bij connection.used
         """
         Deletes given route
 
@@ -179,6 +180,7 @@ class State():
         """
         if route in self.routes:
             self.routes.remove(route)
+            self._update_number_routes()
             return True
         else:
             return False
