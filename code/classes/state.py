@@ -33,7 +33,7 @@ class State():
         self.time_frame: Union(int, None) = time_frame
 
         # add parameters for quality score function
-        self.quality: float = 0.0
+        self.score: float = 0.0
         self.fraction_used_connections: float = 0.0
         self.number_routes: int = 0
         self.total_minutes: int = 0
@@ -347,9 +347,9 @@ class State():
         self._update_fraction_used_connections()
         self._update_total_minutes()
 
-        self.quality = self.fraction_used_connections * 10000 - \
+        self.score = self.fraction_used_connections * 10000 - \
             (self.number_routes * 100 + self.total_minutes)
-        return self.quality
+        return self.score
 
     def write_output(self, file_path: str):
         """
@@ -493,7 +493,7 @@ class State():
         sleeper_string: str = ""
 
         # add quality score and parameters
-        sleeper_string += f"{self.quality}\t{self.fraction_used_connections}\t{self.number_routes}\t{self.total_minutes}\t"
+        sleeper_string += f"{self.score}\t{self.fraction_used_connections}\t{self.number_routes}\t{self.total_minutes}\t"
 
         # add constraint relaxation values
         sleeper_string += f"{self.relaxed_all_connections};{self.relaxed_time_frame};{self.relaxed_max_routes}\t"
@@ -536,7 +536,7 @@ class State():
         sleeper_data = sleeper_string.split("\t")
 
         # add quality score and quality score parameters
-        self.quality = float(sleeper_data[0])
+        self.score = float(sleeper_data[0])
         self.fraction_used_connections = float(sleeper_data[1])
         self.number_routes = int(sleeper_data[2])
         self.total_minutes = float(sleeper_data[3])
@@ -616,7 +616,7 @@ class State():
         self.relaxed_time_frame = False
 
         # reset score and score parameters
-        self.quality = 0.0
+        self.score = 0.0
         self.fraction_used_connections = 0.0
         self.number_routes = 0
         self.total_minutes = 0
