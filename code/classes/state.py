@@ -213,6 +213,8 @@ class State():
             adds connection to unused connections list (if not in any route)  
         """
         if connection in self.used_connections:
+
+            # check if connection is not in any route
             if not any(route for route in self.routes if connection in route.route_connections):
                 self.used_connections.remove(connection)
                 self.unused_connections.append(connection)
