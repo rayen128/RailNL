@@ -14,6 +14,7 @@ class Hill_climber(Algorithm):
         if self.valid_start_state:
             self.create_valid_state()
         else:
+            self.create_random_state()
             
     def create_valid_state(self):
         route_counter = 0
@@ -38,7 +39,6 @@ class Hill_climber(Algorithm):
             while not self.state.routes[route_counter].is_valid_time(self.state.time_frame):
                 self.state.delete_end_connection_from_route(self.state.routes[route_counter])
 
-            print(self.state.show())
             route_counter += 1
 
 if __name__ == "__main__":
@@ -50,6 +50,15 @@ if __name__ == "__main__":
     hillclimber = Hill_climber(state, True)
     
     print(hillclimber.state.show())
+    for connection in hillclimber.state.connections:
+        if not connection.used > 0:
+            print('fout!')
+
+    if hillclimber.state.used_connections.sort() == hillclimber.state.connections.sort():
+        print('valide')
+
+        
+    
 
 
 
