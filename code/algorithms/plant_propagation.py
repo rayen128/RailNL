@@ -9,6 +9,7 @@ class Plant_Propagation(Hill_climber):
         super().__init__(state, valid_states)
         self.population_size = population_size
         self.population: list[object] = []
+        self.scores: list[float] = []
 
         self.current_generation: int = 1
         self.max_generations = max_generations
@@ -18,19 +19,25 @@ class Plant_Propagation(Hill_climber):
         set the initial population by running a certain amount of hill-climber algorithms  
         """
         for _ in range(self.population_size):
-            self.create_valid_state()
-            self.population.append(copy.deepcopy(self.state))
             self.state.reset()
+            self.create_valid_state()
+            self.state.calculate_score()
+            self.scores.append(self.state.calculate_score())
+            self.population.append(copy.deepcopy(self.state))
 
     def fitness_function(self) -> list[float]:
         """
         calulate and return the fitness (='score') of the whole population  
         """
+        # TODO: Normalize fitness_function (vraag aan TAs wat hier het handigst is)
+
+        max_score = max(self.scores)
+        min_score = min(self.scores)
+
         fitness_values = []
 
         for i in range(len(self.population)):
-            fitness_values.append(self.population[i].calculate_score())
-            print(fitness_values[i])
+            fitness_values.append(self.population[i].score)
 
         return fitness_values
 
@@ -47,6 +54,12 @@ class Plant_Propagation(Hill_climber):
             converted_values.append(converted_value)
         return converted_values
 
+    def get_best_from_population(self):
+        # calc scores
+        # sort on scores
+        # get the best 'population_size'
+        pass
+
     def likeness(self, state_1, state_2):
         pass
 
@@ -55,8 +68,8 @@ class Plant_Propagation(Hill_climber):
 
     def run(self):
         self.initial_population()
-        print(self.calculate_converted_fitness())
 
+        print(self.scores)
 # Exploration vs. Exploitation
 
 
