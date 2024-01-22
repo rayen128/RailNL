@@ -1,8 +1,8 @@
-from algorithm import Algorithm
+from .algorithm import Algorithm
 import random
 
 class Hill_climber(Algorithm):
-    def __init__(self, state: object, valid_start_state: bool):
+    def __init__(self, state: object, valid_start_state: bool = True):
         super().__init__(state)
         self.start_state = self.create_valid_state()
         self.valid_start_state = valid_start_state
