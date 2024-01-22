@@ -1,6 +1,7 @@
 from .algorithm import Algorithm
 import random
 
+
 class Hill_climber(Algorithm):
     def __init__(self, state: object, valid_start_state: bool = True):
         super().__init__(state)
@@ -15,14 +16,15 @@ class Hill_climber(Algorithm):
             self.create_valid_state()
         else:
             self.create_random_state()
-            
+
     def create_valid_state(self):
         route_counter = 0
         while not self.state.is_valid_solution():
             if self.state.number_routes < self.state.max_number_routes:
                 self.add_random_route()
             else:
-                random_number = random.randint(0, (self.state.max_number_routes -1))
+                random_number = random.randint(
+                    0, (self.state.max_number_routes - 1))
                 self.state.delete_route(self.state.routes[random_number])
                 self.add_random_route()
                 route_counter -= 1
@@ -31,24 +33,27 @@ class Hill_climber(Algorithm):
                 for connection in self.state.unused_connections:
                     if self.state.add_connection_to_route(self.state.routes[route_counter], connection):
                         connection_added = True
-                        break  
-                if not connection_added: 
+                        break
+                if not connection_added:
                     for connection in self.state.connections:
                         if self.state.add_connection_to_route(self.state.routes[route_counter], connection):
                             break
             while not self.state.routes[route_counter].is_valid_time(self.state.time_frame):
-                self.state.delete_end_connection_from_route(self.state.routes[route_counter])
+                self.state.delete_end_connection_from_route(
+                    self.state.routes[route_counter])
 
             route_counter += 1
+
 
 if __name__ == "__main__":
     from sys import argv, path
     path.append("../classes")
     from state import State
 
-    state = State('../../data/stations_holland.csv', '../../data/routes_holland.csv', 7, 120)
+    state = State('../../data/stations_holland.csv',
+                  '../../data/routes_holland.csv', 7, 120)
     hillclimber = Hill_climber(state, True)
-    
+
     print(hillclimber.state.show())
     for connection in hillclimber.state.connections:
         if not connection.used > 0:
@@ -56,12 +61,3 @@ if __name__ == "__main__":
 
     if hillclimber.state.used_connections.sort() == hillclimber.state.connections.sort():
         print('valide')
-
-        
-    
-
-
-
-
-
-    

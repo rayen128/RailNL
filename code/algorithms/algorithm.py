@@ -1,6 +1,6 @@
 from sys import argv, path
 path.append("../classes")
-from state import State
+from .state import State
 
 import random
 import copy
