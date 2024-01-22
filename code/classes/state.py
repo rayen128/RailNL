@@ -621,6 +621,12 @@ class State():
         self.number_routes = 0
         self.total_minutes = 0
 
+        # reset connection usage
+        self.used_connections = []
+        self.unused_connections = copy.copy(self.connections)
+        for connection in self.connections:
+            connection.used = 0
+
 
 if __name__ == "__main__":
     state = State("../../data/stations_holland.csv",
