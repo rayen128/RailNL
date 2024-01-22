@@ -16,6 +16,9 @@ class Hill_climber(Algorithm):
             self.create_random_state()
             
     def create_valid_state(self):
+        assert not self.state.routes, "there are already routes in this state"
+        assert not self.state.used_connections, "there are used connections"
+        
         route_counter = 0
         while not self.state.is_valid_solution():
             if self.state.number_routes < self.state.max_number_routes:
@@ -39,6 +42,7 @@ class Hill_climber(Algorithm):
                 self.state.delete_end_connection_from_route(self.state.routes[route_counter])
 
             route_counter += 1
+
 
 if __name__ == "__main__":
     from sys import argv, path
