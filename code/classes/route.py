@@ -155,15 +155,17 @@ class Route():
             deletes last station from slef.route_stations
             substracts deleted connections distance from self.total_time
         """
-        assert len(self.route_connections) >= 1, "not enough connections in list"
-        assert len(self.route_stations) >= 2, "not enough stations in list"
+        
         assert self.route_stations[-1].has_connection(self.route_connections[-1]), \
             "the last station in stations list has not the last connection in the connections list"
 
-        connection = self.route_connections.pop()
-        self.route_stations.pop()
-        self.total_time -= connection.distance
-        connection.used -= 1
+        if len(self.route_connections) > 1:
+            connection = self.route_connections.pop()
+            self.route_stations.pop()
+            self.total_time -= connection.distance
+            connection.used -= 1
+            return True
+        return False
 
     def delete_connection_start(self: 'Route') -> None:
         """
@@ -178,15 +180,16 @@ class Route():
             deletes first station from slef.route_stations
             substracts deleted connections distance from self.total_time
         """
-        assert len(self.route_connections) >= 1, "not enough connections in list"
-        assert len(self.route_stations) >= 2, "not enough stations in list"
         assert self.route_stations[0].has_connection(self.route_connections[0]), \
             "the first station in stations list has not the first connection in the connections list"
-
-        connection = self.route_connections.pop(0)
-        self.route_connections.pop(0)
-        self.total_time -= connection.distance
-        connection.used -= 1
+        
+        if len(self.route_connections) > 1:
+            connection = self.route_connections.pop(0)
+            self.route_stations.pop(0)
+            self.total_time -= connection.distance
+            connection.used -= 1
+            return True
+        return False
 
     def is_station_in_route(self: 'Route', station: 'Station') -> bool:
         """
