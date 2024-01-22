@@ -160,6 +160,8 @@ class State():
             # update number of routes
             self.number_routes += 1
 
+            self.set_used(connection)
+
             return True
         else:
             return False
