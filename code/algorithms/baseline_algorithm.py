@@ -5,9 +5,7 @@ from ..classes.route import Route
 import random
 import copy
 
-# FIXME: random_algoritme_1 geeft 'solution is valid' als dat duidelijk niet zo is
 # FIXME: alg_3 loop tegen de volgende assert aan:
-
 """
 Traceback (most recent call last):
   File "/mnt/c/Users/Rayen Oaf/Documents/Programming/Algoritmes & Heuristieken/AHRailNL/test.py", line 14, in <module>
