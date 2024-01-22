@@ -2,11 +2,19 @@ from algorithm import Algorithm
 import random
 
 class Hill_climber(Algorithm):
-    def __init__(self, state: object, valid_states: bool):
+    def __init__(self, state: object, valid_start_state: bool):
         super().__init__(state)
         self.start_state = self.create_valid_state()
+        self.valid_start_state = valid_start_state
         self.state_list = []
 
+        self.create_state()
+
+    def create_state(self):
+        if self.valid_start_state:
+            self.create_valid_state()
+        else:
+            
     def create_valid_state(self):
         route_counter = 0
         while not self.state.is_valid_solution():
@@ -19,18 +27,19 @@ class Hill_climber(Algorithm):
                 route_counter -= 1
             while self.state.routes[route_counter].is_valid_time(self.state.time_frame):
                 connection_added = False
-                for connection in self.state.connections:
-                    if connection.used == 0:
-                        connection_added = state.routes[route_counter].add_connection(connection)
+                for connection in self.state.unused_connections:
+                    if self.state.add_connection_to_route(self.state.routes[route_counter], connection):
+                        connection_added = True
+                        break  
                 if not connection_added: 
                     for connection in self.state.connections:
-                        if state.routes[route_counter].add_connection(connection):
+                        if self.state.add_connection_to_route(self.state.routes[route_counter], connection):
                             break
             while not self.state.routes[route_counter].is_valid_time(self.state.time_frame):
-                self.state.routes[route_counter].delete_connection_end()
+                self.state.delete_end_connection_from_route(self.state.routes[route_counter])
 
-            route_counter += 1
             print(self.state.show())
+            route_counter += 1
 
 if __name__ == "__main__":
     from sys import argv, path
@@ -40,7 +49,7 @@ if __name__ == "__main__":
     state = State('../../data/stations_holland.csv', '../../data/routes_holland.csv', 7, 120)
     hillclimber = Hill_climber(state, True)
     
-    print(hillclimber.start_state.show())
+    print(hillclimber.state.show())
 
 
 

@@ -1,10 +1,10 @@
 from sys import argv, path
+path.append("../classes")
+from state import State
 
 import random
 import copy
 from typing import Union
-
-from ..classes.state import State
 
 
 class Algorithm():
