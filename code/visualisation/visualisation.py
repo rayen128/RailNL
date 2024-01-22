@@ -197,7 +197,8 @@ def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> No
     assert all(isinstance(coord, list) and len(coord) == 2 and all(isinstance(coord_value, float) for coord_value in coord)
                for coord in station_dict.values()), "Each value in station_dict must be a list of two floats."
 
-    colors = ('#cc0000', '#cc0099', '#0033cc', '#009900', '#ffff00', '#00ffcc', '#ff99ff')
+    colors = ('#cc0000', '#cc0099', '#0033cc',
+              '#009900', '#ffff00', '#00ffcc', '#ff99ff')
 
     for i, route in enumerate(state.routes):
         # create basis of GeoJSON-like structure
@@ -205,12 +206,12 @@ def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> No
             'type': 'FeatureCollection',
             'features': []
         }
-        
+
         for connection in route.route_connections:
             # get connection coordinates
             start_coords = station_dict[connection.station_1.name]
             end_coords = station_dict[connection.station_2.name]
-            
+
             # generate connection JSON object
             current_route = {
                 'type': 'Feature',
@@ -233,10 +234,9 @@ def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> No
 
         # plot connections
         p.multi_line(xs='xs', ys='ys', legend_label=f"{route.name}: {route.route_stations[0]} - {route.route_stations[len(route.route_stations)-1]}",
-                     line_width=3, line_color=colors[i%7],
+                     line_width=3, line_color=colors[i % 7],
                      source=current_route_geo_source, name='Route')
-        
-        
+
     # display legend in top left corner (default is top right corner)
     p.add_layout(p.legend[0], "right")
 
@@ -336,8 +336,8 @@ if __name__ == "__main__":
         state = State('../../data/stations_netherlands.csv',
                       '../../data/routes_netherlands.csv', 20, 180)
 
-    #state.add_route(state.connections[0])   
-    #state.add_route(state.connections[1]) 
+    # state.add_route(state.connections[0])
+    # state.add_route(state.connections[1])
     state.awaken_state('8438.0	1.0	7	862.0	False;False;True	train_1:Rotterdam Alexander>Gouda>Alphen a/d Rijn>Leiden Centraal>Schiphol Airport>Amsterdam Zuid>Amsterdam Sloterdijk>Zaandam>Amsterdam Sloterdijk>Amsterdam Centraal>Amsterdam Amstel>Amsterdam Centraal>Amsterdam Sloterdijk;train_2:Amsterdam Zuid>Schiphol Airport>Leiden Centraal>Den Haag Centraal>Gouda>Rotterdam Alexander>Gouda>Rotterdam Alexander>Rotterdam Centraal>Schiedam Centrum>Delft>Den Haag Centraal;train_3:Alkmaar>Hoorn>Zaandam>Beverwijk>Castricum>Alkmaar>Castricum>Zaandam>Castricum>Alkmaar;train_4:Delft>Den Haag Centraal>Leiden Centraal>Heemstede-Aerdenhout>Haarlem>Amsterdam Sloterdijk>Zaandam>Hoorn>Zaandam>Amsterdam Sloterdijk>Amsterdam Centraal;train_5:Amsterdam Zuid>Amsterdam Sloterdijk>Amsterdam Zuid>Schiphol Airport>Leiden Centraal>Heemstede-Aerdenhout>Haarlem>Amsterdam Sloterdijk>Amsterdam Zuid>Amsterdam Amstel>Amsterdam Zuid>Amsterdam Sloterdijk;train_6:Den Haag Centraal>Leiden Centraal>Alphen a/d Rijn>Leiden Centraal>Heemstede-Aerdenhout>Leiden Centraal>Den Haag Centraal>Delft>Schiedam Centrum>Rotterdam Centraal>Dordrecht;train_7:Amsterdam Sloterdijk>Haarlem>Beverwijk>Zaandam>Castricum>Alkmaar>Den Helder')
 
     # save coordinates and names
