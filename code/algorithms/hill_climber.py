@@ -4,7 +4,6 @@ import random
 class Hill_climber(Algorithm):
     def __init__(self, state: object, valid_start_state: bool = True):
         super().__init__(state)
-        self.start_state = self.create_valid_state()
         self.valid_start_state = valid_start_state
         self.state_list = []
 
@@ -50,12 +49,7 @@ if __name__ == "__main__":
     hillclimber = Hill_climber(state, True)
     
     print(hillclimber.state.show())
-    for connection in hillclimber.state.connections:
-        if not connection.used > 0:
-            print('fout!')
 
-    if hillclimber.state.used_connections.sort() == hillclimber.state.connections.sort():
-        print('valide')
 
         
     
