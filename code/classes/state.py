@@ -165,7 +165,6 @@ class State():
             return False
 
     def delete_route(self, route: 'Route'):
-        #TODO: de connecties uit deze route ook verwijderen uit used connections en 1 aftrekken bij connection.used
         """
         Deletes given route
 
@@ -179,13 +178,21 @@ class State():
             True if operation was succesful    
         """
         if route in self.routes:
+            connections = copy.copy(route.route_connections)
+
             self.routes.remove(route)
+
+            # update connection usage variables
+            for connection in connections:
+                connection.used -= 1
+                self.set_unused(connection)
+
             self._update_number_routes()
             return True
         else:
             return False
 
-    def set_used(self, connection: 'Connection'):
+    def set_used(self, connection: 'Connection') -> None:
         """
         Moves connection from unused to used connections
 
@@ -196,6 +203,19 @@ class State():
         if connection in self.unused_connections:
             self.unused_connections.remove(connection)
             self.used_connections.append(connection)
+
+    def set_unused(self, connection: 'Connection') -> None:
+        """
+        Moves connection from used to unused connections
+
+        post:
+            removes connection from used connections list (if not in any route)
+            adds connection to unused connections list (if not in any route)  
+        """
+        if connection in self.used_connections:
+            if not any(route for route in self.routes if connection in route.route_connections):
+                self.used_connections.remove(connection)
+                self.unused_connections.append(connection)
 
     def add_connection_to_route(self, route: 'Route', connection: 'Connection') -> bool:
         """
