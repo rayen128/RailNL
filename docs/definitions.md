@@ -8,7 +8,7 @@ This is small document with an overview of all the definitions, words, etc. we u
 
 **Route** (of traject/lijn) = combination of connections representing the route a train would ride
 
-**Timetable**= the collection of all the different routes
+**Timetable** (of 'lijnvoering')= the collection of all the different routes
 
 **Map**= the representation and collection of all stations and connections.
 
