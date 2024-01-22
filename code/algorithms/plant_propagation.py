@@ -1,5 +1,6 @@
 from hill_climber import Hill_climber
 from math import tanh
+import copy
 
 
 class Plant_Propagation(Hill_climber):
@@ -17,9 +18,9 @@ class Plant_Propagation(Hill_climber):
         set the initial population by running a certain amount of hill-climber algorithms  
         """
         for _ in range(self.population_size):
-            alg = Hill_climber(self.state)
-            solved_state = alg.run()
-            self.population.append(solved_state)
+            self.create_valid_state()
+            self.population.append(copy.deepcopy(self.state))
+            self.state.reset()
 
     def fitness_function(self) -> list[float]:
         """
@@ -28,7 +29,8 @@ class Plant_Propagation(Hill_climber):
         fitness_values = []
 
         for i in range(len(self.population)):
-            fitness_values[i] = self.population[i].score()
+            fitness_values.append(self.population[i].calculate_score())
+            print(fitness_values[i])
 
         return fitness_values
 
@@ -43,7 +45,6 @@ class Plant_Propagation(Hill_climber):
             value = fitness_values[i]
             converted_value = (tanh(4 * value - 2) + 1) * 0.5
             converted_values.append(converted_value)
-
         return converted_values
 
     def likeness(self, state_1, state_2):
@@ -54,7 +55,7 @@ class Plant_Propagation(Hill_climber):
 
     def run(self):
         self.initial_population()
-        print(self.self.calculate_converted_fitness())
+        print(self.calculate_converted_fitness())
 
 # Exploration vs. Exploitation
 
