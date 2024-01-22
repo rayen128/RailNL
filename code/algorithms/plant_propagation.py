@@ -1,4 +1,4 @@
-from .hill_climber import Hill_climber
+from hill_climber import Hill_climber
 from math import tanh
 
 

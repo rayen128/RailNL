@@ -1,6 +1,6 @@
 from sys import argv, path
 path.append("../classes")
-from .state import State
+from state import State
 
 import random
 import copy
@@ -82,8 +82,7 @@ class Algorithm():
             new_connection = random.choice(
                 self.state.routes[route_index].get_end_station().get_connections())
 
-        self.state.add_connection_to_route(
-            self.state.routes[route_index], new_connection)
+        self.state.routes[route_index].add_connection(new_connection)
 
         return choice
 
@@ -96,12 +95,10 @@ class Algorithm():
             choice = random.choice(['start', 'end'])
 
         if choice == 'start':
-            self.state.delete_start_connection_from_route(
-                random.choice(self.state.routes))
+            random.choice(self.state.routes).delete_connection_start()
 
         elif choice == 'end':
-            self.state.delete_end_connection_from_route(
-                random.choice(self.state.routes))
+            random.choice(self.state.routes).delete_connection_end
 
         return choice
 
