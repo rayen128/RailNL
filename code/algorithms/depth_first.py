@@ -61,6 +61,7 @@ class DepthFirst:
         connections += route.get_start_station().get_connections()
 
         # code provided by ChatGPT
+        # TODO: omschrijven
         def key_function(obj): return obj.distance
 
         # Use the min function with the key function to find the connection with the lowest distance value

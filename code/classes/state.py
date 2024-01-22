@@ -363,17 +363,11 @@ class State():
         returns:
             True if all connections are used     
         """
-        all_connections_used = True
-        for connection in self.connections:
-            connection_used = False
-            for route in self.routes:
-                if route.is_connection_in_route(connection):
-                    connection_used = True
-            if not connection_used:
-                all_connections_used = False
-        return all_connections_used
+        if len(self.unused_connections) == 0:
+            return True
+        return False
 
-    def is_valid_solution(self) -> dict:
+    def is_valid_solution(self) -> bool:
         """
         Gives information about satisfaction of all constraints
 
