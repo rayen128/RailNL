@@ -161,6 +161,7 @@ class State():
             self.number_routes += 1
 
             self.set_used(connection)
+            connection.used += 1
 
             return True
         else:
