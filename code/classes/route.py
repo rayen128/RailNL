@@ -23,7 +23,7 @@ class Route():
             connection.station_1, connection.station_2]
         connection.used += 1
         self.route_connections: list['Connection'] = [connection]
-        self.total_time: float = 0
+        self.total_time: float = connection.distance
 
     def __str__(self):
         return f"Route with name {self.name}"
@@ -155,7 +155,7 @@ class Route():
             deletes last station from slef.route_stations
             substracts deleted connections distance from self.total_time
         """
-        
+
         assert self.route_stations[-1].has_connection(self.route_connections[-1]), \
             "the last station in stations list has not the last connection in the connections list"
 
