@@ -159,7 +159,7 @@ def random_algorithm_1(state: 'State') -> tuple[float, 'Route', str]:
         new_connection = random.choice(
             state.routes[0].get_end_station().get_connections())
 
-        state.routes[0].add_connection(new_connection)
+        state.add_connection_to_route(state.routes[0], new_connection)
 
     # save return variables
     score = state.calculate_score()
@@ -203,9 +203,11 @@ def random_algorithm_2(state: 'State') -> tuple[float, 'Route', str]:
             new_connection = random.choice(
                 state.routes[current_route_index].get_end_station().get_connections())
 
-            state.routes[current_route_index].add_connection(new_connection)
+            state.add_connection_to_route(
+                state.routes[current_route_index], new_connection)
 
-        state.routes[current_route_index].delete_connection_end()
+        state.delete_end_connection_from_route(
+            state.routes[current_route_index])
         current_route_index += 1
 
     # save return variables
@@ -250,9 +252,11 @@ def random_algorithm_3(state: 'State') -> tuple[float, 'Route', str]:
             new_connection = random.choice(
                 state.routes[current_route_index].get_end_station().get_connections())
 
-            state.routes[current_route_index].add_connection(new_connection)
+            state.add_connection_to_route(
+                state.routes[current_route_index], new_connection)
 
-        state.routes[current_route_index].delete_connection_end()
+        state.delete_end_connection_from_route(
+            state.routes[current_route_index])
         current_route_index += 1
 
     # save return variables
@@ -277,7 +281,7 @@ def random_algorithm_4(state: 'State') -> tuple[float, 'Route', str]:
             shuffled_routes = []
         connection_added = False
         for route in shuffled_routes:
-            if route.add_connection(random_connection):
+            if state.add_connection_to_route(route, random_connection):
                 connection_added = True
                 break
         if not connection_added:

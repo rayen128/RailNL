@@ -236,6 +236,50 @@ class State():
         """
         if route.add_connection(connection):
             self.set_used(connection)
+            connection.used += 1
+            return True
+        return False
+
+    def delete_end_connection_from_route(self, route: 'Route') -> bool:
+        """
+        deletes last connection of given route
+
+        pre: 
+            route is in routes list
+
+        post:
+            deletes end connection of given route
+            updates usage of deleted connection
+
+        returns:
+            boolean indicating successfulness of operation      
+        """
+        connection = route.route_connections[-1]
+        if route.delete_connection_end():
+            self.set_unused(connection)
+            connection.used -= 1
+            return True
+        return False
+
+    def delete_start_connection_from_route(self, route: 'Route') -> bool:
+        """
+        deletes first connection of given route
+
+        pre: 
+            route is in routes list
+
+        post:
+            deletes start connection of given route
+            updates usage of deleted connection
+
+        returns:
+            boolean indicating successfulness of operation      
+        """
+        assert route in self.routes, "Route not in routes list of current state"
+        connection = route.route_connections[-1]
+        if route.delete_connection_start():
+            self.set_unused(connection)
+            connection.used -= 1
             return True
         return False
 
