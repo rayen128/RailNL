@@ -1,14 +1,12 @@
-from sys import argv, path
+from sys import path
 path.append("../classes")
 from state import State
+from station import Station
+from connection import Connection
 
 import random
 import copy
 from typing import Union
-
-from ..classes.state import State
-from ..classes.station import Station
-from ..classes.connection import Connection
 
 
 class Algorithm():
