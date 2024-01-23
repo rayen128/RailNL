@@ -12,12 +12,13 @@ from typing import Union
 
 
 class Algorithm():
-    def __init__(self, state: 'State', max_connection_returns: int = 0, heuristic_number_connections: bool = False) -> None:
+    def __init__(self, state: 'State', max_connection_returns: int = 0, heuristic_number_connections: bool = False, heuristic_route_maximalisation: bool = False) -> None:
         self.state = state
 
         self.max_connection_returns = max_connection_returns
 
         self.heuristic_number_connections = heuristic_number_connections
+        self.heuristic_route_maximalisation = heuristic_route_maximalisation
 
     def __str__(self):
         return "Algorithm object"
@@ -59,6 +60,9 @@ class Algorithm():
 
         if self.heuristic_number_connections:
             total_b_m += self.get_points_multiple_use_connections(state)
+
+        if self.heuristic_route_maximalisation:
+            total_b_m += self.minus_points_routes_maximalisation(state)
 
         return total_b_m
 
@@ -266,7 +270,7 @@ class Algorithm():
             if self.max_connection_returns and self.connection_used_before_end(connection, route) >= self.max_connection_returns:
                 return connection
 
-    #### MINUS POINTS MULTIPLE USE CONNECTION ####
+    #### MINUS POINTS MULTIPLE USE CONNECTION HEURISTIC ####
     def _get_points_multiple_use_connection(self, connection: 'Connection'):
         minus_points: int = 0
         for i in range(1, connection.used):
@@ -293,3 +297,41 @@ class Algorithm():
         for connection in state.connections:
             minus_points -= self._get_points_multiple_use_connection(
                 connection)
+        return minus_points
+
+    #### ROUTE MAXIMALISATION HEURISTIC ####
+    def _minus_points_route_maximalisation(self, route: 'Route', timeframe: int) -> int:
+        """
+        gives minus points if the route is not maximalised
+
+        pre:
+            route is a Route object
+
+        returns:
+            negative integer, indicating minus points
+
+        """
+        assert isinstance(
+            Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
+        return timeframe - route.total_time
+
+    def minus_points_routes_maximalisation(self, state: 'State'):
+        """
+        gives minus points of route maximalisation heuristic
+
+        pre:
+            state is a State object
+
+        returns:
+            negative integer, indicating minus points
+        """
+        assert isinstance(
+            State, state), f"state should be a State object, is a {type(state)} (value: {state})"
+        if not self.heuristic_route_maximalisation:
+            return 0
+
+        minus_points = 0
+        for route in state.routes:
+            minus_points += self._minus_points_route_maximalisation(
+                route, state.time_frame)
+        return minus_points
