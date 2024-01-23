@@ -39,3 +39,4 @@ We hebben al een Algorithm class geïmplenteerd. Alle andere algoritmes zullen d
 4. [Eerste heuristiek toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/0318f84955a1294a19bffef322dfca98752b4d5a)
 5. [Heuristieken voor herhaling van connectiegebruik toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/f3916db25bb6a020c09e6c56ba7b2cda7c97c61d)
 6. [Heuristiek voor routemaximalisatie toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/f1efcbbb67bf8d772dc4dabe648e02afe19e5cd3)
+7. [Heuristiek voor moeilijke connecties toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/8c5b5a4b275cf843fa5274cff5b2fe301f663284)
