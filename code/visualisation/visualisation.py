@@ -242,7 +242,9 @@ def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> No
 
     # add a title to your legend
     p.legend.title = "Routes"
+    p.legend.click_policy="hide"
 
+#enige wat we nu niet kunnen zien als er (in dezelfde route) heen en weer wordt gereden, willen we dat (of gaan we dan net iets te blij)
 
 def plot_map(p: figure, map: str) -> None:
     """
