@@ -18,7 +18,7 @@ class Hill_climber(Algorithm):
     def create_valid_state(self):
         assert not self.state.routes, "there are already routes in this state"
         assert not self.state.used_connections, "there are used connections"
-        
+
         route_counter = 0
         while not self.state.is_valid_solution():
             if self.state.number_routes < self.state.max_number_routes:
@@ -42,6 +42,7 @@ class Hill_climber(Algorithm):
                 self.state.delete_end_connection_from_route(self.state.routes[route_counter])
 
             route_counter += 1
+    
 
 
 if __name__ == "__main__":
@@ -51,6 +52,7 @@ if __name__ == "__main__":
 
     state = State('../../data/stations_holland.csv', '../../data/routes_holland.csv', 7, 120)
     hillclimber = Hill_climber(state, True)
+    hillclimber.state.write_output("../../docs/output.csv")
     
     print(hillclimber.state.show())
 
