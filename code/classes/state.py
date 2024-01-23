@@ -47,7 +47,8 @@ class State():
         self.route_id_tracker: int = 1
 
         self.used_connections: list = []
-        self.unused_connections: list = copy.copy(self.connections)
+        self.unused_connections: list = [
+            connection for connection in self.connections]
 
     def __str__(self):
         """
@@ -509,6 +510,24 @@ class State():
                 sleeper_string += ";"
 
         return sleeper_string
+
+    def get_standardized_sleeper_string(self) -> str:
+        """
+        gives a standardized sleeper string for archiving
+
+        returns:
+            string with all routes, sorted alphabetically
+        """
+        sleeper_list = []
+
+        for route in self.routes:
+            sleeper_route = "|"
+            for station in route.route_stations:
+                print(type(station))
+                sleeper_route += station.name
+            sleeper_list.append(sleeper_route)
+        sleeper_list.sort()
+        return str(sleeper_list)
 
     def awaken_state(self, sleeper_string: str):
         """
