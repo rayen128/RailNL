@@ -36,10 +36,16 @@ Lieke | Rayen | Gert
 
 ---
 
-### Random algoritmen/baseline
+### Baseline
 
 - 3 random algoritmes
 -Histogram erbij poepen-
+
+---
+
+### Grafiekjes
+
+
 ---
 
 ### Heuristieken
