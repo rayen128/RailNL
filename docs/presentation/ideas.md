@@ -46,3 +46,14 @@
 ## Conclusie
 
 ## Future work
+
+
+# Script
+- **Introductie, uitleg case:** Lieke
+- **Introductie probleem, uitdaging:** Gert
+- **Methoden:**
+    - **Baseline:** Rayen
+    - **Heuristieken:** Gert
+    - **Random:** Lieke
+    - **Hill Climber:** Lieke
+    - **Plant propagation:** Rayen
