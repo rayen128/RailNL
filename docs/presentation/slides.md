@@ -1,6 +1,6 @@
 ---
 marp : true
-theme: uncover
+theme: gaia
 class: invert
 ---
 
@@ -17,21 +17,31 @@ Lieke | Rayen | Gert
 -plaatje van lege visualisatie?-
 
 ---
+### Het probleem: doelfunctie
+```python
+K = p * 10000 - (T * 100 + Min)
+```
 
-## Het probleem
-- Doelfunctie
-- Constraints
+- 10.000 als alle connecties gebruikt zijn
+    - -100 voor elke route
+    - -totaal aantal minuten
 
 ---
+### Het probleem: constraints
+- Alle connecties berijden
+- Maximum routes
+- Timeframe
 
-### Waar zit de uitdaging?
-- Statespace
-- Veel combinaties
+-plaatje?-
+
+---
+### Het probleem: statespace
+- Alle mogelijke routes
+- Alle mogelijke combinaties van routes
+- Grote statespace
 - Veel lokale optima
-- Kwantificeren
 
 ---
-
 ## Methoden
 
 ---
@@ -40,12 +50,16 @@ Lieke | Rayen | Gert
 
 - 3 random algoritmes
 -Histogram erbij poepen-
+
 ---
 
 ### Heuristieken
+- Geïsoleerde stations
+    - Stations met 1 ongebruikte connectie
 - Aantal keer heen en weer
+    - Variabel
 - Herhaling gebruik connecties
-- ...
+    - Minpunten voor meer dan één keer
 
 ---
 
