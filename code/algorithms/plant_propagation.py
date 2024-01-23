@@ -5,71 +5,136 @@ import copy
 
 class Plant_Propagation(Hill_climber):
 
-    def __init__(self, state: object, valid_states: bool, population_size: int, max_generations: int):
+    def __init__(self, state: object, valid_states: bool, population_size: int, max_generations: int, max_nr_runners: int):
         super().__init__(state, valid_states)
+
         self.population_size = population_size
         self.population: list[object] = []
+
+        self.runner_populaion: list[object] = []
+
         self.scores: list[float] = []
+        self.converted_fitness_values: list[float: object] = {}
 
         self.current_generation: int = 1
         self.max_generations = max_generations
+
+        self.max_nr_runners = max_nr_runners
 
     def initial_population(self) -> None:
         """
         set the initial population by running a certain amount of hill-climber algorithms  
         """
-        for _ in range(self.population_size):
+        for i in range(self.population_size):
             self.state.reset()
             self.create_valid_state()
-            self.state.calculate_score()
-            self.scores.append(self.state.calculate_score())
+            self.scores.append(self.get_mutated_score(self.state))
             self.population.append(copy.deepcopy(self.state))
 
     def fitness_function(self) -> list[float]:
         """
-        calulate and return the fitness (='score') of the whole population  
+        calulate and return the fitness (= normalized score) of the whole population  
         """
-        # TODO: Normalize fitness_function (vraag aan TAs wat hier het handigst is)
 
         max_score = max(self.scores)
         min_score = min(self.scores)
 
-        fitness_values = []
+        raw_fitness_values = []
 
         for i in range(len(self.population)):
-            fitness_values.append(self.population[i].score)
+            score = self.population[i].score
+            value = (max_score - score) / (max_score - min_score)
+            raw_fitness_values.append(value)
 
-        return fitness_values
+        return raw_fitness_values
 
     def calculate_converted_fitness(self) -> list[float]:
         """
-        convert fitness values so that these are mapped to [0,1]
+        convert fitness-values so that these are mapped to [0,1]
         """
-        fitness_values = self.fitness_function()
+        raw_fitness_values = self.fitness_function()
         converted_values = []
 
-        for i in range(len(fitness_values)):
-            value = fitness_values[i]
+        for i in range(len(raw_fitness_values)):
+            value = raw_fitness_values[i]
             converted_value = (tanh(4 * value - 2) + 1) * 0.5
-            converted_values.append(converted_value)
-        return converted_values
+
+            converted_values.append([converted_value, self.population[i]])
+
+        # sort population based on fitness scores
+        self.converted_fitness_values = sorted(
+            converted_values, key=lambda x: x[0], reverse=True)
+
+        print(self.converted_fitness_values)
 
     def get_best_from_population(self):
-        # calc scores
-        # sort on scores
-        # get the best 'population_size'
+        """
+        picks the best performing states from the population
+        """
+
+        states = [item[1] for item in self.converted_fitness_values]
+
+        # pick the best scores
+        new_population = states[:self.population_size]
+
+        # fill self.population with the best scores
+        for i in range(len(new_population)):
+            self.population[i] = new_population[i]
+
+    def calculate_number_of_runners(self):
+        """
+        determines the amount of runners per state based on the fitness value
+        """
+        n_max = self.max_nr_runners
+        runner_list = []
+
+        for i in range(len(self.converted_fitness_values)):
+            n_runners = int(n_max * self.converted_fitness_values[i][0])
+            runner_list.append(n_runners)
+
+        return (runner_list)
+        # for i in range(len(self.converted_fitness_values)):
+        #     n_r = n_max * self.converted_fitness_values.items()[i]
+        #     print(n_r)
+
+    def calculate_distance(self):
+        """
+        determines the distance for all runners
+        """
+        # dimensies zijn:
+        # elke connectie (afstand is hoeveel bereden)
+        # nr_of_routes (mogelijk x10 laten wegen)
+        # total_time
+
         pass
 
-    def likeness(self, state_1, state_2):
+    def likeness(self, original_state, new_state):
+
         pass
 
     def make_runners(self):
-        pass
+
+        runner_list = self.calculate_number_of_runners()
 
     def run(self):
+        # create initial population
         self.initial_population()
 
-        print(self.scores)
+        # detirme fitness of current population
+        self.calculate_converted_fitness()
+
+        # create runner
+        self.make_runners()
+
+        # update population
+        self.get_best_from_population()
+
+
+# Vragen (voor Quinten?):
+    # normalization van fitness_function?
+    # grootte N_max (= number of max runners)?
+    # rond ik naar boven of naar onder af bij #_of_runners
+
 # Exploration vs. Exploitation
 
 
