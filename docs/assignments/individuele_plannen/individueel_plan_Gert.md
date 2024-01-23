@@ -37,3 +37,4 @@ We hebben al een Algorithm class geïmplenteerd. Alle andere algoritmes zullen d
 2. [Individueel plan aangepast](https://github.com/Hachenberger02/AHRailNL/commit/707690aec8d5441a268d2386b593826cffb0931e)
 3. [Individueel plan afgemaakt](https://github.com/Hachenberger02/AHRailNL/commit/7354273ef3f914a8d582fa09cda12885971b18e2)
 4. [Eerste heuristiek toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/0318f84955a1294a19bffef322dfca98752b4d5a)
+5. [Heuristieken voor herhaling van connectiegebruik toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/f3916db25bb6a020c09e6c56ba7b2cda7c97c61d)
