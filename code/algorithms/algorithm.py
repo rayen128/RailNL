@@ -12,13 +12,14 @@ from typing import Union
 
 
 class Algorithm():
-    def __init__(self, state: 'State', max_connection_returns: int = 0, heuristic_number_connections: bool = False, heuristic_route_maximalisation: bool = False) -> None:
+    def __init__(self, state: 'State', max_connection_returns: int = 0, heuristic_number_connections: bool = False, heuristic_route_maximalisation: bool = False, heuristic_difficult_connections: bool = False) -> None:
         self.state = state
 
         self.max_connection_returns = max_connection_returns
 
         self.heuristic_number_connections = heuristic_number_connections
         self.heuristic_route_maximalisation = heuristic_route_maximalisation
+        self.heuristic_difficult_connections = heuristic_difficult_connections
 
     def __str__(self):
         return "Algorithm object"
@@ -335,3 +336,58 @@ class Algorithm():
             minus_points += self._minus_points_route_maximalisation(
                 route, state.time_frame)
         return minus_points
+
+    #### DIFFICTULT CONNECTIONS HEURISTIC ####
+    def connection_is_difficult(self, connection: 'Connection') -> bool:
+        """
+        Identifies if a connection is difficult.
+        A connection is difficult if the numbers of connections at both of the stations are odd
+
+        pre: 
+            connection is Connection object
+
+        post:
+            True if connection is difficult
+        """
+        assert isinstance(
+            Connection, connection), f"connection should be a Connection object, is a {type(connection)} (value: {connection})"
+        check_station_1 = len(connection.station_1.connections) % 2
+        check_station_2 = len(connection.station_2.connections) % 2
+        return not (check_station_1 and check_station_2)
+
+    def identify_difficult_connections(self, state) -> set:
+        """
+        Gives a list of difficult connections
+
+        pre:
+            state is a State object
+        """
+        assert isinstance(
+            State, state), f"state should be a State object, is a {type(state)} (value: {state})"
+        difficult_connections = (
+            connection for connection in state.connection if self.connection_is_difficult(connection))
+        return difficult_connections
+
+    def difficult_connections_used(self, state):
+        """
+        Gives bonus points for used difficult connections
+
+        pre:
+            state should be a State object
+
+        returns:
+            a positive integer, indicating bonus points
+        """
+        assert isinstance(
+            State, state), f"state should be a State object, is a {type(state)} (value: {state})"
+
+        if not self.heuristic_difficult_connections:
+            return 0
+
+        difficult_connections = self.identify_difficult_connections(state)
+
+        bonus_points = 0
+        for connection in state.used_connections:
+            if connection in difficult_connections:
+                bonus_points += connection.distance
+        return bonus_points
