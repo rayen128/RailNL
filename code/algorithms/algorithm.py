@@ -1,8 +1,9 @@
 from sys import path
+
 path.append("../classes")
-from state import State
-from station import Station
-from connection import Connection
+from code.classes.state import State
+from code.classes.station import Station
+from code.classes.connection import Connection
 
 import random
 import copy
