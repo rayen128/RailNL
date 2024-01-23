@@ -59,7 +59,7 @@ K = p * 10000 - (T * 100 + Min)
 
 Histogram totaal            |  Boxplot alle algoritmen
 :-------------------------:|:-------------------------:
-  ![height:500 width:550](/AHRailNL/docs/presentation/assets/baseline/scores_van_alle_algoritmes_holland.png) | ![height:500 width:550](/AHRailNL/docs/presentation/assets/baseline/boxplot.png)
+  ![height:500 width:550](assets/baseline/scores_van_alle_algoritmes_holland.png) | ![height:500 width:550](assets/baseline/boxplot.png)
 
 ---
 ### Baseline
@@ -133,32 +133,32 @@ Histogram totaal            |  Boxplot alle algoritmen
 ### Baseline (extra) - Algorithm Histograms
 | Algoritme 1              | Algoritme 2 | Algoritme 3 |
 | :----------------: | :------: | :----: |
-| ![width:350](/AHRailNL/docs/presentation/assets/baseline/scores_van_algoritme_1_holland.png) | ![width:350](/AHRailNL/docs/presentation/assets/baseline/scores_van_algoritme_2_holland.png) | ![width:350](/AHRailNL/docs/presentation/assets/baseline/scores_van_algoritme_3_Holland.png)
+| ![width:350](assets/baseline/scores_van_algoritme_1_holland.png) | ![width:350](assets/baseline/scores_van_algoritme_2_holland.png) | ![width:350](assets/baseline/scores_van_algoritme_3_Holland.png)
 
 --- 
 ### Baseline (extra) - Solved State Results
 
-![width:1200px](/AHRailNL/docs/presentation/assets/baseline/ranking_solved.png)
+![width:1200px](assets/baseline/ranking_solved.png)
 
 ---
 ### PPA - Uitleg
 
 Originale Paper            |  ChatGPT
 :-------------------------:|:-------------------------:
-  ![height:500 width:550](/AHRailNL/docs/presentation/assets/PPA/PPA_paper_uitleg.png) | ![height:500 width:550](/AHRailNL/docs/presentation/assets/PPA/ChatGPT_uitleg_PPA.png)
+  ![height:500 width:550](assets/PPA/PPA_paper_uitleg.png) | ![height:500 width:550](assets/PPA/ChatGPT_uitleg_PPA.png)
 
   ---
 ### PPA - Fitness Functions
 
-![height:400 width:550](/AHRailNL/docs/presentation/assets/PPA/tanh_graph.png)
+![height:400 width:550](assets/PPA/tanh_graph.png)
 
-![width:550](/AHRailNL/docs/presentation/assets/PPA/tanh_function.png)
+![width:550](assets/PPA/tanh_function.png)
 
 ---
 ### PPA - Other Functions
 
-![width:400](/AHRailNL/docs/presentation/assets/PPA/fitness_function.png)
+![width:400](assets/PPA/fitness_function.png)
 
-![width:400](/AHRailNL/docs/presentation/assets/PPA/distance_function.png)
+![width:400](assets/PPA/distance_function.png)
 
-![width:400](/AHRailNL/docs/presentation/assets/PPA/runner_function.png)
+![width:400](assets/PPA/runner_function.png)
