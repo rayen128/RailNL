@@ -46,10 +46,15 @@ K = p * 10000 - (T * 100 + Min)
 
 ---
 
-### Random algoritmen/baseline
+### Baseline
 
 - 3 random algoritmes
 -Histogram erbij poepen-
+
+---
+
+### Grafiekjes
+
 
 ---
 

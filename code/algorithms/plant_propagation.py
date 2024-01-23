@@ -28,8 +28,14 @@ class Plant_Propagation(Hill_climber):
         for i in range(self.population_size):
             self.state.reset()
             self.create_valid_state()
-            self.scores.append(self.get_mutated_score(self.state))
             self.population.append(copy.deepcopy(self.state))
+
+        self.get_scores()
+
+    def get_scores(self) -> None:
+
+        for i in range(len(self.population)):
+            self.scores.append(self.get_mutated_score(self.state))
 
     def fitness_function(self) -> list[float]:
         """
@@ -64,8 +70,6 @@ class Plant_Propagation(Hill_climber):
         # sort population based on fitness scores
         self.converted_fitness_values = sorted(
             converted_values, key=lambda x: x[0], reverse=True)
-
-        print(self.converted_fitness_values)
 
     def get_best_from_population(self):
         """
@@ -105,8 +109,9 @@ class Plant_Propagation(Hill_climber):
         # elke connectie (afstand is hoeveel bereden)
         # nr_of_routes (mogelijk x10 laten wegen)
         # total_time
+        distance_list = []
 
-        pass
+        return distance_list
 
     def likeness(self, original_state, new_state):
 
@@ -114,7 +119,9 @@ class Plant_Propagation(Hill_climber):
 
     def make_runners(self):
 
+        # self.population
         runner_list = self.calculate_number_of_runners()
+        distance_list = self.calculate_distance()
 
     def run(self):
         # create initial population

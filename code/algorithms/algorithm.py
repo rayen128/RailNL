@@ -1,10 +1,10 @@
 from sys import path
 
 path.append("../classes")
-from code.classes.state import State
-from code.classes.station import Station
-from code.classes.connection import Connection
-from code.classes.route import Route
+from state import State
+from station import Station
+from connection import Connection
+from route import Route
 
 import random
 import copy
