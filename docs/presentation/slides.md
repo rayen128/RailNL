@@ -182,12 +182,15 @@ Histogram totaal            |  Boxplot alle algoritmen
 - Genetic Algorithm
 - Hill-Climbers
 
+![width:600 bg right](assets/PPA/strawberry_plant.png)
+
 ---
 ### Plant propagation - runners
 - Ver en weinig vs. dichtbij en veel
 - Afstand
 - Richting
   - Heuristieken
+
 ---
 
 ---
