@@ -1,8 +1,11 @@
 ---
 marp : true
-backgroundColor: #2C365E
-color: lightblue
+theme: gaia
+class: invert
 ---
+<br>
+<br>
+<br>
 
 # Sociale Wetenschappers
 Lieke | Rayen | Gert
@@ -74,12 +77,12 @@ Lieke | Rayen | Gert
 ![bg right](assets/empty_state.png)
 
 ---
-### Het probleem
+## Het probleem
 - Doelfunctie
 - Constraints
 
 ---
-### Het probleem: doelfunctie
+## Het probleem - doelfunctie
 ```python
 K = p * 10000 - (T * 100 + Min)
 ```
@@ -89,7 +92,7 @@ K = p * 10000 - (T * 100 + Min)
     - -totaal aantal minuten
 
 ---
-### Het probleem: constraints
+## Het probleem - constraints
 - Maximum routes
 - Timeframe
 <br>
@@ -98,7 +101,7 @@ K = p * 10000 - (T * 100 + Min)
 ![bg right](assets/empty_state.png)
 
 ---
-### Het probleem: statespace
+## Het probleem: statespace
 - Alle mogelijke routes
 - Alle mogelijke combinaties van routes
 - Grote statespace
@@ -107,11 +110,11 @@ K = p * 10000 - (T * 100 + Min)
 ![bg right](assets/empty_state_holland.png)
 
 ---
-## Methoden
+# Methoden
 
 ---
 
-### Baseline
+## Baseline
 
 - 3 random algoritmes
 
@@ -127,7 +130,7 @@ Histogram totaal            |  Boxplot alle algoritmen
   ![height:500 width:550](assets/baseline/scores_van_alle_algoritmes_holland.png) | ![height:500 width:550](assets/baseline/boxplot.png)
 
 ---
-### Baseline
+# Baseline
 
 - ``20`` daadwerkelijke solved states
 
@@ -137,7 +140,7 @@ Histogram totaal            |  Boxplot alle algoritmen
 
 ---
 
-### LRA
+## LRA
 
 - Voor het maken van een **valide state**
 
@@ -152,7 +155,7 @@ Histogram totaal            |  Boxplot alle algoritmen
 
 ---
 
-### Hill-climber
+## Hill-climber
 - Maak start-state
 
 - Maak aanpassing
@@ -165,7 +168,7 @@ Histogram totaal            |  Boxplot alle algoritmen
 
 
 ---
-### Heuristieken
+## Heuristieken
 
 - Aan de voorkant
   - Geïsoleerde stations
@@ -177,13 +180,13 @@ Histogram totaal            |  Boxplot alle algoritmen
 
 ---
 
-### Plant propagation - Overview
+## Plant propagation - Overview
 
 - Genetic Algorithm
 - Hill-Climbers
 
 ---
-### Plant propagation - runners
+## Plant propagation - runners
 - Ver en weinig vs. dichtbij en veel
 - Afstand
 - Richting
@@ -194,46 +197,46 @@ Histogram totaal            |  Boxplot alle algoritmen
 # Extra Info
 
 --- 
-### State Space - Formule
+## State Space - Formule
 
 ![width:500](assets/state_space/formule_trajecten.png)
 
 ![width:500](assets/state_space/formule_state_space.png)
 
 --- 
-### Baseline (extra) - Results Table
+## Baseline (extra) - Results Table
 
 ![width:1000](/AHRailNL/docs/presentation/assets/baseline/baseline_results_table.png)
 
 
 ---
 
-### Baseline (extra) - Algorithm Histograms
+## Baseline (extra) - Algorithm Histograms
 | Algoritme 1              | Algoritme 2 | Algoritme 3 |
 | :----------------: | :------: | :----: |
 | ![width:350](assets/baseline/scores_van_algoritme_1_holland.png) | ![width:350](assets/baseline/scores_van_algoritme_2_holland.png) | ![width:350](assets/baseline/scores_van_algoritme_3_Holland.png)
 
 --- 
-### Baseline (extra) - Solved State Results
+## Baseline (extra) - Solved State Results
 
 ![width:1200px](assets/baseline/ranking_solved.png)
 
 ---
-### PPA - Uitleg
+## PPA - Uitleg
 
 Originale Paper            |  ChatGPT
 :-------------------------:|:-------------------------:
   ![height:500 width:550](assets/PPA/PPA_paper_uitleg.png) | ![height:500 width:550](assets/PPA/ChatGPT_uitleg_PPA.png)
 
   ---
-### PPA - Fitness Functions
+## PPA - Fitness Functions
 
 ![height:400 width:550](assets/PPA/tanh_graph.png)
 
 ![width:550](assets/PPA/tanh_function.png)
 
 ---
-### PPA - Other Functions
+## PPA - Other Functions
 
 ![width:400](assets/PPA/fitness_function.png)
 
