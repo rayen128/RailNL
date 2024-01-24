@@ -1,7 +1,7 @@
 ---
 marp : true
-theme: gaia
-class: invert
+backgroundColor: #2C365E
+color: lightblue
 ---
 
 # Sociale Wetenschappers
@@ -10,17 +10,39 @@ Lieke | Rayen | Gert
 ---
 ## Case: RailNL
 - Routes maken
-
-- Timeframe
-
-- Maximum routes
-
-- *Alle connecties gebruiken*
+- Constraints
 <br>
 
 - Doel: zo hoog mogelijke score
 
 ![bg right](assets/empty_state.png)
+
+---
+## Terminologie
+- **Connecties**: spoorverbinding tussen twee stations
+![bg right](assets/empty_state_holland.png)
+
+---
+
+## Terminologie
+- **Connecties**
+<br>
+
+- **Route**: combinatie van connecties tussen stations
+
+![bg right](assets/route.png)
+
+---
+## Terminologie
+- **Connecties**
+<br>
+
+- **Route** 
+<br>
+
+- **State**: lijnvoering op bepaald moment
+
+![bg right](assets/valid_state.png)
 
 ---
 ## Holland
@@ -52,32 +74,9 @@ Lieke | Rayen | Gert
 ![bg right](assets/empty_state.png)
 
 ---
-## Terminologie
-- **Connecties**: spoorverbinding tussen twee stations
-![bg right](assets/empty_state_holland.png)
-
----
-
-## Terminologie
-- **Connecties**
-<br>
-
-- **Route**: combinatie van connecties tussen stations
-
-![bg right](assets/route.png)
-
----
-## Terminologie
-- **Connecties**
-<br>
-
-- **Route** 
-<br>
-
-- **State**: een volledige oplossing met verschillende routes
-
-![bg right](assets/valid_state.png)
-
+### Het probleem
+- Doelfunctie
+- Constraints
 
 ---
 ### Het probleem: doelfunctie
@@ -91,11 +90,12 @@ K = p * 10000 - (T * 100 + Min)
 
 ---
 ### Het probleem: constraints
-- Alle connecties berijden
 - Maximum routes
 - Timeframe
+<br>
+- Alle connecties berijden
 
--plaatje?-
+![bg right](assets/empty_state.png)
 
 ---
 ### Het probleem: statespace
@@ -103,6 +103,8 @@ K = p * 10000 - (T * 100 + Min)
 - Alle mogelijke combinaties van routes
 - Grote statespace
 - Veel lokale optima
+
+![bg right](assets/empty_state_holland.png)
 
 ---
 ## Methoden
@@ -131,18 +133,7 @@ Histogram totaal            |  Boxplot alle algoritmen
 
 - Scores liggen tussen ``8300-8600``
 
-- Dit is onze **baseline**!
-
----
-
-### Heuristieken
-- Geïsoleerde stations
-    - Stations met 1 ongebruikte connectie
-- Aantal keer heen en weer
-    - Variabel
-- Herhaling gebruik connecties
-    - Minpunten voor meer dan één keer
-
+- Dit is ons streven
 
 ---
 
@@ -168,10 +159,21 @@ Histogram totaal            |  Boxplot alle algoritmen
     - Verwijderen connectie
     - Toevoegen connectie
     - Verwijderen route
-    - toevoegen route
+    - Toevoegen route
 
 - Vergelijk score
 
+
+---
+### Heuristieken
+
+- Aan de voorkant
+  - Geïsoleerde stations
+- Bij de evaluatie
+  - Plus- en minpunten
+  - Meervoudig gebruik connecties
+
+![bg right](assets/empty_state_holland.png)
 
 ---
 
@@ -181,25 +183,12 @@ Histogram totaal            |  Boxplot alle algoritmen
 - Hill-Climbers
 
 ---
-### Plant propagation - Fitness
-
-- Doel-functie
-- Map to ``(0,1)``
-
+### Plant propagation - runners
+- Ver en weinig vs. dichtbij en veel
+- Afstand
+- Richting
+  - Heuristieken
 ---
-
-### Plant propagation - Runners
-
-- Veel kindjes
-- Exploration vs. Exploitation
-- Het concept *Distance*
-
----
-### Plant propagation - And repeat!!
-
-- Filter de beste oplossingen
-- Maak hier weer kindjes voor
-- Etc.
 
 ---
 # Extra Info
@@ -207,9 +196,9 @@ Histogram totaal            |  Boxplot alle algoritmen
 --- 
 ### State Space - Formule
 
-![width:500](/AHRailNL/docs/presentation/assets/state_space/formule_trajecten.png)
+![width:500](assets/state_space/formule_trajecten.png)
 
-![width:500](/AHRailNL/docs/presentation/assets/state_space/formule_state_space.png)
+![width:500](assets/state_space/formule_state_space.png)
 
 --- 
 ### Baseline (extra) - Results Table
