@@ -132,7 +132,7 @@ Histogram totaal            |  Boxplot alle algoritmen
 ---
 # Baseline
 
-- ``20`` daadwerkelijke solved states
+- ``20`` daadwerkelijke valide states
 
 - Scores liggen tussen ``8300-8600``
 
@@ -172,7 +172,7 @@ Histogram totaal            |  Boxplot alle algoritmen
 
 - Aan de voorkant
   - Geïsoleerde stations
-- Bij de evaluatie
+- Bij evaluatie van scores
   - Plus- en minpunten
   - Meervoudig gebruik connecties
 
@@ -207,14 +207,14 @@ Histogram totaal            |  Boxplot alle algoritmen
 ![width:500](assets/state_space/formule_state_space.png)
 
 --- 
-## Baseline (extra) - Results Table
+## Baseline - Results Table
 
-![width:1000](/AHRailNL/docs/presentation/assets/baseline/baseline_results_table.png)
+![width:1000](assets/baseline/baseline_results_table.png)
 
 
 ---
 
-## Baseline (extra) - Algorithm Histograms
+## Baseline - Algorithm Histograms
 | Algoritme 1              | Algoritme 2 | Algoritme 3 |
 | :----------------: | :------: | :----: |
 | ![width:350](assets/baseline/scores_van_algoritme_1_holland.png) | ![width:350](assets/baseline/scores_van_algoritme_2_holland.png) | ![width:350](assets/baseline/scores_van_algoritme_3_Holland.png)
