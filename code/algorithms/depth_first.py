@@ -1,4 +1,10 @@
 import copy
+from sys import path
+
+path.append("code/classes")
+from state import State
+from route import Route
+from connection import Connection
 
 
 class DepthFirst:
@@ -33,16 +39,15 @@ class DepthFirst:
         """
         print("Entering new build_children...")
         # get values to add to new states
-        print(route)
+        print(f"- Route: {route}")
         values = route.get_end_station().get_connections()
-        # for connection in route.get_start_station().get_connections():
-        #     if connection not in values:
-        #         values.append(connection)
+        for connection in route.get_start_station().get_connections():
+            if connection not in values:
+                values.append(connection)
 
-        # print(values)
+        print(f"- Values: {values}")
 
         for value in values:
-            # print(f"Value: {value}")
             # get something to let the value compare
             value_dict = self.get_connection_dict(value)
 
@@ -62,7 +67,7 @@ class DepthFirst:
             if state.calculate_score() != new_state.calculate_score():
                 # print(
                 #     f"other score found. Old score: {state.calculate_score()}. New score: {new_state.calculate_score()}")
-                std_sleeper_string = new_state.get_standardized_sleeper_string()
+                std_sleeper_string = new_state.show_sleeper_string()
                 if std_sleeper_string not in self.archive:
                     self.archive.add(std_sleeper_string)
                     self.states.append(new_state)
@@ -76,13 +81,15 @@ class DepthFirst:
             self.best_value = new_value
             print(f"New best value: {self.best_value}")
 
-    def get_smallest_connection(self, state, route) -> int:
+    def get_smallest_connection(self, route: 'Route') -> int:
         # get all possible connections
-        connections = route.get_end_station().get_connections()
-        connections += route.get_start_station().get_connections()
+        connections = route.route_stations[-1].connections
+        for connection in route.route_stations[0].connections:
+            if connection not in connections:
+                connections.append(connection)
 
-        def key_function(connection):
-            return connection.distance
+        def key_function(x):
+            return x.distance
 
         # Use the min function with the key function to find the connection with the lowest distance value
         min_connection = min(connections, key=key_function)
@@ -94,18 +101,15 @@ class DepthFirst:
             state.add_route(state.unused_connections[0])
         route_to_return = state.routes[-1]
 
-        print(self.get_smallest_connection(state, route_to_return))
-
-        if state.time_frame - route_to_return.total_time > self.get_smallest_connection(state, route_to_return):
+        if (state.time_frame - route_to_return.total_time) > self.get_smallest_connection(route_to_return):
             return route_to_return
-        else:
-            if state.unused_connections:
-                state.add_route(state.unused_connections[0])
-                return state.routes[-1]
+
+        if state.unused_connections:
+            state.add_route(state.unused_connections[0])
+            return state.routes[-1]
 
     def run(self):
         while self.states:
-            print(f"stack length: {len(self.states)}")
             new_state = self.get_next_state()
 
             route = self.get_route(new_state)

@@ -523,7 +523,6 @@ class State():
         for route in self.routes:
             sleeper_route = "|"
             for station in route.route_stations:
-                print(type(station))
                 sleeper_route += station.name
             sleeper_list.append(sleeper_route)
         sleeper_list.sort()
