@@ -243,7 +243,7 @@ def plot_routes(p: figure, state: 'State', station_dict: dict[str: list[float]])
 
     # add a title to your legend
     p.legend.title = "Routes"
-    p.legend.click_policy="hide"
+    p.legend.click_policy = "hide"
 
 
 def plot_map(p: figure, map: str) -> None:
@@ -303,10 +303,9 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str, fil
     plot_routes(p, state, station_dict)
     plot_stations(p, station_dict)
 
-    # TODO: Goed weergeven als 2 (of meer) routes dezelfde connectie gebruiken
-    # TODO: TOGGLES IN DE LEGENDA PER ROUTE?!?!?!
     # TODO: Zorg dat het openen van de html goed en automatisch gaat
     # TODO: Totale Score (goed) weergeven in de Legenda
+    # TODO: Methode schrijven om de kaart als picture op te slaan
 
     # add HoverTool for connections
     hover_connections = HoverTool(
@@ -315,7 +314,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str, fil
     p.add_tools(hover_connections)
 
     # show the plot
-    #show(p)
+    # show(p)
     export_png(p, filename=filename)
 
 
