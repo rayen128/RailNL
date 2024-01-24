@@ -246,3 +246,9 @@ Originale Paper            |  ChatGPT
 ![width:400](assets/PPA/distance_function.png)
 
 ![width:400](assets/PPA/runner_function.png)
+
+---
+
+## UML
+
+![width:800 bg center](assets/UML.png)
