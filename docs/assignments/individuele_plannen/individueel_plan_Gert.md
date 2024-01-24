@@ -32,6 +32,9 @@ Zonder de pretentie maar met de ambitie alles te (kunnen) schrijven, hebben we e
 ## Aansluiting met werk van andere studenten
 We hebben al een Algorithm class geïmplenteerd. Alle andere algoritmes zullen deze class inheriten. In deze class zal ik al deze methods schrijven, die dan dus voor ieder ander algoritme beschikbaar zijn. 
 
+## Wat anders uit is gepakt
+Er zijn geen onverwachte dingen gebeurd. Eigenlijk liep alles volgens plan. Het enige wat een beetje anders was, is dat ik soms een extra method nodig had voor het implementeren van een heuristiek. 
+
 ## Links naar commits
 1. [Individueel plan gemaakt](https://github.com/Hachenberger02/AHRailNL/commit/b0e2d81017bdfc9e84117bd0e7f382c58689b530)
 2. [Individueel plan aangepast](https://github.com/Hachenberger02/AHRailNL/commit/707690aec8d5441a268d2386b593826cffb0931e)
