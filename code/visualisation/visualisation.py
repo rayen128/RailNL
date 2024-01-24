@@ -9,6 +9,7 @@ from bokeh.models import GeoJSONDataSource, HoverTool, Legend
 from bokeh.plotting import figure, show
 from bokeh.sampledata.sample_geojson import geojson
 from bokeh.palettes import Dark2_5 as palette
+from bokeh.io import export_png
 import itertools
 import json
 
@@ -166,7 +167,7 @@ def plot_connections(p: figure, state: 'State', station_dict: dict[str: list[flo
                  source=connection_geo_source, name='Connections')
 
 
-def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> None:
+def plot_routes(p: figure, state: 'State', station_dict: dict[str: list[float]]) -> None:
     """
     plots all routes based on related coordinates
 
@@ -244,7 +245,6 @@ def plot_routes(p: figure, map: str, station_dict: dict[str: list[float]]) -> No
     p.legend.title = "Routes"
     p.legend.click_policy="hide"
 
-#enige wat we nu niet kunnen zien als er (in dezelfde route) heen en weer wordt gereden, willen we dat (of gaan we dan net iets te blij)
 
 def plot_map(p: figure, map: str) -> None:
     """
@@ -281,7 +281,7 @@ def plot_map(p: figure, map: str) -> None:
                   line_color='black', fill_alpha=0.5)
 
 
-def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> None:
+def show_plot(station_dict: dict[str: list[float]], state: object, map: str, filename: str) -> None:
     """
     completely plots the current state with stations, connections, routes and maps.
 
@@ -315,7 +315,8 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
     p.add_tools(hover_connections)
 
     # show the plot
-    show(p)
+    #show(p)
+    export_png(p, filename=filename)
 
 
 if __name__ == "__main__":

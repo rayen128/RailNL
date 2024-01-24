@@ -1,6 +1,7 @@
 from algorithm import Algorithm
 import random
 import copy
+from sys import path
 
 class Hill_climber(Algorithm):
     def __init__(self, state: object, valid_start_state: bool = True):
@@ -43,8 +44,9 @@ class Hill_climber(Algorithm):
                             break
             while not self.state.routes[route_counter].is_valid_time(self.state.time_frame):
                 self.state.delete_end_connection_from_route(self.state.routes[route_counter])
-
+            
             route_counter += 1
+
 
     def make_change(self):
         random_number = random.randint(0, 100)
@@ -84,6 +86,19 @@ class Hill_climber(Algorithm):
             else:
                 self.delete_random_route()
             
+    def get_score_state(self, state: 'State'):
+        score = state.calculate_score()
+        
+        if not state.is_valid_solution():
+            score -= 1000
+        
+        return score
+    
+    def compare_scores_state(self):
+        score_new_state = self.get_score_state(self.state)
+        score_old_state = self.get_score_state(self.old_state)
+
+    
     def choose_route_to_add_connection(self) -> int:
         routes_able_to_add_connection = []
         for index in range(self.number_routes - 1):
@@ -103,7 +118,7 @@ if __name__ == "__main__":
 
     state = State('../../data/stations_holland.csv', '../../data/routes_holland.csv', 7, 120)
     hillclimber = Hill_climber(state, True)
-    hillclimber.state.write_output("../../docs/output.csv")
+    
     
     print(hillclimber.state.show())
 

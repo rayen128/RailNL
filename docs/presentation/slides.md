@@ -10,11 +10,74 @@ Lieke | Rayen | Gert
 ---
 ## Case: RailNL
 - Routes maken
-- Alle connecties gebruiken
+
 - Timeframe
+
 - Maximum routes
 
--plaatje van lege visualisatie?-
+- *Alle connecties gebruiken*
+<br>
+
+- Doel: zo hoog mogelijke score
+
+![bg right](assets/empty_state.png)
+
+---
+## Holland
+
+#### Input
+
+- 28 connecties
+- 22 stations 
+<br> 
+ 
+#### Constraints
+- Maximaal 7 routes
+- Timeframe van 120 minuten
+
+![bg right](assets/empty_state_holland.png)
+
+---
+## Nederland
+#### Input
+
+- 89 connecties
+- 61 stations 
+<br> 
+
+#### Constraints
+- Maximaal 20 routes
+- Timeframe van 180 minuten
+
+![bg right](assets/empty_state.png)
+
+---
+## Terminologie
+- **Connecties**: spoorverbinding tussen twee stations
+![bg right](assets/empty_state_holland.png)
+
+---
+
+## Terminologie
+- **Connecties**
+<br>
+
+- **Route**: combinatie van connecties tussen stations
+
+![bg right](assets/route.png)
+
+---
+## Terminologie
+- **Connecties**
+<br>
+
+- **Route** 
+<br>
+
+- **State**: een volledige oplossing met verschillende routes
+
+![bg right](assets/valid_state.png)
+
 
 ---
 ### Het probleem: doelfunctie
@@ -80,9 +143,35 @@ Histogram totaal            |  Boxplot alle algoritmen
 - Herhaling gebruik connecties
     - Minpunten voor meer dan één keer
 
+
+---
+
+### LRA
+
+- Voor het maken van een **valide state**
+
+
+- Maakt nieuwe routes tot *valide state*
+
+- Voegt connecties toe tot *timeframe* is bereikt
+
+- Geeft voorrang aan *ongebruikte connecties*
+
+![bg right](assets/lra_gif.gif)
+
 ---
 
 ### Hill-climber
+- Maak start-state
+
+- Maak aanpassing
+    - Verwijderen connectie
+    - Toevoegen connectie
+    - Verwijderen route
+    - toevoegen route
+
+- Vergelijk score
+
 
 ---
 
