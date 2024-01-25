@@ -1,4 +1,4 @@
-from algorithm import Algorithm
+from .algorithm import Algorithm
 import random
 import copy
 from sys import path
@@ -7,11 +7,10 @@ class Hill_climber(Algorithm):
     def __init__(self, state: object, valid_start_state: bool = True):
         super().__init__(state)
         self.valid_start_state = valid_start_state
-        self.state_list = []
 
         self.create_state()
 
-        self.old_state = copy.deepcopy(self.state)
+        self.current_state = copy.deepcopy(self.state)
 
     def create_state(self):
         if self.valid_start_state:
@@ -96,19 +95,35 @@ class Hill_climber(Algorithm):
     
     def compare_scores_state(self):
         score_new_state = self.get_score_state(self.state)
-        score_old_state = self.get_score_state(self.old_state)
+        score_old_state = self.get_score_state(self.current_state)
+        if score_new_state >= score_old_state:
+            self.current_state = copy.deepcopy(self.state)
+        else: 
+            self.state = copy.deepcopy(self.current_state)
 
     
     def choose_route_to_add_connection(self) -> int:
         routes_able_to_add_connection = []
-        for index in range(self.number_routes - 1):
-            if self.routes[index].total_time <= self.time_frame - 20:
+        for index in range(self.state.number_routes - 1):
+            if self.state.routes[index].total_time <= self.state.time_frame - 20:
                 routes_able_to_add_connection.append(index)
+        
+        if routes_able_to_add_connection == []:
+            return None
         
         random_route = random.choice(routes_able_to_add_connection)
 
         return random_route
             
+    def run(self, iterations: int) -> object:
+        for iteration in range(iterations):
+            self.make_change()
+            self.compare_scores_state()
+
+        return self.state
+            
+
+        
         
 
 if __name__ == "__main__":
@@ -118,9 +133,12 @@ if __name__ == "__main__":
 
     state = State('../../data/stations_holland.csv', '../../data/routes_holland.csv', 7, 120)
     hillclimber = Hill_climber(state, True)
+    solution_state = hillclimber.run(100000)
+
+    solution_state.show()
     
     
-    print(hillclimber.state.show())
+    print(hillclimber.current_state.show())
 
 
         
