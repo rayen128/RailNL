@@ -28,7 +28,17 @@ class Algorithm():
 
     def return_score(self) -> tuple[float, str]:
         """
-        # TODO: doc-string
+        returns a an (extended) description of the (current) results of the algoritm
+
+        pre: 
+            self.state is an state object
+
+        returns:
+            score = a float describing the overall (quantative) score 
+            description with:
+                all routes with their connections
+                score       
+
         """
         # save return variables
         score = self.state.calculate_score()
@@ -38,14 +48,27 @@ class Algorithm():
 
     def load_state(self, new_state: object) -> None:
         """
-        # TODO: doc-string
+        loads self.state 
+
+        pre: 
+            new_state is an State-object
+
+        post:
+            self.state is new_state input
         """
         self.state = new_state
 
     def read_sleeper_string(self, sleeper_string: str) -> None:
         """
-        # TODO: doc-string
+        reads the sleeper string and creates its state 
+
+        pre: 
+            sleeper string has the correct format  
+
+        post:
+            self.state is changed to the sleeper-string
         """
+
         self.state.awaken_state(sleeper_string)
 
     #### METHODS FOR BONUS AND MALUS POINT CALCULATION ####
@@ -107,7 +130,18 @@ class Algorithm():
 
     def add_random_connection(self, route_index: int = 0, choice: Union[str, None] = None) -> str:
         """
-        # TODO: doc-string
+        adds a random available connection to a selected route 
+
+        pre: 
+            route_index is an integer
+            a route exists with the route_index index in state.routes
+            choice is either None, 'start' or 'end'  
+
+        post:
+            a connection is added (either at beginning or end) to the route
+
+        returns:
+            either ' start' or 'end' based on where the connection is added
         """
 
         # determine choice if not prematurely done
@@ -126,9 +160,20 @@ class Algorithm():
 
         return choice
 
-    def delete_random_connection(self, choice: Union[str, None] = None) -> str:
+    def delete_random_connection(self, route_index: int = 0, choice: Union[str, None] = None) -> str:
         """
-        # TODO: doc-string
+        deletes a random available connection from a selected route
+
+        pre: 
+            route_index is an integer
+            a route exists with the route_index index in state.routes
+            choice is either None, 'start' or 'end'  
+
+        post:
+            a connection is deleted (either at beginning or end) from the route
+
+        returns:
+            either ' start' or 'end' based on where the connection is removed
         """
         # determine choice if not prematurely done
         if choice == None:

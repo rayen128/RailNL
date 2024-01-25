@@ -1,5 +1,6 @@
 from hill_climber import Hill_climber
 from math import tanh
+import random
 import copy
 
 
@@ -33,7 +34,9 @@ class Plant_Propagation(Hill_climber):
         self.get_scores()
 
     def get_scores(self) -> None:
-
+        """
+        fills self.score with the current population_scores
+        """
         for i in range(len(self.population)):
             self.scores.append(self.get_mutated_score(self.state))
 
@@ -41,7 +44,6 @@ class Plant_Propagation(Hill_climber):
         """
         calulate and return the fitness (= normalized score) of the whole population  
         """
-
         max_score = max(self.scores)
         min_score = min(self.scores)
 
@@ -71,7 +73,7 @@ class Plant_Propagation(Hill_climber):
         self.converted_fitness_values = sorted(
             converted_values, key=lambda x: x[0], reverse=True)
 
-    def get_best_from_population(self):
+    def get_best_from_population(self) -> None:
         """
         picks the best performing states from the population
         """
@@ -85,7 +87,7 @@ class Plant_Propagation(Hill_climber):
         for i in range(len(new_population)):
             self.population[i] = new_population[i]
 
-    def calculate_number_of_runners(self):
+    def calculate_number_of_runners(self) -> list[int]:
         """
         determines the amount of runners per state based on the fitness value
         """
@@ -97,11 +99,8 @@ class Plant_Propagation(Hill_climber):
             runner_list.append(n_runners)
 
         return (runner_list)
-        # for i in range(len(self.converted_fitness_values)):
-        #     n_r = n_max * self.converted_fitness_values.items()[i]
-        #     print(n_r)
 
-    def calculate_distance(self):
+    def calculate_distance(self, state: object) -> None:
         """
         determines the distance for all runners
         """
@@ -110,6 +109,12 @@ class Plant_Propagation(Hill_climber):
         # nr_of_routes (mogelijk x10 laten wegen)
         # total_time
         distance_list = []
+
+        for i in range(len(self.calculate_converted_fitness)):
+            r = random.random()
+            distance = 2 * \
+                (1 - self.calculate_converted_fitness[i]) * (r - 0.5)
+            distance_list.append(distance)
 
         return distance_list
 
@@ -122,6 +127,7 @@ class Plant_Propagation(Hill_climber):
         # self.population
         runner_list = self.calculate_number_of_runners()
         distance_list = self.calculate_distance()
+        print(distance_list)
 
     def run(self):
         # create initial population
