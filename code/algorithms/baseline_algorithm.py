@@ -58,7 +58,6 @@ class Baseline_Algorithm(Algorithm):
 
         # do loop until there is a valid solution (while max routes can be exceeded)
         while not self.state.is_valid_solution():
-            print(self.state.calculate_score())
             # pick random connection and create route
             self.add_random_route()
 
@@ -73,7 +72,12 @@ class Baseline_Algorithm(Algorithm):
 
             # remove last-added connection
             self.delete_random_connection(-1, choice)
-            # self.state.routes[self.current_route_index].delete_random_connection(choice)
+            # if choice == 'start':
+            #     self.state.delete_start_connection_from_route(
+            #         self.state.routes[-1])
+            # elif choice == 'end':
+            #     self.state.delete_end_connection_from_route(
+            #         self.state.routes[-1])
             self.current_route_index += 1
 
         self.return_score()
@@ -101,6 +105,8 @@ class Baseline_Algorithm(Algorithm):
 
             # create a new route
             self.add_random_route()
+            print(self.state.show())
+            print(f"\n{self.current_route_index}")
 
             # add routes until time_frame is exceeded
             while self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
