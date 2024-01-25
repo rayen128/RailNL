@@ -2,7 +2,9 @@
 marp : true
 theme: gaia
 class: invert
+paginate: true
 ---
+<!-- _paginate: skip -->
 <br>
 <br>
 <br>
@@ -16,7 +18,7 @@ Lieke | Rayen | Gert
 - Constraints
 <br>
 
-- Doel: zo hoog mogelijke score
+- Doel: zo efficiënt mogelijke lijnvoering
 
 ![bg right](assets/empty_state.png)
 
@@ -80,6 +82,7 @@ Lieke | Rayen | Gert
 ## Het probleem
 - Doelfunctie
 - Constraints
+- Statespace
 
 ---
 ## Het probleem - doelfunctie
@@ -110,6 +113,13 @@ K = p * 10000 - (T * 100 + Min)
 ![bg right](assets/empty_state_holland.png)
 
 ---
+<!-- _paginate: skip -->
+
+<br>
+<br>
+<br>
+<br>
+
 # Methoden
 
 ---
@@ -195,8 +205,9 @@ Histogram totaal            |  Boxplot alle algoritmen
   - Heuristieken
 
 ---
-
+<!-- _paginate: skip -->
 ---
+
 # Extra Info
 
 --- 
@@ -207,6 +218,17 @@ Histogram totaal            |  Boxplot alle algoritmen
 ![width:500](assets/state_space/formule_state_space.png)
 
 --- 
+## State space - deel 1
+
+![width:500](assets/state_space/Deel_1_1.png)
+![width:500](assets/state_space/deel_1_2.png)
+
+---
+
+## State space - deel 2
+![width:500](assets/state_space/deel_2.png)
+
+---
 ## Baseline - Results Table
 
 ![width:1000](assets/baseline/baseline_results_table.png)

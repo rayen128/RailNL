@@ -281,7 +281,7 @@ def plot_map(p: figure, map: str) -> None:
                   line_color='black', fill_alpha=0.5)
 
 
-def show_plot(station_dict: dict[str: list[float]], state: object, map: str, filename: str) -> None:
+def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> None:
     """
     completely plots the current state with stations, connections, routes and maps.
 
@@ -314,8 +314,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str, fil
     p.add_tools(hover_connections)
 
     # show the plot
-    # show(p)
-    export_png(p, filename=filename)
+    show(p)
 
 
 if __name__ == "__main__":
