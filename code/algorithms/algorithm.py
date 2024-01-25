@@ -1,6 +1,6 @@
 from sys import path
 
-path.append("code/classes")
+path.append("../classes")
 from state import State
 from station import Station
 from connection import Connection
