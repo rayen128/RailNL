@@ -1,11 +1,26 @@
 from .algorithm import Algorithm
+from sys import path
+path.append("../classes")
+from state import State
+
 import random
 import copy
 from sys import path
 
 class Hill_climber(Algorithm):
     def __init__(self, state: object, valid_start_state: bool = True):
+        """
+        initializes the hillclimber with a starting state
+
+        pre: 
+            the given state is a object
+
+        post: 
+            creates a start state for self.state and copies that to self.current_state
+        """
+        
         super().__init__(state)
+
         self.valid_start_state = valid_start_state
 
         self.create_state()
@@ -13,42 +28,78 @@ class Hill_climber(Algorithm):
         self.current_state = copy.deepcopy(self.state)
 
     def create_state(self):
+        """
+        creates a start state
+
+        pre:
+            self.valid_start_state is a boolean
+        
+        post:
+            a random or a valid start state is created 
+        """
         if self.valid_start_state:
             self.create_valid_state()
         else:
             self.create_random_state()
             
     def create_valid_state(self):
+        """
+        creates for self.state a start-state that is valid 
+
+        pre:
+            self.state doesn't consist of any routes
+            there aren't any used connections in self.state
+
+        post:
+            self.state is now valid solved state
+        """
         assert not self.state.routes, "there are already routes in this state"
         assert not self.state.used_connections, "there are used connections"
 
-        route_counter = 0
+        # add routes until state is valid
         while not self.state.is_valid_solution():
+            # add route if the max amount is not reached
             if self.state.number_routes < self.state.max_number_routes:
                 self.add_random_route()
+            # if max is reached delete random route and add route after that
             else:
                 random_number = random.randint(0, (self.state.max_number_routes -1))
                 self.state.delete_route(self.state.routes[random_number])
                 self.add_random_route()
-                route_counter -= 1
-            while self.state.routes[route_counter].is_valid_time(self.state.time_frame):
+                self.current_route_index -= 1
+
+            # add connections until timeframe is reached 
+            while self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
                 connection_added = False
+                # try to add unused connections
                 for connection in self.state.unused_connections:
-                    if self.state.add_connection_to_route(self.state.routes[route_counter], connection):
+                    if self.state.add_connection_to_route(self.state.routes[self.current_route_index], connection):
                         connection_added = True
                         break  
+                # add used connection if unused connection is not added
                 if not connection_added: 
                     for connection in self.state.connections:
-                        if self.state.add_connection_to_route(self.state.routes[route_counter], connection):
+                        if self.state.add_connection_to_route(self.state.routes[self.current_route_index], connection):
                             break
-            while not self.state.routes[route_counter].is_valid_time(self.state.time_frame):
-                self.state.delete_end_connection_from_route(self.state.routes[route_counter])
+            # delete connections above timeframe
+            while not self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
+                self.state.delete_end_connection_from_route(self.state.routes[self.current_route_index])
             
-            route_counter += 1
+            self.current_route_index += 1
 
 
     def make_change(self):
+        """
+        makes one change in the state
+
+        pre:
+            self.state is an already solved state
+
+        post:
+            a route is added or deleted or a connection is added or deleted in self.state
+        """
         random_number = random.randint(0, 100)
+        # if connections can not be added but routes can
         if not self.choose_route_to_add_connection() and \
             self.state.number_routes < self.state.max_number_routes:
             if random_number <= 45:
@@ -58,6 +109,7 @@ class Hill_climber(Algorithm):
             else:
                 self.delete_random_route()
 
+        # if both routes and connections can not be added
         elif not self.choose_route_to_add_connection() and \
             self.state.number_routes >= self.state.max_number_routes:
             if random_number <= 65:
@@ -65,6 +117,7 @@ class Hill_climber(Algorithm):
             else:
                 self.delete_random_route()
 
+        # if routes and connections can be added
         elif self.state.number_routes < self.state.max_number_routes:
             if random_number <= 35:
                 self.delete_random_connection()
@@ -76,6 +129,7 @@ class Hill_climber(Algorithm):
             else:
                 self.delete_random_route()
 
+        # if connections can be added but routes not
         elif self.state.number_routes >= self.state.max_number_routes:
             if random_number <= 45:
                 self.delete_random_connection()
@@ -86,6 +140,15 @@ class Hill_climber(Algorithm):
                 self.delete_random_route()
             
     def get_score_state(self, state: 'State'):
+        """
+        get the score for a state with negative points for a non-valid state
+
+        pre: 
+            self.state has a score 
+
+        returns:
+            the calculated score
+        """
         score = state.calculate_score()
         
         if not state.is_valid_solution():
@@ -94,8 +157,20 @@ class Hill_climber(Algorithm):
         return score
     
     def compare_scores_state(self):
+        """
+        compares the scores from the current state and the changed state
+
+        pre:
+            both states has scores
+
+        post:
+            both current state as state are now the state with the highest score
+        """
+        # get scores for both states
         score_new_state = self.get_score_state(self.state)
         score_old_state = self.get_score_state(self.current_state)
+        
+        # compare scores and change states
         if score_new_state >= score_old_state:
             self.current_state = copy.deepcopy(self.state)
         else: 
@@ -103,42 +178,45 @@ class Hill_climber(Algorithm):
 
     
     def choose_route_to_add_connection(self) -> int:
+        """
+        makes a list with routes who will be able to add a connection to
+
+        pre:
+            state has routes filled with at least one connection
+
+        returns:
+            a random route from the list with routes able to add a connection
+        """
+        # add routes with enough time left to add connections to list
         routes_able_to_add_connection = []
         for index in range(self.state.number_routes - 1):
             if self.state.routes[index].total_time <= self.state.time_frame - 20:
                 routes_able_to_add_connection.append(index)
         
+        # return none if there are no routes
         if routes_able_to_add_connection == []:
             return None
         
+        # chose random route to add connection to
         random_route = random.choice(routes_able_to_add_connection)
 
         return random_route
             
     def run(self, iterations: int) -> object:
+        """
+        runs the hillclimber
+
+        pre:
+            iterations is a integer
+
+        returns:
+            the last state after the hill-climber
+        """
         for iteration in range(iterations):
             self.make_change()
             self.compare_scores_state()
 
-        return self.state
-            
-
-        
-        
-
-if __name__ == "__main__":
-    from sys import argv, path
-    path.append("../classes")
-    from state import State
-
-    state = State('../../data/stations_holland.csv', '../../data/routes_holland.csv', 7, 120)
-    hillclimber = Hill_climber(state, True)
-    solution_state = hillclimber.run(100000)
-
-    solution_state.show()
-    
-    
-    print(hillclimber.current_state.show())
+        return self.current_state
 
 
         
