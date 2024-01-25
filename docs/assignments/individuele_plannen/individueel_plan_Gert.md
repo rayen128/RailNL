@@ -45,3 +45,4 @@ Er zijn geen onverwachte dingen gebeurd. Eigenlijk liep alles volgens plan. Het 
 5. [Heuristieken voor herhaling van connectiegebruik toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/f3916db25bb6a020c09e6c56ba7b2cda7c97c61d)
 6. [Heuristiek voor routemaximalisatie toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/f1efcbbb67bf8d772dc4dabe648e02afe19e5cd3)
 7. [Heuristiek voor moeilijke connecties toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/8c5b5a4b275cf843fa5274cff5b2fe301f663284)
+8. [Enkele vergeten regels code toegevoegd](https://github.com/Hachenberger02/AHRailNL/commit/4dce14de881bfe77bda819fc798bf3fa8484d287)

@@ -12,25 +12,26 @@ class Plant_Propagation(Hill_climber):
         self.population_size = population_size
         self.population: list[object] = []
 
-        self.runner_population: list[object] = []
-
         self.scores: list[float] = []
-        self.converted_fitness_values: list[float: object] = {}
+        self.sorted_fitness_values: list[float: object] = {}
 
         self.current_generation: int = 1
         self.max_generations = max_generations
 
         self.max_nr_runners = max_nr_runners
+        self.runner_population: list[object] = []
 
     def initial_population(self) -> None:
         """
         set the initial population by running a certain amount of hill-climber algorithms  
         """
+        # create the hill-climbers
         for i in range(self.population_size):
             self.state.reset()
             self.create_valid_state()
             self.population.append(copy.deepcopy(self.state))
 
+        # populate self.scores
         self.get_scores()
 
     def get_scores(self) -> None:
@@ -42,7 +43,7 @@ class Plant_Propagation(Hill_climber):
 
     def fitness_function(self) -> list[float]:
         """
-        calulate and return the fitness (= normalized score) of the whole population  
+        calulate and return the fitness (=normalized score) of the whole population  
         """
         max_score = max(self.scores)
         min_score = min(self.scores)
@@ -63,6 +64,7 @@ class Plant_Propagation(Hill_climber):
         raw_fitness_values = self.fitness_function()
         converted_values = []
 
+        # convert fitness values
         for i in range(len(raw_fitness_values)):
             value = raw_fitness_values[i]
             converted_value = (tanh(4 * value - 2) + 1) * 0.5
@@ -70,29 +72,24 @@ class Plant_Propagation(Hill_climber):
             converted_values.append([converted_value, self.population[i]])
 
         # sort population based on fitness scores
-        self.converted_fitness_values = sorted(
+        self.sorted_fitness_values = sorted(
             converted_values, key=lambda x: x[0], reverse=True)
 
-    def merge_population(self):
+    def merge_population(self) -> None:
         """
-        merges the original and runner population
+        merge runner and original population
         """
-        TODO
-        pass
+        for runner in self.runner_population:
+            self.population.append(runner)
 
-    def get_best_from_population(self) -> None:
+    def filter_population(self) -> None:
         """
-        TODO: dit nog aanpassen
+        filter the best of the original and runner population 
         """
+        self.merge_population()
+        self.get_scores()
 
-        states = [item[1] for item in self.converted_fitness_values]
-
-        # pick the best scores
-        new_population = states[:self.population_size]
-
-        # fill self.population with the best scores
-        for i in range(len(new_population)):
-            self.population[i] = new_population[i]
+        # filter on the best ones
 
     def calculate_number_of_runners(self, fitness_value: float) -> int:
         """
@@ -105,51 +102,77 @@ class Plant_Propagation(Hill_climber):
 
     def calculate_distance(self, fitness_value: float) -> float:
         """
-        determines the distance for all runners
+        determines a distance (semi-random) based on a fitness-value  
         """
-
         r = random.random()
         distance = 2 * (1 - fitness_value) * (r - 0.5)
 
         return distance
 
-    def likeness(self, original_state: object, new_state: object):
+    def count_route_difference(self, original_state: object, new_state: object):
         """
-        checks and quantifies the difference between two states
+        checks and checks the route differences between two states
         """
         connections_overlapping = 0
         connections_different = 0
 
+        routes_used = []
+        connection_counter = 0
+
         for original_route in original_state.routes:
+
+            max_overlap = -1
+            best_match = None
+            original_connections = set(original_route.connection_ids)
+
+            connection_counter += len(original_connections)
+
             for new_route in new_state.routes:
-                original_connections = set(original_route.route_connections)
-                new_connections = set(new_route.route_connections)
+                if new_route not in routes_used:
+                    new_connections = set(new_route.connection_ids)
 
-                connections_overlapping += len(original_connections &
-                                               new_connections)
-                connections_different += len(original_connections ^
-                                             new_connections)
+                    overlap = len(
+                        original_connections.intersection(new_connections))
 
-        print(connections_different)
+                    if overlap > max_overlap:
+                        max_overlap = overlap
+                        difference = len(original_connections.symmetric_difference(
+                            new_connections))
+                        best_match = new_route
 
-        # pick route_1 from original
-        # compare this with all 5 routes from new_state
-        # add how many routes are overlapping and how many aren't
+            if best_match:
+                routes_used.append(best_match)
+                connections_different += difference
+                connections_overlapping += max_overlap
+
+        proportion = connections_overlapping / connection_counter
+
+        return connections_different, connections_overlapping, proportion
+
+    def likeness(self, original_state: object, new_state: object):
+        """
+        quantifies the difference between two states
+        """
+        connections_different, connections_overlapping, proportion = self.count_route_difference(
+            original_state, new_state)
+
+        return proportion
 
     def generate_runner_distances(self):
         """
         Generate all runners
         """
         distance_dict = {}
-        # loop p/state
-        for i in range(len(self.converted_fitness_values)):
-            state = self.converted_fitness_values[i][1]
-            value = self.converted_fitness_values[i][0]
+
+        # loop over the population
+        for i in range(len(self.sorted_fitness_values)):
+            state = self.sorted_fitness_values[i][1]
+            value = self.sorted_fitness_values[i][0]
             amount_of_runners = self.calculate_number_of_runners(value)
 
             distance_dict[i] = []
 
-            # loop p/runner
+            # loop over all runners
             for j in range(max(amount_of_runners, 1)):
                 distance = self.calculate_distance(value)
                 distance_dict[i].append(distance)
@@ -162,21 +185,36 @@ class Plant_Propagation(Hill_climber):
         """
         distance_dict = self.generate_runner_distances()
 
+        # loop over population
+        for state_index in range(len(self.population)):
+            # loop over all runners
+            current_state = self.population[state_index]
+
+            for runner_index in range(len(distance_dict[state_index])):
+                distance_goal = distance_dict[state_index][runner_index]
+
+                current_runner = copy.deepcopy(current_state)
+
+                while abs(distance_goal) > self.likeness(current_state, current_runner):
+                    for _ in range(50):
+                        current_runner.make_change()
+                self.runner_population.append(current_runner)
+
+        print(f"Size of population is: {len(self.population)}")
+
     def run(self):
         # create initial population
         self.initial_population()
 
-        # determine fitness of current population
-        self.calculate_converted_fitness()
+        for generation in range(self.max_generations):
+            # determine fitness of current population
+            self.calculate_converted_fitness()
 
-        # create runner
-        self.make_runners()
+            # create runner
+            self.make_runners()
 
-        # likeness_test
-        self.likeness(self.population[0], self.population[1])
-
-        # update population
-        self.get_best_from_population()
+            # update population
+            self.filter_population()
 
 
 # Vragen (voor Quinten?):
