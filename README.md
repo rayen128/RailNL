@@ -51,6 +51,7 @@ Verdere belangrijke documentatie:
 De volgende experimenten kunnen nog worden uitgevoerd, om het onderzoek te verbeteren:
 - **Aantal iteraties hill climber**: het aantal iteraties bepalen dat het hill climber algoritme nodig heeft om een lokaal optimum te vinden.
 - **Temperatuur simulated annealing**: de optimale starttemperatuur en afkoeling van het simulated annealing algoritme bepalen.
+- **Implementatie van heuristieken**: onderzoeken welke combinatie van heuristieken een algoritme beter maakt
 - **Vergelijkingen tussen algoritmen**: vergelijking van score, runtime en aantal iteraties tussen verschillende algoritmen, om een conclusie te kunnen trekken over het 'beste' algoritme.
 
 ## Auteurs
