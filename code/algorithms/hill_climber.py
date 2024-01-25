@@ -82,11 +82,12 @@ class Hill_climber(Algorithm):
                     for connection in self.state.connections:
                         if self.state.add_connection_to_route(self.state.routes[self.current_route_index], connection):
                             break
-            while not self.state.routes[route_counter].is_valid_time(self.state.time_frame):
+            # delete connections above timeframe
+            while not self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
                 self.state.delete_end_connection_from_route(
-                    self.state.routes[route_counter])
+                    self.state.routes[self.current_route_index])
 
-            route_counter += 1
+            self.current_route_index += 1
 
     def make_change(self):
         """
@@ -170,6 +171,12 @@ class Hill_climber(Algorithm):
         score_new_state = self.get_score_state(self.state)
         score_old_state = self.get_score_state(self.old_state)
 
+        # compare scores and change states
+        if score_new_state >= score_old_state:
+            self.current_state = copy.deepcopy(self.state)
+        else: 
+            self.state = copy.deepcopy(self.current_state)
+
     def choose_route_to_add_connection(self) -> int:
         """
         makes a list with routes who will be able to add a connection to
@@ -185,19 +192,24 @@ class Hill_climber(Algorithm):
         for index in range(self.state.number_routes - 1):
             if self.state.routes[index].total_time <= self.state.time_frame - 20:
                 routes_able_to_add_connection.append(index)
-
+        # return none if there are no routes
+        if routes_able_to_add_connection == []:
+            return None
+        
         random_route = random.choice(routes_able_to_add_connection)
-
+        
         return random_route
 
+    def run(self, iterations: int) -> object:
+        """
+        runs the hillclimber
+        pre:
+            iterations is a integer
+        returns:
+            the last state after the hill-climber
+        """
+        for iteration in range(iterations):
+            self.make_change()
+            self.compare_scores_state()
 
-if __name__ == "__main__":
-    from sys import argv, path
-    path.append("../classes")
-    from state import State
-
-    state = State('../../data/stations_holland.csv',
-                  '../../data/routes_holland.csv', 7, 120)
-    hillclimber = Hill_climber(state, True)
-
-    print(hillclimber.state.show())
+        return self.current_state
