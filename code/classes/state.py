@@ -29,7 +29,7 @@ class State():
             connections_file_path)
         self.routes: list[object] = []
 
-        self.max_number_routes: Union(int, None) = max_number_routes
+        self.max_number_routes: Union(int, None) = int(max_number_routes)
         self.time_frame: Union(int, None) = time_frame
 
         # add parameters for quality score function
@@ -111,7 +111,7 @@ class State():
 
                 # add connection to connection list
                 new_connection: object = Connection(
-                    station1, station2, float(row["distance"]))
+                    self.total_number_connections, station1, station2, float(row["distance"]))
                 connections_list.append(new_connection)
 
                 # add connection to Station objects
@@ -277,7 +277,7 @@ class State():
             boolean indicating successfulness of operation      
         """
         assert route in self.routes, "Route not in routes list of current state"
-        connection = route.route_connections[-1]
+        connection = route.route_connections[0]
         if route.delete_connection_start():
             self.set_unused(connection)
             connection.used -= 1
@@ -426,11 +426,11 @@ class State():
             bool for overall constraint satisfaction     
         """
 
-        if not self.relaxed_time_frame and not self.routes_valid_time_frame():
+        if (not self.relaxed_time_frame) and (not self.routes_valid_time_frame()):
             return False
-        if not self.relaxed_max_routes and not self.less_than_max_routes():
+        if (not self.relaxed_max_routes) and (not self.less_than_max_routes()):
             return False
-        if not self.relaxed_all_connections and not self.all_connections_used():
+        if (not self.relaxed_all_connections) and (not self.all_connections_used()):
             return False
         return True
 
