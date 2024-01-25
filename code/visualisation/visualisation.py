@@ -243,7 +243,7 @@ def plot_routes(p: figure, state: 'State', station_dict: dict[str: list[float]])
 
     # add a title to your legend
     p.legend.title = "Routes"
-    p.legend.click_policy="hide"
+    p.legend.click_policy = "hide"
 
 
 def plot_map(p: figure, map: str) -> None:
@@ -281,7 +281,7 @@ def plot_map(p: figure, map: str) -> None:
                   line_color='black', fill_alpha=0.5)
 
 
-def show_plot(station_dict: dict[str: list[float]], state: object, map: str, filename: str) -> None:
+def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> None:
     """
     completely plots the current state with stations, connections, routes and maps.
 
@@ -315,8 +315,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str, fil
     p.add_tools(hover_connections)
 
     # show the plot
-    #show(p)
-    export_png(p, filename=filename)
+    show(p)
 
 
 if __name__ == "__main__":
@@ -347,4 +346,4 @@ if __name__ == "__main__":
     station_dict = get_station_info(state)
 
     # create and show plot
-    show_plot(station_dict, state, case_name)
+    show_plot(station_dict, state, case_name, )
