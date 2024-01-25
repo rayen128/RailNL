@@ -57,6 +57,7 @@ class Hill_climber(Algorithm):
         assert not self.state.routes, "there are already routes in this state"
         assert not self.state.used_connections, "there are used connections"
 
+        self.current_route_index = 0
         # add routes until state is valid
         while not self.state.is_valid_solution():
             # add route if the max amount is not reached
@@ -64,9 +65,7 @@ class Hill_climber(Algorithm):
                 self.add_random_route()
             # if max is reached delete random route and add route after that
             else:
-                random_number = random.randint(
-                    0, (self.state.max_number_routes - 1))
-                self.state.delete_route(self.state.routes[random_number])
+                self.delete_random_route()
                 self.add_random_route()
                 self.current_route_index -= 1
 
