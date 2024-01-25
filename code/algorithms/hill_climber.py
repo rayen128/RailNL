@@ -212,3 +212,51 @@ class Hill_climber(Algorithm):
             self.compare_scores_state()
 
         return self.current_state
+    
+class Hill_climber_restart(Hill_climber):
+    def __init__(self, state: 'State', restart_number: int):
+        self.restart = restart_number
+        self.restart_counter = 0
+
+    def compare_scores_state_restart(self):
+        """
+        compares the scores from the current state and the changed state
+
+        pre:
+            both states has scores
+
+        post:
+            both current state as state are now the state with the highest score
+        """
+        # get scores for both states
+        score_new_state = self.get_score_state(self.state)
+        score_old_state = self.get_score_state(self.old_state)
+
+        # compare scores and change states
+        if score_new_state >= score_old_state:
+            self.current_state = copy.deepcopy(self.state)
+            self.restart_counter = 0
+        else: 
+            self.state = copy.deepcopy(self.current_state)
+            self.restart_counter += 1
+
+    def run(self, iterations: int) -> object:
+        """
+        runs the hillclimber
+        pre:
+            iterations is a integer
+        returns:
+            the last state after the hill-climber
+        """
+        self.restart_counter = 0
+        for iteration in range(iterations):
+            self.make_change()
+            self.compare_scores_state()
+            if self.restart_counter >= self.restart:
+                self.state.reset()
+                self.create_state()
+                
+
+        return self.current_state
+
+    
