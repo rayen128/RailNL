@@ -9,8 +9,7 @@ from state import State
 
 def baseline(case_name: str, state: 'State') -> None:
     baseline_alg = Baseline_Algorithm(state)
-    # TODO: remove 'test' from file path
-    with open(f"data/baseline_data_{case_name}_test.csv", "w") as file:
+    with open(f"data/baseline_data_{case_name}.csv", "w") as file:
         writer = csv.writer(file)
         writer.writerow(["state_id", "algorithm", "score", "fraction_used_connections",
                         "number_routes", "total_minutes", "is_solution", "sleeper_string"])

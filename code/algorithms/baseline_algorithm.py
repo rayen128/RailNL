@@ -9,7 +9,6 @@ import copy
 class Baseline_Algorithm(Algorithm):
     def __init__(self, state: object) -> None:
         super().__init__(state)
-        
 
     def baseline_algorithm_1(self):
         """
@@ -105,8 +104,6 @@ class Baseline_Algorithm(Algorithm):
 
             # create a new route
             self.add_random_route()
-            print(self.state.show())
-            print(f"\n{self.current_route_index}")
 
             # add routes until time_frame is exceeded
             while self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
