@@ -122,18 +122,17 @@ class Plant_Propagation(Hill_climber):
 
         for original_route in original_state.routes:
             for new_route in new_state.routes:
-                original_connections = set(original_route.route_connections)
-                new_connections = set(new_route.route_connections)
+                original_connections = set(original_route.connection_ids)
+                new_connections = set(new_route.route_connection_ids)
 
-                connections_overlapping += len(original_connections &
-                                               new_connections)
-                connections_different += len(original_connections ^
-                                             new_connections)
+        connections_overlapping += len(original_connections &
+                                       new_connections)
+        connections_different += len(original_connections ^
+                                     new_connections)
 
-        print(connections_different)
-
-        # pick route_1 from original
+        #
         # compare this with all 5 routes from new_state
+        # save which routes overlap the most
         # add how many routes are overlapping and how many aren't
 
     def generate_runner_distances(self):
