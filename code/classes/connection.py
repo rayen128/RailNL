@@ -1,6 +1,6 @@
 class Connection():
 
-    def __init__(self: 'Connection', station_1: object, station_2: object, distance: float) -> None:
+    def __init__(self: 'Connection', id: int, station_1: object, station_2: object, distance: float) -> None:
         """
         initializes Connection-class
 
@@ -18,6 +18,7 @@ class Connection():
         assert isinstance(
             station_2, object), 'station_2 should be a station object'
 
+        self.id = id
         self.station_1 = station_1
         self.station_2 = station_2
         self.distance = distance
