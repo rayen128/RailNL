@@ -1,4 +1,4 @@
-from hill_climber import Hill_climber
+from .hill_climber import Hill_climber
 from math import tanh
 import random
 import copy
@@ -12,7 +12,7 @@ class Plant_Propagation(Hill_climber):
         self.population_size = population_size
         self.population: list[object] = []
 
-        self.runner_populaion: list[object] = []
+        self.runner_population: list[object] = []
 
         self.scores: list[float] = []
         self.converted_fitness_values: list[float: object] = {}
@@ -38,7 +38,7 @@ class Plant_Propagation(Hill_climber):
         fills self.score with the current population_scores
         """
         for i in range(len(self.population)):
-            self.scores.append(self.get_mutated_score(self.state))
+            self.scores.append(self.get_mutated_score(self.population[i]))
 
     def fitness_function(self) -> list[float]:
         """
@@ -73,9 +73,16 @@ class Plant_Propagation(Hill_climber):
         self.converted_fitness_values = sorted(
             converted_values, key=lambda x: x[0], reverse=True)
 
+    def merge_population(self):
+        """
+        merges the original and runner population
+        """
+        TODO
+        pass
+
     def get_best_from_population(self) -> None:
         """
-        picks the best performing states from the population
+        TODO: dit nog aanpassen
         """
 
         states = [item[1] for item in self.converted_fitness_values]
@@ -87,57 +94,86 @@ class Plant_Propagation(Hill_climber):
         for i in range(len(new_population)):
             self.population[i] = new_population[i]
 
-    def calculate_number_of_runners(self) -> list[int]:
+    def calculate_number_of_runners(self, fitness_value: float) -> int:
         """
         determines the amount of runners per state based on the fitness value
         """
         n_max = self.max_nr_runners
-        runner_list = []
+        n_runners = int(n_max * fitness_value)
 
-        for i in range(len(self.converted_fitness_values)):
-            n_runners = int(n_max * self.converted_fitness_values[i][0])
-            runner_list.append(n_runners)
+        return n_runners
 
-        return (runner_list)
-
-    def calculate_distance(self, state: object) -> None:
+    def calculate_distance(self, fitness_value: float) -> float:
         """
         determines the distance for all runners
         """
-        # dimensies zijn:
-        # elke connectie (afstand is hoeveel bereden)
-        # nr_of_routes (mogelijk x10 laten wegen)
-        # total_time
-        distance_list = []
 
-        for i in range(len(self.calculate_converted_fitness)):
-            r = random.random()
-            distance = 2 * \
-                (1 - self.calculate_converted_fitness[i]) * (r - 0.5)
-            distance_list.append(distance)
+        r = random.random()
+        distance = 2 * (1 - fitness_value) * (r - 0.5)
 
-        return distance_list
+        return distance
 
-    def likeness(self, original_state, new_state):
+    def likeness(self, original_state: object, new_state: object):
+        """
+        checks and quantifies the difference between two states
+        """
+        connections_overlapping = 0
+        connections_different = 0
 
-        pass
+        for original_route in original_state.routes:
+            for new_route in new_state.routes:
+                original_connections = set(original_route.route_connections)
+                new_connections = set(new_route.route_connections)
+
+                connections_overlapping += len(original_connections &
+                                               new_connections)
+                connections_different += len(original_connections ^
+                                             new_connections)
+
+        print(connections_different)
+
+        # pick route_1 from original
+        # compare this with all 5 routes from new_state
+        # add how many routes are overlapping and how many aren't
+
+    def generate_runner_distances(self):
+        """
+        Generate all runners
+        """
+        distance_dict = {}
+        # loop p/state
+        for i in range(len(self.converted_fitness_values)):
+            state = self.converted_fitness_values[i][1]
+            value = self.converted_fitness_values[i][0]
+            amount_of_runners = self.calculate_number_of_runners(value)
+
+            distance_dict[i] = []
+
+            # loop p/runner
+            for j in range(max(amount_of_runners, 1)):
+                distance = self.calculate_distance(value)
+                distance_dict[i].append(distance)
+
+        return distance_dict
 
     def make_runners(self):
-
-        # self.population
-        runner_list = self.calculate_number_of_runners()
-        distance_list = self.calculate_distance()
-        print(distance_list)
+        """
+        creates runner population
+        """
+        distance_dict = self.generate_runner_distances()
 
     def run(self):
         # create initial population
         self.initial_population()
 
-        # detirme fitness of current population
+        # determine fitness of current population
         self.calculate_converted_fitness()
 
         # create runner
         self.make_runners()
+
+        # likeness_test
+        self.likeness(self.population[0], self.population[1])
 
         # update population
         self.get_best_from_population()
