@@ -14,6 +14,7 @@ from typing import Union
 class Algorithm():
     def __init__(self, state: 'State', max_connection_returns: int = 0, heuristic_number_connections: bool = False, heuristic_route_maximalisation: bool = False, heuristic_difficult_connections: bool = False) -> None:
         self.state = state
+        self.current_route_index = 0
 
         self.max_connection_returns = max_connection_returns
 

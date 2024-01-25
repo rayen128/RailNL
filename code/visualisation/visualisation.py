@@ -314,8 +314,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
     p.add_tools(hover_connections)
 
     # show the plot
-    # show(p)
-    export_png(p, filename=filename)
+    show(p)
 
 
 if __name__ == "__main__":
@@ -346,4 +345,4 @@ if __name__ == "__main__":
     station_dict = get_station_info(state)
 
     # create and show plot
-    show_plot(station_dict, state, case_name, )
+    show_plot(station_dict, state, case_name)
