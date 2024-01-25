@@ -89,6 +89,9 @@ class Algorithm():
         if self.heuristic_route_maximalisation:
             total_b_m += self.minus_points_routes_maximalisation(state)
 
+        if self.heuristic_difficult_connections:
+            total_b_m += self.difficult_connections_used(state)
+
         return total_b_m
 
     def get_mutated_score(self, state) -> int:
@@ -322,6 +325,12 @@ class Algorithm():
 
     #### MINUS POINTS MULTIPLE USE CONNECTION HEURISTIC ####
     def _get_points_multiple_use_connection(self, connection: 'Connection'):
+        """
+        gives minus points if a connection is used multiple times. The minus points get progressively more, the more a connection is used.
+
+        returns:
+            minus points for multiple use of one single connection
+        """
         minus_points: int = 0
         for i in range(1, connection.used):
             minus_points += int(connection.distance) * i
