@@ -23,6 +23,7 @@ class Route():
             connection.station_1, connection.station_2]
         connection.used += 1
         self.route_connections: list['Connection'] = [connection]
+        self.connection_ids: list[int] = [connection.id]
         self.total_time: float = connection.distance
 
     def __str__(self):
@@ -79,6 +80,7 @@ class Route():
         # check if end station has the connection, if true add connection
         if end_station.has_connection(connection):
             self.route_connections.append(connection)
+            self.connection_ids.append(connection.id)
             self.add_station_end(
                 self.get_other_station(connection, end_station))
             self.total_time += connection.distance
@@ -88,6 +90,7 @@ class Route():
         # check if start station has the connection, if true add connection
         elif start_station.has_connection(connection):
             self.route_connections.insert(0, connection)
+            self.connection_ids.insert(0, connection.id)
             self.add_station_start(self.get_other_station(
                 connection, start_station))
             self.total_time += connection.distance
@@ -161,6 +164,7 @@ class Route():
 
         if len(self.route_connections) > 1:
             connection = self.route_connections.pop()
+            self.connection_ids.pop()
             self.route_stations.pop()
             self.total_time -= connection.distance
             connection.used -= 1
@@ -185,6 +189,7 @@ class Route():
         
         if len(self.route_connections) > 1:
             connection = self.route_connections.pop(0)
+            self.connection_ids.pop(0)
             self.route_stations.pop(0)
             self.total_time -= connection.distance
             connection.used -= 1
