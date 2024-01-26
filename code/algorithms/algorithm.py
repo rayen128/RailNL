@@ -128,6 +128,8 @@ class Algorithm():
         post:
             self.state.routes contains specified number of 1-length routes
         """
+        # TODO: zorgen dat random hoeveelheid routes word gekozen
+        # TODO: zorgen dat deze random hoeveelheid connecties kunnen hebben (zonder over max te gaan ofc)
         for new_connection in range(number_of_connections):
             # pick random connection and create route
             self.add_random_route()
