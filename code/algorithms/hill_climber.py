@@ -215,8 +215,9 @@ class Hill_climber(Algorithm):
         random_route = random.choice(routes_able_to_add_connection)
 
         return random_route
+    
 
-    def run(self, iterations: int, change_light: bool = True) -> object:
+    def run(self, iterations: int, hillclimber_id: int, change_light: bool = True) -> object:
         """
         runs the hillclimber
         pre:
@@ -228,7 +229,7 @@ class Hill_climber(Algorithm):
         self.create_state()
         self.current_state = copy.deepcopy(self.state)
 
-        for _ in range(iterations):
+        for iteration in range(iterations):
             if not change_light:
                 self.make_change_heavy()
             else:
