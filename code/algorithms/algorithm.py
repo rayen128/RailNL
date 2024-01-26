@@ -352,8 +352,6 @@ class Algorithm():
         returns:
             negative number, indicating minus points
         """
-        assert isinstance(
-            State, state), f"state should be a State object, is a {type(state)} (value: {state})"
 
         minus_points = 0
         for connection in state.connections:
@@ -374,8 +372,6 @@ class Algorithm():
             negative integer, indicating minus points
 
         """
-        assert isinstance(
-            Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
         return timeframe - route.total_time
 
     def minus_points_routes_maximalisation(self, state: 'State'):
@@ -388,8 +384,6 @@ class Algorithm():
         returns:
             negative integer, indicating minus points
         """
-        assert isinstance(
-            State, state), f"state should be a State object, is a {type(state)} (value: {state})"
 
         minus_points = 0
         for route in state.routes:
@@ -409,8 +403,6 @@ class Algorithm():
         post:
             True if connection is difficult
         """
-        assert isinstance(
-            Connection, connection), f"connection should be a Connection object, is a {type(connection)} (value: {connection})"
         check_station_1 = len(connection.station_1.connections) % 2
         check_station_2 = len(connection.station_2.connections) % 2
         return not (check_station_1 and check_station_2)
@@ -422,10 +414,8 @@ class Algorithm():
         pre:
             state is a State object
         """
-        assert isinstance(
-            State, state), f"state should be a State object, is a {type(state)} (value: {state})"
         difficult_connections = (
-            connection for connection in state.connection if self.connection_is_difficult(connection))
+            connection for connection in state.connections if self.connection_is_difficult(connection))
         return difficult_connections
 
     def difficult_connections_used(self, state):
@@ -438,8 +428,6 @@ class Algorithm():
         returns:
             a positive integer, indicating bonus points
         """
-        assert isinstance(
-            State, state), f"state should be a State object, is a {type(state)} (value: {state})"
 
         difficult_connections = self.identify_difficult_connections(state)
 
@@ -464,7 +452,7 @@ class Algorithm():
         """
         if not state.is_valid_solution():
             return minus_points
-        
+
     def get_variables(self, state: 'State', algorithm_id: int, iteration: int) -> list:
         """
         returns a list with all important variables from that state
@@ -477,6 +465,7 @@ class Algorithm():
         returns:
             a list with values
         """
+        print(iteration)
         variables_list = [f'{algorithm_id}.{iteration}',
                           algorithm_id,
                           iteration,
@@ -490,9 +479,5 @@ class Algorithm():
                           self.difficult_connections_used(state),
                           self.minus_points_non_valid_state(state),
                           state.show_sleeper_string()]
-        
+
         return variables_list
-
-
-
-
