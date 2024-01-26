@@ -303,9 +303,7 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
     plot_routes(p, state, station_dict)
     plot_stations(p, station_dict)
 
-    # TODO: Zorg dat het openen van de html goed en automatisch gaat
-    # TODO: Totale Score (goed) weergeven in de Legenda
-    # TODO: Methode schrijven om de kaart als picture op te slaan
+    # TODO: Totale Score (goed) weergeven in de Legenda?
 
     # add HoverTool for connections
     hover_connections = HoverTool(
