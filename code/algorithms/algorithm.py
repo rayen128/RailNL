@@ -466,6 +466,17 @@ class Algorithm():
             return minus_points
         
     def get_variables(self, state: 'State', algorithm_id: int, iteration: int) -> list:
+        """
+        returns a list with all important variables from that state
+
+        pre:
+            state is a filled state
+            algoritm_id is a integer
+            iteration is a integer
+
+        returns:
+            a list with values
+        """
         variables_list = [f'{algorithm_id}.{iteration}',
                           algorithm_id,
                           iteration,
