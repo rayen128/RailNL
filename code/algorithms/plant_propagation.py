@@ -13,33 +13,39 @@ class Plant_Propagation(Hill_climber):
         self.population: list[object] = []
 
         self.scores: list[float] = []
-        self.sorted_fitness_values: list[float: object] = {}
+        self.fitness_values: list[list[float, object]] = []
 
-        self.current_generation: int = 1
         self.max_generations = max_generations
 
         self.max_nr_runners = max_nr_runners
         self.runner_population: list[object] = []
 
-    def initial_population(self) -> None:
-        """
-        set the initial population by running a certain amount of hill-climber algorithms  
-        """
-        # create the hill-climbers
-        for i in range(self.population_size):
-            self.state.reset()
-            self.create_valid_state()
-            self.population.append(copy.deepcopy(self.state))
+    def run(self):
+        # create initial population
+        self.initial_population()
 
-        # populate self.scores
-        self.get_scores()
+        for generation in range(self.max_generations):
+            # determine fitness of current population
+            self.fitness_function()
+
+            # create runner
+            self.make_runners()
+
+            # update population
+            self.filter_population()
+
+            # print(f"Generation {generation + 1}: {self.scores}")
+
+    ### SCORE FUNCTIONS ###
 
     def get_scores(self) -> None:
         """
-        fills self.score with the current population_scores
+        fills self.score with the current population_scores and sort the population based on these scores
         """
         for i in range(len(self.population)):
             self.scores.append(self.get_mutated_score(self.population[i]))
+
+        self.sort_population()
 
     def fitness_function(self) -> list[float]:
         """
@@ -48,32 +54,56 @@ class Plant_Propagation(Hill_climber):
         max_score = max(self.scores)
         min_score = min(self.scores)
 
-        raw_fitness_values = []
-
         for i in range(len(self.population)):
             score = self.population[i].score
-            value = (max_score - score) / (max_score - min_score)
-            raw_fitness_values.append(value)
+            value = 1
+            # FIXME: bekijk deze functie nog heeeeul goed (of het uberhaupt boeit btw)
+            value = (score - min_score) / (max_score - min_score)
+            self.fitness_values.append([value, self.population[i]])
 
-        return raw_fitness_values
+    ### POPULATION FUNCTIONS ###
 
-    def calculate_converted_fitness(self) -> list[float]:
+    def initial_population(self) -> None:
         """
-        convert fitness-values so that these are mapped to [0,1]
+        set the initial population by running a certain amount of hill-climber algorithms  
         """
-        raw_fitness_values = self.fitness_function()
-        converted_values = []
+        hill_climber = Hill_climber(self.state)
+        # create the hill-climbers
+        for i in range(self.population_size):
+            hill_climber.run()
+            self.population.append(copy.deepcopy(self.state))
 
-        # convert fitness values
-        for i in range(len(raw_fitness_values)):
-            value = raw_fitness_values[i]
-            converted_value = (tanh(4 * value - 2) + 1) * 0.5
+        # populate self.scores
+        self.get_scores()
 
-            converted_values.append([converted_value, self.population[i]])
+    def filter_population(self) -> None:
+        """
+        filter the best of the original and runner population 
+        """
+        self.merge_population()
+        self.get_scores()
+        self.sort_population()
 
-        # sort population based on fitness scores
-        self.sorted_fitness_values = sorted(
-            converted_values, key=lambda x: x[0], reverse=True)
+        next_generation = self.population[:self.population_size]
+
+        self.population = []
+        self.scores = []
+        self.sorted_fitness_values = []
+        self.population = next_generation
+        self.get_scores()
+
+    def sort_population(self) -> None:
+        """
+        sorts the population on score
+        """
+        # combine scores, population and sort this
+        combined_list = list(zip(self.population, self.scores))
+        sorted_combined_list = sorted(
+            combined_list, key=lambda x: x[1], reverse=True)
+
+        # update scores and population
+        self.population = [state for state, score in sorted_combined_list]
+        self.scores = [score for state, score in sorted_combined_list]
 
     def merge_population(self) -> None:
         """
@@ -82,12 +112,51 @@ class Plant_Propagation(Hill_climber):
         for runner in self.runner_population:
             self.population.append(runner)
 
-    def filter_population(self) -> None:
+    ### RUNNER METHODS ###
+
+    def make_runners(self):
         """
-        filter the best of the original and runner population 
+        creates runner population
         """
-        self.merge_population()
-        self.get_scores()
+        distance_dict = self.generate_runner_distances()
+
+        # loop over population
+        for state_index in range(len(self.population)):
+            # loop over all runners
+            current_state = self.population[state_index]
+
+            for runner_index in range(len(distance_dict[state_index])):
+                distance_goal = distance_dict[state_index][runner_index]
+
+                current_runner = copy.deepcopy(current_state)
+
+                # TODO: Hier heel erg mee spelen op onderzoek gaan
+                while abs(distance_goal) > self.likeness(current_state, current_runner):
+                    for _ in range(50):
+                        current_runner.make_change()
+                self.runner_population.append(current_runner)
+
+        print(self.runner_population)
+
+    def generate_runner_distances(self):
+        """
+        Generate all runners distances
+        """
+        distance_dict = {}
+
+        # loop over the population
+        for i in range(len(self.fitness_values)):
+            state = self.fitness_values[i][1]
+            value = self.fitness_values[i][0]
+            amount_of_runners = max(self.calculate_number_of_runners(value), 1)
+            distance_dict[i] = []
+
+            # loop over all runners
+            for j in range(amount_of_runners):
+                distance = self.calculate_change(value)
+                distance_dict[i].append(distance)
+
+        return distance_dict
 
     def calculate_number_of_runners(self, fitness_value: float) -> int:
         """
@@ -98,10 +167,11 @@ class Plant_Propagation(Hill_climber):
 
         return n_runners
 
-    def calculate_distance(self, fitness_value: float) -> float:
+    def calculate_change(self, fitness_value: float) -> float:
         """
         determines a distance (semi-random) based on a fitness-value  
         """
+        # FIXME: Verander deze (totaal)
         r = random.random()
         distance = 2 * (1 - fitness_value) * (r - 0.5)
 
@@ -155,92 +225,3 @@ class Plant_Propagation(Hill_climber):
             original_state, new_state)
 
         return proportion
-
-    def generate_runner_distances(self):
-        """
-        Generate all runners
-        """
-        distance_dict = {}
-
-        # loop over the population
-        for i in range(len(self.sorted_fitness_values)):
-            state = self.sorted_fitness_values[i][1]
-            value = self.sorted_fitness_values[i][0]
-            amount_of_runners = self.calculate_number_of_runners(value)
-
-            distance_dict[i] = []
-
-            # loop over all runners
-            for j in range(max(amount_of_runners, 1)):
-                distance = self.calculate_distance(value)
-                distance_dict[i].append(distance)
-
-        return distance_dict
-
-    def make_runners(self):
-        """
-        creates runner population
-        """
-        distance_dict = self.generate_runner_distances()
-
-        # loop over population
-        for state_index in range(len(self.population)):
-            # loop over all runners
-            current_state = self.population[state_index]
-
-            for runner_index in range(len(distance_dict[state_index])):
-                distance_goal = distance_dict[state_index][runner_index]
-
-                current_runner = copy.deepcopy(current_state)
-
-                while abs(distance_goal) > self.likeness(current_state, current_runner):
-                    for _ in range(50):
-                        current_runner.make_change()
-                self.runner_population.append(current_runner)
-
-        print(f"Size of population is: {len(self.population)}")
-
-    def run(self):
-        # create initial population
-        self.initial_population()
-
-        for generation in range(self.max_generations):
-            # determine fitness of current population
-            self.calculate_converted_fitness()
-
-            # create runner
-            self.make_runners()
-
-            # update population
-            self.filter_population()
-
-
-# Vragen (voor Quinten?):
-    # normalization van fitness_function?
-    # grootte N_max (= number of max runners)?
-    # rond ik naar boven of naar onder af bij #_of_runners
-
-# Exploration vs. Exploitation
-
-
-# Variables:
-# the population size (=De start hoeveelheid HCs & max hoeveelheid states)
-# the (max) number of generations (=g_max)
-# a fitness function (f())
-# the number of runners to create for each solution
-# the distance for each runner
-
-
-# Nr. of shoots = m
-
-# All shoots send out runners p/itteration
-# --> This provides a terminating criterion and is represented by g_max.
-
-# Fitness-function [0,1] = hoe 'goed' een solution is & dus based op de doel-functie
-# --> Map fitness function (f(x)) on the following N(x) = 1/2 (tanh (4f(x) − 2) + 1)
-
-# Number of runners = n_r = [nmax N_ir]
-# --> n_max is max number of runners to generate (=population size?)
-
-# d_(r,j) = 2(1 − N_i)(r − 0.5)
-# for j = 1, . . . , n, where n is the dimension of the search space.
