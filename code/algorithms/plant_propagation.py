@@ -89,8 +89,6 @@ class Plant_Propagation(Hill_climber):
         self.merge_population()
         self.get_scores()
 
-        # filter on the best ones
-
     def calculate_number_of_runners(self, fitness_value: float) -> int:
         """
         determines the amount of runners per state based on the fitness value
