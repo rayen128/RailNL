@@ -215,10 +215,12 @@ class Hill_climber(Algorithm):
         random_route = random.choice(routes_able_to_add_connection)
 
         return random_route
+    
 
-    def run(self, iterations: int, change_light: bool = True) -> object:
+    def run(self, iterations: int, algorithm_id: int, change_light: bool = True) -> object:
         """
         runs the hillclimber
+        
         pre:
             iterations is a integer
         returns:
@@ -228,14 +230,17 @@ class Hill_climber(Algorithm):
         self.create_state()
         self.current_state = copy.deepcopy(self.state)
 
-        for _ in range(iterations):
+        hillclimber_list_variables = []
+        for iteration in range(iterations):
             if not change_light:
                 self.make_change_heavy()
             else:
                 self.make_change_light()
             self.compare_scores_state()
+            variables_list = self.get_variables(self.current_state, algorithm_id, iteration)
+            hillclimber_list_variables.append(variables_list)
 
-        return self.current_state
+        return hillclimber_list_variables
 
 
 class Hill_climber_restart(Hill_climber):
@@ -266,15 +271,22 @@ class Hill_climber_restart(Hill_climber):
             self.state = copy.deepcopy(self.current_state)
             self.restart_counter += 1
 
-    def run(self, iterations: int, change_light: bool = True) -> 'State':
+    def run(self, iterations: int, algorithm_id: int, change_light: bool = True) -> 'State':
         """
         runs the hillclimber
+        
         pre:
             iterations is a integer
         returns:
             the last state after the hill-climber
         """
+        
+        self.state.reset()
+        self.create_state()
+        self.current_state = copy.deepcopy(self.state)
         self.restart_counter = 0
+
+        hillclimber_list_variables = []
         for iteration in range(iterations):
             if not change_light:
                 self.make_change_heavy()
@@ -284,5 +296,8 @@ class Hill_climber_restart(Hill_climber):
             if self.restart_counter >= self.restart:
                 self.state.reset()
                 self.create_state()
+                self.current_state = copy.deepcopy(self.state)
+            variables_list = self.get_variables(self.current_state, algorithm_id, iteration)
+            hillclimber_list_variables.append(variables_list)
 
-        return self.current_state
+        return hillclimber_list_variables

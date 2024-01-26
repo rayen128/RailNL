@@ -5,6 +5,7 @@ from state import State
 
 import random
 import copy
+import math
 
 class Simulated_annealing(Hill_climber):
     def __init__(self, state: 'State', temperature: int, iterations: int, alpha: float = None) -> None:
@@ -51,7 +52,20 @@ class Simulated_annealing(Hill_climber):
         temperature = self.start_temperature * (0.997 ** iteration)
 
         return temperature
+    
+    def calculate_temperature_logaritmic(self, iteration) -> float:
+        """
+        calculates the current temperature with a lineair formula
 
+        pre:
+            iteration is less than self.iterations
+
+        return:
+            the current temperature
+        """
+        temperature = self.start_temperature /  (1 + (math.log(1 + iteration)))
+
+        return temperature
 
     def get_chance(self, temperature) -> float:
         """
@@ -73,7 +87,7 @@ class Simulated_annealing(Hill_climber):
 
         return chance
     
-    def change_state(self, iteration: int, exponential: bool) -> None:
+    def change_state(self, iteration: int, cooling_scheme: str) -> None:
         """
         changes the state if a random_number is below the accept chance
 
@@ -85,10 +99,12 @@ class Simulated_annealing(Hill_climber):
             changes the current state if the change is accepted
         """
         # get temperature
-        if exponential:
+        if cooling_scheme == 'exponential':
             temperature = self.calculate_temperature_exponential(iteration)
-        else:
+        elif cooling_scheme == 'lineair':
             temperature = self.calculate_temperature_lineair(iteration)
+        elif cooling_scheme == 'logaritmic':
+            temperature = self.calculate_temperature_logaritmic(iteration)
         
         # get accept chance
         accept_chance = self.get_chance(temperature)
@@ -103,7 +119,7 @@ class Simulated_annealing(Hill_climber):
             self.state = copy.deepcopy(self.current_state)
 
 
-    def run(self, exponential: bool) -> 'State':
+    def run(self, algorithm_id: int, cooling_scheme: str, change_light: bool = False) -> 'State':
         """
         runs the simulated annealing algorithm
 
@@ -113,9 +129,20 @@ class Simulated_annealing(Hill_climber):
         returns:
             the state after iteration times of changes
         """
+        self.state.reset()
+        self.create_state()
+        self.current_state = copy.deepcopy(self.state)
+        self.restart_counter = 0
+
+        annealing_list_variables = []
+
         for iteration in range(self.iterations):
-            self.make_change_heavy()
-            self.change_state(iteration, exponential)
+            if not change_light:
+                self.make_change_heavy()
+            else:
+                self.make_change_light()
+            self.change_state(iteration, cooling_scheme)
+            variables_list = self.get_variables(self.current_state, algorithm_id, iteration)
+            annealing_list_variables.append(variables_list)
 
-        return self.current_state
-
+        return annealing_list_variables
