@@ -474,8 +474,8 @@ class Algorithm():
         if not state.is_valid_solution():
             return minus_points
         
-    def get_variabels(self, state: 'State', algorithm_id: int, iteration: int) -> list:
-        variabels_list = [f'{algorithm_id}.{iteration}',
+    def get_variables(self, state: 'State', algorithm_id: int, iteration: int) -> list:
+        variables_list = [f'{algorithm_id}.{iteration}',
                           algorithm_id,
                           iteration,
                           state.calculate_score(),
@@ -489,7 +489,7 @@ class Algorithm():
                           self.minus_points_non_valid_state(state),
                           state.show_sleeper_string()]
         
-        return variabels_list
+        return variables_list
 
 
 
