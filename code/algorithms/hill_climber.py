@@ -9,7 +9,7 @@ from sys import path
 
 
 class Hill_climber(Algorithm):
-    def __init__(self, state: object, valid_start_state: bool = True):
+    def __init__(self, state: object, valid_start_state: bool = True) -> None:
         """
         initializes the hillclimber with a starting state
 
@@ -28,7 +28,7 @@ class Hill_climber(Algorithm):
 
         self.current_state = copy.deepcopy(self.state)
 
-    def create_state(self):
+    def create_state(self) -> None:
         """
         creates a start state
 
@@ -43,7 +43,7 @@ class Hill_climber(Algorithm):
         else:
             self.create_random_state()
 
-    def create_valid_state(self):
+    def create_valid_state(self) -> None:
         """
         creates for self.state a start-state that is valid 
 
@@ -88,7 +88,7 @@ class Hill_climber(Algorithm):
 
             self.current_route_index += 1
 
-    def make_change(self):
+    def make_change_heavy(self) -> None:
         """
         makes one change in the state
 
@@ -139,7 +139,30 @@ class Hill_climber(Algorithm):
             else:
                 self.delete_random_route()
 
-    def get_score_state(self, state: 'State'):
+    
+    def make_change_light(self) -> None:
+        """
+        makes one change in the state
+
+        pre:
+            self.state is an already solved state
+
+        post:
+            a route is added or deleted or a connection is added or deleted in self.state
+        """
+        random_number = random.randint(0, 100)
+        if not self.choose_route_to_add_connection():
+            self.delete_random_connection()
+
+        else:
+            if random_number <= 40:
+                route_number = self.choose_route_to_add_connection()
+                self.add_random_connection(route_number)
+            else:
+                self.delete_random_connection()
+
+    
+    def get_score_state(self, state: 'State') -> float:
         """
         get the score for a state with negative points for a non-valid state
 
@@ -151,12 +174,9 @@ class Hill_climber(Algorithm):
         """
         score = state.calculate_score()
 
-        if not state.is_valid_solution():
-            score -= 1000
-
         return score
 
-    def compare_scores_state(self):
+    def compare_scores_state(self) -> None:
         """
         compares the scores from the current state and the changed state
 
@@ -168,7 +188,7 @@ class Hill_climber(Algorithm):
         """
         # get scores for both states
         score_new_state = self.get_score_state(self.state)
-        score_old_state = self.get_score_state(self.old_state)
+        score_old_state = self.get_score_state(self.current_state)
 
         # compare scores and change states
         if score_new_state >= score_old_state:
@@ -199,7 +219,7 @@ class Hill_climber(Algorithm):
         
         return random_route
 
-    def run(self, iterations: int) -> object:
+    def run(self, iterations: int, change_light: bool = True) -> object:
         """
         runs the hillclimber
         pre:
@@ -208,17 +228,21 @@ class Hill_climber(Algorithm):
             the last state after the hill-climber
         """
         for iteration in range(iterations):
-            self.make_change()
+            if not change_light:
+                self.make_change_heavy()
+            else:
+                self.make_change_light()
             self.compare_scores_state()
 
         return self.current_state
     
 class Hill_climber_restart(Hill_climber):
-    def __init__(self, state: 'State', restart_number: int):
+    def __init__(self, state: 'State', restart_number: int) -> None:
+        super().__init__(state)
         self.restart = restart_number
         self.restart_counter = 0
 
-    def compare_scores_state_restart(self):
+    def compare_scores_state_restart(self) -> None:
         """
         compares the scores from the current state and the changed state
 
@@ -230,7 +254,7 @@ class Hill_climber_restart(Hill_climber):
         """
         # get scores for both states
         score_new_state = self.get_score_state(self.state)
-        score_old_state = self.get_score_state(self.old_state)
+        score_old_state = self.get_score_state(self.current_state)
 
         # compare scores and change states
         if score_new_state >= score_old_state:
@@ -240,7 +264,7 @@ class Hill_climber_restart(Hill_climber):
             self.state = copy.deepcopy(self.current_state)
             self.restart_counter += 1
 
-    def run(self, iterations: int) -> object:
+    def run(self, iterations: int, change_light: bool = True) -> 'State':
         """
         runs the hillclimber
         pre:
@@ -250,8 +274,11 @@ class Hill_climber_restart(Hill_climber):
         """
         self.restart_counter = 0
         for iteration in range(iterations):
-            self.make_change()
-            self.compare_scores_state()
+            if not change_light:
+                self.make_change_heavy()
+            else:
+                self.make_change_light()
+            self.compare_scores_state_restart()
             if self.restart_counter >= self.restart:
                 self.state.reset()
                 self.create_state()

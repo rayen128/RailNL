@@ -12,7 +12,7 @@ from typing import Union
 
 
 class Algorithm():
-    def __init__(self, state: 'State', max_connection_returns: int = 0, heuristic_number_connections: bool = False, heuristic_route_maximalisation: bool = False, heuristic_difficult_connections: bool = False) -> None:
+    def __init__(self, state: 'State', max_connection_returns: int = 0, heuristic_number_connections: bool = False, heuristic_route_maximalisation: bool = False, heuristic_difficult_connections: bool = False, heuristic_non_valid: bool = False) -> None:
         self.state = state
         self.current_route_index = 0
 
@@ -21,6 +21,7 @@ class Algorithm():
         self.heuristic_number_connections = heuristic_number_connections
         self.heuristic_route_maximalisation = heuristic_route_maximalisation
         self.heuristic_difficult_connections = heuristic_difficult_connections
+        self.heuristic_non_valid = heuristic_non_valid
 
     def __str__(self):
         return "Algorithm object"
@@ -91,6 +92,9 @@ class Algorithm():
 
         if self.heuristic_difficult_connections:
             total_b_m += self.difficult_connections_used(state)
+
+        if self.heuristic_non_valid:
+            total_b_m += self.minus_points_non_valid_state(state)
 
         return total_b_m
 
@@ -451,3 +455,21 @@ class Algorithm():
             if connection in difficult_connections:
                 bonus_points += connection.distance
         return bonus_points
+
+    #### NON VALID HEURISTIC ####
+
+    def minus_points_non_valid_state(self, state: 'State', minus_points: int = 1000):
+        """
+        Gives a 1000 minus points if a state is not valid.
+
+        pre:
+            state is a State object
+            minus_points is an int
+
+        returns:
+            a negative integer, indicating the minus points
+        """
+        if not self.heuristic_non_valid:
+            return 0
+        if not state.is_valid_solution():
+            return minus_points
