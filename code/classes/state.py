@@ -162,7 +162,6 @@ class State():
             self.number_routes += 1
 
             self.set_used(connection)
-            connection.used += 1
 
             return True
         else:
@@ -237,7 +236,6 @@ class State():
         """
         if route.add_connection(connection):
             self.set_used(connection)
-            connection.used += 1
             return True
         return False
 
@@ -258,7 +256,6 @@ class State():
         connection = route.route_connections[-1]
         if route.delete_connection_end():
             self.set_unused(connection)
-            connection.used -= 1
             return True
         return False
 
@@ -280,7 +277,6 @@ class State():
         connection = route.route_connections[0]
         if route.delete_connection_start():
             self.set_unused(connection)
-            connection.used -= 1
             return True
         return False
 

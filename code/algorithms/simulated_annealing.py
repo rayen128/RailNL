@@ -64,9 +64,11 @@ class Simulated_annealing(Hill_climber):
             the chance
         
         """
+        # get scores both states
         score_old_state = self.get_score_state(self.current_state)
         score_new_state = self.get_score_state(self.state)
 
+        # calculate the accept chance
         chance = 2 ** ((score_new_state - score_old_state) / temperature)
 
         return chance
@@ -82,15 +84,19 @@ class Simulated_annealing(Hill_climber):
         post:
             changes the current state if the change is accepted
         """
+        # get temperature
         if exponential:
             temperature = self.calculate_temperature_exponential(iteration)
         else:
             temperature = self.calculate_temperature_lineair(iteration)
         
+        # get accept chance
         accept_chance = self.get_chance(temperature)
 
+        # get random number
         random_number = random.random()
         
+        # decide to accept change or not
         if random_number < accept_chance:
             self.current_state = copy.deepcopy(self.state)
         else: 
