@@ -26,9 +26,18 @@ def experiment_hill_climber_iterations(case_name: str, state: 'State', time_seco
         # experiment with valid start state and light mutations
         hc = Hill_climber(state)
         start = time.time()
+
+        # run grid element for 1/4 of the time
         while time.time() - start < time_seconds / 4:
+
+            # run gives a list with lists of results of each iteration
             csv_list = hc.run()
-            writer.writerow([i, "valid", "light", score_list])
+
+            # write iterations to csv
+            for iteration_result in csv_list:
+                writer.writerow(iteration_result)
+
+            counter += 1
 
         hc = Hill_climber(state, valid_start_state=False)
         for i in range(1000, 2000):
