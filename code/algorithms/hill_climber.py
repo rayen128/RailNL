@@ -85,6 +85,7 @@ class Hill_climber(Algorithm):
                     self.state.routes[self.current_route_index])
 
             self.current_route_index += 1
+            
 
     def make_change_heavy(self) -> None:
         """

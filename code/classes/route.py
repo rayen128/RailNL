@@ -96,8 +96,8 @@ class Route():
             self.total_time += connection.distance
             connection.used += 1
             return True
-
-        return False
+        
+        return False 
 
     def add_station_end(self: 'Route', station: 'Station') -> None:
         """
