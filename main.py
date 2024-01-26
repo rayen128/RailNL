@@ -3,6 +3,7 @@ import csv
 from sys import argv, path
 from code.algorithms.baseline_algorithm import *
 from code.scripts.baseline import baseline
+from code.scripts.experiment_hill_climber_choices import experiment_hill_climber_choices
 
 path.append("code/classes")
 from state import State
@@ -34,4 +35,7 @@ if __name__ == "__main__":
                           file_path_routes, max_number_routes, time_frame)
 
     # make a baseline
-    baseline(argv[1], state)
+    # baseline(argv[1], state)
+
+    # experiment with hill climber choices
+    experiment_hill_climber_choices(argv[1], state)

@@ -1,6 +1,6 @@
 import csv
 
-from sys import argv, path
+from sys import path
 from code.algorithms.baseline_algorithm import *
 
 path.append("code/classes")
