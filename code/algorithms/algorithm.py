@@ -355,9 +355,6 @@ class Algorithm():
         assert isinstance(
             State, state), f"state should be a State object, is a {type(state)} (value: {state})"
 
-        if not self.heuristic_number_connections:
-            return 0
-
         minus_points = 0
         for connection in state.connections:
             minus_points -= self._get_points_multiple_use_connection(
@@ -365,6 +362,7 @@ class Algorithm():
         return minus_points
 
     #### ROUTE MAXIMALISATION HEURISTIC ####
+
     def _minus_points_route_maximalisation(self, route: 'Route', timeframe: int) -> int:
         """
         gives minus points if the route is not maximalised
@@ -392,8 +390,6 @@ class Algorithm():
         """
         assert isinstance(
             State, state), f"state should be a State object, is a {type(state)} (value: {state})"
-        if not self.heuristic_route_maximalisation:
-            return 0
 
         minus_points = 0
         for route in state.routes:
@@ -445,9 +441,6 @@ class Algorithm():
         assert isinstance(
             State, state), f"state should be a State object, is a {type(state)} (value: {state})"
 
-        if not self.heuristic_difficult_connections:
-            return 0
-
         difficult_connections = self.identify_difficult_connections(state)
 
         bonus_points = 0
@@ -469,8 +462,6 @@ class Algorithm():
         returns:
             a negative integer, indicating the minus points
         """
-        if not self.heuristic_non_valid:
-            return 0
         if not state.is_valid_solution():
             return minus_points
         
