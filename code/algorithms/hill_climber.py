@@ -85,7 +85,6 @@ class Hill_climber(Algorithm):
                     self.state.routes[self.current_route_index])
 
             self.current_route_index += 1
-            
 
     def make_change_heavy(self) -> None:
         """
@@ -215,12 +214,11 @@ class Hill_climber(Algorithm):
         random_route = random.choice(routes_able_to_add_connection)
 
         return random_route
-    
 
     def run(self, iterations: int, algorithm_id: int, change_light: bool = True) -> object:
         """
         runs the hillclimber
-        
+
         pre:
             iterations is a integer
         returns:
@@ -237,7 +235,8 @@ class Hill_climber(Algorithm):
             else:
                 self.make_change_light()
             self.compare_scores_state()
-            variables_list = self.get_variables(self.current_state, algorithm_id, iteration)
+            variables_list = self.get_variables(
+                self.current_state, algorithm_id, iteration)
             hillclimber_list_variables.append(variables_list)
 
         return hillclimber_list_variables
@@ -274,13 +273,13 @@ class Hill_climber_restart(Hill_climber):
     def run(self, iterations: int, algorithm_id: int, change_light: bool = True) -> 'State':
         """
         runs the hillclimber
-        
+
         pre:
             iterations is a integer
         returns:
             the last state after the hill-climber
         """
-        
+
         self.state.reset()
         self.create_state()
         self.current_state = copy.deepcopy(self.state)
@@ -297,7 +296,8 @@ class Hill_climber_restart(Hill_climber):
                 self.state.reset()
                 self.create_state()
                 self.current_state = copy.deepcopy(self.state)
-            variables_list = self.get_variables(self.current_state, algorithm_id, iteration)
+            variables_list = self.get_variables(
+                self.current_state, algorithm_id, iteration)
             hillclimber_list_variables.append(variables_list)
 
         return hillclimber_list_variables

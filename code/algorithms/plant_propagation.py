@@ -20,6 +20,8 @@ class Plant_Propagation(Hill_climber):
         self.max_nr_runners = max_nr_runners
         self.runner_population: list[object] = []
 
+    ### GENERAL FUNCTIONS ###
+
     def run(self):
         # create initial population
         self.initial_population()
@@ -36,6 +38,21 @@ class Plant_Propagation(Hill_climber):
 
             # print(f"Generation {generation + 1}: {self.scores}")
 
+    def initial_population(self) -> None:
+        """
+        set the initial population by running a certain amount of hill-climber algorithms  
+        """
+        # TODO: Maak hier hill-climbers van
+        hill_climber = Hill_climber(self.state)
+        # create the hill-climbers
+        for i in range(self.population_size):
+            self.state.reset()
+            self.create_valid_state()
+            self.population.append(copy.deepcopy(self.state))
+
+        # populate self.scores
+        self.get_scores()
+
     ### SCORE FUNCTIONS ###
 
     def get_scores(self) -> None:
@@ -43,54 +60,39 @@ class Plant_Propagation(Hill_climber):
         fills self.score with the current population_scores and sort the population based on these scores
         """
         for i in range(len(self.population)):
-            self.scores.append(self.get_mutated_score(self.population[i]))
-
-        self.sort_population()
+            self.scores.append([self.get_mutated_score(
+                self.population[i]), self.population[i]])
 
     def fitness_function(self) -> list[float]:
         """
-        calulate and return the fitness (=normalized score) of the whole population  
+        calulate and the fitness (=normalized score) of the whole population  
         """
-        max_score = max(self.scores)
-        min_score = min(self.scores)
+        # Extract just the scores from self.scores
+        scores_only = [score_state_pair[0] for score_state_pair in self.scores]
+
+        # Now find the max and min scores
+        max_score = max(scores_only)
+        min_score = min(scores_only)
 
         for i in range(len(self.population)):
-            score = self.population[i].score
-            value = 1
-            # FIXME: bekijk deze functie nog heeeeul goed (of het uberhaupt boeit btw)
+            score = self.scores[i][0]
             value = (score - min_score) / (max_score - min_score)
-            self.fitness_values.append([value, self.population[i]])
+            self.fitness_values.append([value, self.scores[i][1]])
 
     ### POPULATION FUNCTIONS ###
-
-    def initial_population(self) -> None:
-        """
-        set the initial population by running a certain amount of hill-climber algorithms  
-        """
-        hill_climber = Hill_climber(self.state)
-        # create the hill-climbers
-        for i in range(self.population_size):
-            hill_climber.run()
-            self.population.append(copy.deepcopy(self.state))
-
-        # populate self.scores
-        self.get_scores()
 
     def filter_population(self) -> None:
         """
         filter the best of the original and runner population 
         """
         self.merge_population()
-        self.get_scores()
-        self.sort_population()
 
-        next_generation = self.population[:self.population_size]
-
-        self.population = []
         self.scores = []
         self.sorted_fitness_values = []
-        self.population = next_generation
+        self.population = []
         self.get_scores()
+
+        # FIXME: Tournament_Style verhaal
 
     def sort_population(self) -> None:
         """
@@ -110,7 +112,7 @@ class Plant_Propagation(Hill_climber):
         merge runner and original population
         """
         for runner in self.runner_population:
-            self.population.append(runner)
+            self.fitness_values.append(runner)
 
     ### RUNNER METHODS ###
 
@@ -119,6 +121,8 @@ class Plant_Propagation(Hill_climber):
         creates runner population
         """
         distance_dict = self.generate_runner_distances()
+        print(self.fitness_values)
+        print(distance_dict)
 
         # loop over population
         for state_index in range(len(self.population)):
@@ -127,16 +131,15 @@ class Plant_Propagation(Hill_climber):
 
             for runner_index in range(len(distance_dict[state_index])):
                 distance_goal = distance_dict[state_index][runner_index]
-
                 current_runner = copy.deepcopy(current_state)
 
-                # TODO: Hier heel erg mee spelen op onderzoek gaan
-                while abs(distance_goal) > self.likeness(current_state, current_runner):
-                    for _ in range(50):
-                        current_runner.make_change()
-                self.runner_population.append(current_runner)
+                # TODO: Experimenteren
+                while distance_goal > self.likeness(current_state, current_runner):
+                    for i in range(distance_goal):
+                        # FIXME: dit maakt geen veranderingen
+                        self.make_change_light()
 
-        print(self.runner_population)
+                self.runner_population.append(current_runner)
 
     def generate_runner_distances(self):
         """
@@ -153,7 +156,7 @@ class Plant_Propagation(Hill_climber):
 
             # loop over all runners
             for j in range(amount_of_runners):
-                distance = self.calculate_change(value)
+                distance = self.calculate_distance(value)
                 distance_dict[i].append(distance)
 
         return distance_dict
@@ -167,13 +170,17 @@ class Plant_Propagation(Hill_climber):
 
         return n_runners
 
-    def calculate_change(self, fitness_value: float) -> float:
+    def calculate_distance(self, fitness_value: float) -> float:
         """
         determines a distance (semi-random) based on a fitness-value  
         """
-        # FIXME: Verander deze (totaal)
+        # TODO: Experimenteren
+        scale_factor = 20
+        variability = 4
         r = random.random()
-        distance = 2 * (1 - fitness_value) * (r - 0.5)
+
+        distance = max(int((1 - fitness_value) *
+                       scale_factor + int(r * variability)), 1)
 
         return distance
 
@@ -181,6 +188,7 @@ class Plant_Propagation(Hill_climber):
         """
         checks and checks the route differences between two states
         """
+        # FIXME: Tel overlap aan totale routes (en check of dit uberhaupt wel goed werkt!)
         connections_overlapping = 0
         connections_different = 0
 
@@ -224,4 +232,4 @@ class Plant_Propagation(Hill_climber):
         connections_different, connections_overlapping, proportion = self.count_route_difference(
             original_state, new_state)
 
-        return proportion
+        return connections_different
