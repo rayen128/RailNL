@@ -465,7 +465,7 @@ class Algorithm():
         returns:
             a list with values
         """
-        print(iteration)
+        print(f'{algorithm_id}.{iteration}')
         variables_list = [f'{algorithm_id}.{iteration}',
                           algorithm_id,
                           iteration,
