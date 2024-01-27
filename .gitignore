@@ -163,6 +163,8 @@ cython_debug/
 
 data/baseline_data_netherlands.csv
 data/baseline_data_holland.csv
+data/experiment_hill_climber_grid_search_netherlands.csv
+data/experiment_hill_climber_grid_search_holland.csv
 
 test_state.py
 test.py
