@@ -2,12 +2,15 @@ import csv
 
 from sys import argv, path
 from code.algorithms.baseline_algorithm import *
+from code.algorithms.hill_climber import Hill_climber
+from code.algorithms.algorithm import *
 from code.scripts.baseline import baseline
 from code.scripts.experiment_hill_climber_choices import experiment_hill_climber_choices
 from code.scripts.experiment_hill_climber_grid_search import experiment_hill_climber_grid_search as hcgs
+from code.classes.state import State
 
-path.append("code/classes")
-from state import State
+# path.append("code/classes")
+# from state import State
 
 if __name__ == "__main__":
     # make sure a .csv is given for both stations and routes
@@ -39,7 +42,9 @@ if __name__ == "__main__":
     # baseline(argv[1], state)
 
     # grid search experiment hill climber
-    hcgs(argv[1], state, 300)
+    hcgs(argv[1], state, 7200)
+    # hcgs("netherlands", State("data/stations_netherlands.csv",
+    #      "data/routes_netherlands.csv", 20, 180), 60)
 
     # experiment with hill climber choices
     # experiment_hill_climber_choices(argv[1], state)

@@ -37,7 +37,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
         while time.time() - start < time_seconds / 4:
 
             # run gives a list with lists of results of each iteration
-            csv_list = hc.run(10000, counter)
+            csv_list = hc.run(1000, counter)
 
             # write iterations to csv
             for iteration_result in csv_list:
@@ -51,7 +51,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
         start = time.time()
 
         while time.time() - start < time_seconds / 4:
-            csv_list = hc.run(10000, counter)
+            csv_list = hc.run(1000, counter)
             for iteration_result in csv_list:
                 iteration_result.append("random")
                 iteration_result.append("light")
@@ -62,7 +62,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
         start = time.time()
 
         while time.time() - start < time_seconds / 4:
-            csv_list = hc.run(10000, counter, change_light=False)
+            csv_list = hc.run(1000, counter, change_light=False)
             for iteration_result in csv_list:
                 iteration_result.append("valid")
                 iteration_result.append("heavy")
@@ -73,7 +73,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
         start = time.time()
 
         while time.time() - start < time_seconds / 4:
-            csv_list = hc.run(10000, counter, change_light=False)
+            csv_list = hc.run(1000, counter, change_light=False)
             for iteration_result in csv_list:
                 iteration_result.append("random")
                 iteration_result.append("heavy")
