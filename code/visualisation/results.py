@@ -1,6 +1,6 @@
 import csv
 
-def read_csv(csv_filepath: str) -> dict:
+def read_csv(csv_filepath: str, id_name: str) -> dict:
     """
     reads csv file with states and saves every state in a dictionary
     saves a dictionary with all the states dictionaries with state id as key
@@ -22,7 +22,7 @@ def read_csv(csv_filepath: str) -> dict:
     with open(csv_filepath) as states:
         csv_reader = csv.DictReader(states)
         for row in csv_reader:
-            states_dict[row["state_id"]] = row
+            states_dict[row[id_name]] = row
 
     return states_dict
 

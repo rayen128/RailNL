@@ -86,10 +86,38 @@ def make_line_diagram(scores: list, title_diagram: str, filepath: str) -> None:
     post:
         saves a png file with the line diagram
     """
+    plt.clf()
     
     x = list(range(len(scores)))
     
     plt.plot(x, scores)
+    plt.xlabel("Iterations")
+    plt.ylabel("Scores")
+    plt.title(f"{title_diagram}")
+    plt.savefig(
+        f'{filepath}.png')
+    
+def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, filepath: str, comparison: bool) -> None:
+    """
+    makes a line diagram with multiple lines of the scores against the iterations
+
+    pre:
+        the scores in the list is in the same order as the amount of iterations
+        scores is a list with integers
+        title_diagram and filepath are strings
+
+    post:
+        saves a png file with the line diagram
+    """
+    plt.clf()
+    
+    for score_list in scores:
+        x = list(range(len(score_list)))
+        if not comparison:
+            plt.plot(x, score_list, alpha=0.2, color='magenta')
+        else:
+            plt.plot(x, score_list)
+
     plt.xlabel("Iterations")
     plt.ylabel("Scores")
     plt.title(f"{title_diagram}")
