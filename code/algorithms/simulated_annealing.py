@@ -8,7 +8,7 @@ import copy
 import math
 
 class Simulated_annealing(Hill_climber):
-    def __init__(self, state: 'State', temperature: int, iterations: int, alpha: float = None) -> None:
+    def __init__(self, state: 'State', temperature: int, iterations: int, valid_start_state: bool = True) -> None:
         """
         initializes the simulated annealing with a temperature and a amount of iterations
 
@@ -21,9 +21,9 @@ class Simulated_annealing(Hill_climber):
         """
         super().__init__(state)
 
+        self.valid_start_state = valid_start_state
         self.start_temperature: int = temperature
         self.iterations = iterations
-        self.alpha = alpha
 
     def calculate_temperature_lineair(self, iteration) -> float:
         """
@@ -132,7 +132,6 @@ class Simulated_annealing(Hill_climber):
         self.state.reset()
         self.create_state()
         self.current_state = copy.deepcopy(self.state)
-        self.restart_counter = 0
 
         annealing_list_variables = []
 

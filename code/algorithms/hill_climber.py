@@ -104,7 +104,7 @@ class Hill_climber(Algorithm):
                 self.delete_random_connection()
             elif random_number >= 46 and random_number <= 80:
                 self.add_random_route()
-            else:
+            elif self.state.number_routes > 1:
                 self.delete_random_route()
 
         # if both routes and connections can not be added
@@ -112,7 +112,7 @@ class Hill_climber(Algorithm):
                 self.state.number_routes >= self.state.max_number_routes:
             if random_number <= 65:
                 self.delete_random_connection()
-            else:
+            elif self.state.number_routes > 1:
                 self.delete_random_route()
 
         # if routes and connections can be added
@@ -124,7 +124,7 @@ class Hill_climber(Algorithm):
                 self.add_random_connection(route_number)
             elif random_number >= 61 and random_number <= 85:
                 self.add_random_route()
-            else:
+            elif self.state.number_routes > 1:
                 self.delete_random_route()
 
         # if connections can be added but routes not
@@ -134,7 +134,7 @@ class Hill_climber(Algorithm):
             elif random_number >= 46 and random_number <= 75:
                 route_number = self.choose_route_to_add_connection()
                 self.add_random_connection(route_number)
-            else:
+            elif self.state.number_routes > 1:
                 self.delete_random_route()
 
     def make_change_light(self) -> None:
@@ -243,10 +243,11 @@ class Hill_climber(Algorithm):
 
 
 class Hill_climber_restart(Hill_climber):
-    def __init__(self, state: 'State', restart_number: int) -> None:
+    def __init__(self, state: 'State', restart_number: int, valid_start_state: bool = True) -> None:
         super().__init__(state)
         self.restart = restart_number
         self.restart_counter = 0
+        self.valid_start_state = valid_start_state
 
     def compare_scores_state_restart(self) -> None:
         """

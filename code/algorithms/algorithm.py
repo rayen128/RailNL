@@ -122,7 +122,7 @@ class Algorithm():
         """
         self.state.add_route(random.choice(self.state.connections))
 
-    def create_random_state(self, number_of_connections: int = 1) -> None:
+    def create_random_state(self) -> None:
         """
         randomly generates a state with random 1-length routes (default=1)
 
@@ -134,9 +134,20 @@ class Algorithm():
         """
         # TODO: zorgen dat random hoeveelheid routes word gekozen?
         # TODO: zorgen dat deze random hoeveelheid connecties kunnen hebben (zonder over max te gaan ofc)
-        for new_connection in range(number_of_connections):
+        number_of_routes = random.randint(1, self.state.max_number_routes)
+        number_of_connections = random.randint(1, 20)
+
+        for new_route in range(number_of_routes):
             # pick random connection and create route
             self.add_random_route()
+            for new_connection in range(number_of_connections):
+                self.add_random_connection(new_route)
+            
+            while not self.state.routes[new_route].is_valid_time(self.state.time_frame):
+                self.state.delete_end_connection_from_route(self.state.routes[new_route])
+            
+            
+                
 
     def add_random_connection(self, route_index: int = 0, choice: Union[str, None] = None) -> str:
         """

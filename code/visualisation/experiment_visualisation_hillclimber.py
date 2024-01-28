@@ -60,6 +60,6 @@ def histogram_hillclimber_onegrid(import_file: str, export_file_path: str, title
 
 
 if __name__ == "__main__":
-    line_diagram_multiple_lines_hillclimber_onegrid("../../data/experiment_hill_climber_grid_search_holland.csv", "test", "test line diagram experiment", "valid", "light")
-    line_diagram_multiple_lines_hillclimber_comparison("../../data/experiment_hill_climber_grid_search_holland.csv", "test2", "test line diagram experiment")
-    histogram_hillclimber_onegrid("../../data/experiment_hill_climber_grid_search_holland.csv", "test", "test histogram experiment", "valid", "light")
+    line_diagram_multiple_lines_hillclimber_onegrid("../../data/annealing/experiment_annealing_grid_search_holland_lineair_500.csv", "test", "test line diagram experiment", "valid", "light")
+    line_diagram_multiple_lines_hillclimber_comparison("../../data/annealing/experiment_annealing_grid_search_holland_lineair_500.csv", "test2", "test line diagram experiment")
+    histogram_hillclimber_onegrid("../../data/annealing/experiment_annealing_grid_search_holland_lineair_500.csv", "test3", "test histogram experiment", "valid", "light")
