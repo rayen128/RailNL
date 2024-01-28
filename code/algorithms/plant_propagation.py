@@ -23,12 +23,9 @@ class Plant_Propagation(Hill_climber):
         # saves overall highest achieved score
         self.high_score: float = 0
 
-<<<<<<< HEAD
-=======
         # TODO: Experimenteren
         self.tournament_size = 3
 
->>>>>>> 2ae82bb8731b46b9c03c9062d325366028667825
     ### GENERAL FUNCTIONS ###
 
     def run(self):
@@ -52,8 +49,6 @@ class Plant_Propagation(Hill_climber):
             # update population
             self.filter_population_sequential()
 
-<<<<<<< HEAD
-=======
     def reset(self) -> None:
         self.scores = []
         self.sorted_fitness_values = []
@@ -61,16 +56,11 @@ class Plant_Propagation(Hill_climber):
         self.runner_population = []
         self.high_score = 0
 
->>>>>>> 2ae82bb8731b46b9c03c9062d325366028667825
     def initial_population(self) -> None:
         """
         set the initial population by running a certain amount of hill-climber algorithms  
         """
-<<<<<<< HEAD
-        # TODO: Gebruik hier de hill-climbers
-=======
         # FIXME: Gebruik hier de hill-climbers
->>>>>>> 2ae82bb8731b46b9c03c9062d325366028667825
         hill_climber = Hill_climber(self.state)
 
         # TODO: Experimenteren
@@ -110,35 +100,12 @@ class Plant_Propagation(Hill_climber):
     ### POPULATION FUNCTIONS ###
 
     def filter_population(self) -> None:
-<<<<<<< HEAD
-        """
-        filter the best of the original and runner population 
-        """
-=======
->>>>>>> 2ae82bb8731b46b9c03c9062d325366028667825
         # add runners to population
         self.merge_population()
 
         # calculate all scores
         self.get_scores()
 
-<<<<<<< HEAD
-        # TODO: Experimenteren
-        tournament_size = 3
-
-        self.population = []
-
-        while len(self.population) < self.population_size:
-            # ensure tournament_size doesn't exceed number of remaining states
-            current_tournament_size = min(tournament_size, len(self.scores))
-
-            # pick winner of randomly chosen states
-            tournament = random.sample(self.scores, current_tournament_size)
-            winner = max(tournament, key=lambda x: x[0])
-
-            # update high-score
-            if float(winner[0]) > self.high_score:
-=======
         tournament_size = self.tournament_size
 
         self.population = []
@@ -170,19 +137,11 @@ class Plant_Propagation(Hill_climber):
             # update high-score
 
             if winner[0] > self.high_score:
->>>>>>> 2ae82bb8731b46b9c03c9062d325366028667825
                 self.high_score = winner[0]
 
             # add winner to population of the next generation
             self.population.append(winner[1])
 
-<<<<<<< HEAD
-            # remove from scores (so that it is not chosen anymore)
-            self.scores.remove(winner)
-
-        self.scores = []
-        self.sorted_fitness_values = []
-=======
         self.scores = []
         self.sorted_fitness_values = []
 
@@ -220,7 +179,6 @@ class Plant_Propagation(Hill_climber):
 
         self.scores = []
         self.sorted_fitness_values = []
->>>>>>> 2ae82bb8731b46b9c03c9062d325366028667825
 
     def sort_population(self) -> None:
         """
