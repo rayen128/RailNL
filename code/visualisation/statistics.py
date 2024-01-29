@@ -38,7 +38,7 @@ def make_histogram(values: list, title_histogram: str, filepath: str) -> None:
         f'{filepath}.png')
 
 
-def make_boxplot(values: list, title_boxplot: str, filepath: str) -> None:
+def make_boxplot(values: list, title_boxplot: str, filepath: str, legend: list[str]) -> None:
     """
     makes a boxplot for all algorithms and the total scores 
 
@@ -55,7 +55,7 @@ def make_boxplot(values: list, title_boxplot: str, filepath: str) -> None:
     fig, ax = plt.subplots(figsize=(10, 10))
 
     # creating axes instance
-    bp = ax.boxplot(values, patch_artist=True, vert=True)
+    bp = ax.boxplot(values, patch_artist=True, vert=False)
 
     # set colors subplots
     colors = ['#5e747f', '#7b9e87',
@@ -65,10 +65,11 @@ def make_boxplot(values: list, title_boxplot: str, filepath: str) -> None:
 
     # Adding title
     plt.title(f"{title_boxplot}")
+    plt.xlabel("Scores")
+    plt.ylabel("Algorithms")
 
     # set x-axis labels
-    ax.set_xticklabels(['algoritme 1', 'algoritme 2',
-                        'algoritme 3', 'totaal'])
+    ax.set_yticklabels(legend)
 
     # save the plot in a png
     plt.savefig(
@@ -97,7 +98,7 @@ def make_line_diagram(scores: list, title_diagram: str, filepath: str) -> None:
     plt.savefig(
         f'{filepath}.png')
     
-def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, filepath: str, comparison: bool) -> None:
+def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, filepath: str, comparison: bool, legend: list[str] = None) -> None:
     """
     makes a line diagram with multiple lines of the scores against the iterations
 
@@ -111,13 +112,14 @@ def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, fil
     """
     plt.clf()
     
-    for score_list in scores:
-        x = list(range(len(score_list)))
+    for i in range(len(scores)):
+        x = list(range(len(scores[i])))
         if not comparison:
-            plt.plot(x, score_list, alpha=0.2, color='magenta')
+            plt.plot(x, scores[i], alpha=0.2, color='magenta')
         else:
-            plt.plot(x, score_list)
+            plt.plot(x, scores[i])
 
+    plt.legend(legend, loc = "lower right")
     plt.xlabel("Iterations")
     plt.ylabel("Scores")
     plt.title(f"{title_diagram}")
@@ -174,7 +176,16 @@ def statistics_scores(scores: list) -> dict:
 
 if __name__ == "__main__":
 
-    states_results = read_csv("../../data/baseline_data_holland.csv")
-    filtered_results = filter_states(states_results, 'algorithm', 'random_algorithm_3')
-    scores = all_scores(filtered_results)
-    make_line_diagram(scores, 'line-diagram algorithm 3', 'test')
+    states_results = read_csv("../../data/baseline_data_holland.csv", "state_id")
+    filtered_results_1 = filter_states(states_results, 'algorithm', 'random_algorithm_2')
+    scores_1 = all_scores(filtered_results_1)
+
+    filtered_results_2 = filter_states(states_results, 'algorithm', 'random_algorithm_2')
+    scores_2 = all_scores(filtered_results_2)
+    
+    filtered_results_3 = filter_states(states_results, 'algorithm', 'random_algorithm_3')
+    scores_3 = all_scores(filtered_results_3)
+
+    scores_total = all_scores(states_results)
+    scores = [scores_1, scores_2, scores_3, scores_total]
+    make_boxplot(scores, 'Boxplot Baseline', 'boxplot', ['Algorithm 1', 'Algorithm 2', 'Algorithm 3', 'Total'])

@@ -294,7 +294,7 @@ class Plant_Propagation(Hill_climber):
                 self.state = current_runner
 
                 counter = 0
-
+                
                 # TODO: Experimenteren
                 while distance_goal > self.likeness(current_state, self.state) and counter < 1000:
                     for i in range(distance_goal):
@@ -304,7 +304,7 @@ class Plant_Propagation(Hill_climber):
                         else:
                             self.make_change_light()
                         counter += 1
-
+            
                 self.runner_population.append(self.state)
 
     def generate_runner_distances(self):
@@ -362,9 +362,8 @@ class Plant_Propagation(Hill_climber):
 
         routes_used = []
         connection_counter = 0
-
+        
         for original_route in original_state.routes:
-
             max_overlap = -1
             best_match = None
             original_connections = set(original_route.connection_ids)
@@ -383,7 +382,7 @@ class Plant_Propagation(Hill_climber):
                         difference = len(original_connections.symmetric_difference(
                             new_connections))
                         best_match = new_route
-
+            
             if best_match:
                 routes_used.append(original_route)
                 routes_used.append(best_match)
@@ -405,5 +404,5 @@ class Plant_Propagation(Hill_climber):
         """
         connections_different, connections_overlapping, proportion = self.count_route_difference(
             original_state, new_state)
-
+        
         return connections_different
