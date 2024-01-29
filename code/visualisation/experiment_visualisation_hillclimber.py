@@ -68,6 +68,7 @@ def line_diagram_multiple_lines_hillclimber_onegrid_long_experiments(results_dic
 
 def line_diagram_multiple_lines_hillclimber_comparison_long_experiments(results_dict: dict, export_file_path: str, title_diagram: str):
     best_scores_lists = []
+    legend = []
     start_parameters = ['valid', 'random']
     mutation_parameters = ['light', 'heavy']
     
@@ -77,12 +78,11 @@ def line_diagram_multiple_lines_hillclimber_comparison_long_experiments(results_
             filtered_results = filter_states(filtered_results_start, 'mutation', mutation)
             sorted_results = dict(sorted(filtered_results.items(), key=lambda x: float(x[1]['score']), reverse=True))
             key_run = list(sorted_results.keys())[0]
-            run =  str(filtered_results[key_run]['run_id'])
-            run_results = filter_states(filtered_results, 'run_id', run)
-            scores_run = all_scores(run_results)
-            best_scores_lists.append(scores_run)
+            best_scores = str_to_list(filtered_results[key_run]['score_list'])
+            best_scores_lists.append(best_scores)
+            legend.append(f"{start}, {mutation}")
             
-    make_line_diagram_multiple_lines(best_scores_lists, title_diagram, export_file_path, True)
+    make_line_diagram_multiple_lines(best_scores_lists, title_diagram, export_file_path, True, legend)
 
 
 
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     #line_diagram_multiple_lines_hillclimber_onegrid_short_experiments("../../data/hill_climber/experiment_hill_climber_grid_search_holland.csv", "hill_climber_valid_light", "test line diagram experiment", "valid", "light")
     #line_diagram_multiple_lines_hillclimber_onegrid_short_experiments("../../data/hill_climber/experiment_hill_climber_grid_search_holland.csv", "hill_climber_valid_heavy", "test line diagram experiment", "valid", "heavy")
     #line_diagram_multiple_lines_hillclimber_onegrid_short_experiments("../../data/hill_climber/experiment_hill_climber_grid_search_holland.csv", "hill_climber_random_light", "test line diagram experiment", "random", "light")
-    line_diagram_multiple_lines_hillclimber_onegrid_long_experiments(results_dict, "hill_climber_random_heavy", "test line diagram experiment", "random", "heavy")
+    line_diagram_multiple_lines_hillclimber_comparison_long_experiments(results_dict, "hill_climber_random_heavy", "test line diagram experiment")
     
     
     #histogram_hillclimber_onegrid(results_dict, "hill_climber", "test histogram experiment", "valid", "light")
