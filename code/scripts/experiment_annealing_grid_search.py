@@ -30,6 +30,7 @@ def experiment_annealing_grid_search(case_name: str, state: 'State', time_second
                          "cooling scheme"])
 
         counter = 0
+        """
         # experiment with valid start state and light mutations
         sa = Simulated_annealing(state, temperature, 1000, True)
         start = time.time()
@@ -50,11 +51,12 @@ def experiment_annealing_grid_search(case_name: str, state: 'State', time_second
 
             counter += 1
             print(counter)
+        """
 
         sa = Simulated_annealing(state, temperature, 1000, False)
         start = time.time()
 
-        while time.time() - start < time_seconds / 4:
+        while time.time() - start < time_seconds / 2:
             csv_list = sa.run(counter, cooling_scheme, True)
             for iteration_result in csv_list:
                 iteration_result.append("random")
@@ -65,6 +67,7 @@ def experiment_annealing_grid_search(case_name: str, state: 'State', time_second
             counter += 1
             print(counter)
 
+        """
         sa = Simulated_annealing(state, temperature, 1000, True)
         start = time.time()
 
@@ -78,11 +81,11 @@ def experiment_annealing_grid_search(case_name: str, state: 'State', time_second
                 writer.writerow(iteration_result)
             counter += 1
             print(counter)
-
+        """
         sa = Simulated_annealing(state, temperature, 1000, False)
         start = time.time()
 
-        while time.time() - start < time_seconds / 4:
+        while time.time() - start < time_seconds / 2:
             csv_list = sa.run(counter, cooling_scheme, False)
             for iteration_result in csv_list:
                 iteration_result.append("random")
