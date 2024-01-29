@@ -132,6 +132,7 @@ class Algorithm():
         post:
             self.state.routes contains specified number of 1-length routes
         """
+        # TODO: aanpassen zodat maar 1x number_of_routes & connections wordt bepaald/kan worden vastgezet (zodat meerdere keren aanroepen states van dezelfde grootte geeft)
         number_of_routes = random.randint(1, self.state.max_number_routes)
         number_of_connections = random.randint(1, 20)
 
