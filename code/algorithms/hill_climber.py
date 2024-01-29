@@ -215,31 +215,29 @@ class Hill_climber(Algorithm):
 
         return random_route
 
-    def run(self, iterations: int, algorithm_id: int, change_light: bool = True) -> object:
+    def run(self, iterations: int, algorithm_id: int, change_light: bool = True) -> list[float]:
         """
         runs the hillclimber
 
         pre:
             iterations is a integer
         returns:
-            the last state after the hill-climber
+            list of scores of all iterations
         """
         self.state.reset()
         self.create_state()
         self.current_state = copy.deepcopy(self.state)
 
-        hillclimber_list_variables = []
-        for iteration in range(iterations):
+        hillclimber_score_list = []
+        for _ in range(iterations):
             if not change_light:
                 self.make_change_heavy()
             else:
                 self.make_change_light()
             self.compare_scores_state()
-            variables_list = self.get_variables(
-                self.current_state, algorithm_id, iteration)
-            hillclimber_list_variables.append(variables_list)
+            hillclimber_score_list.append(self.current_state.calculate_score())
 
-        return hillclimber_list_variables
+        return hillclimber_score_list
 
 
 class Hill_climber_restart(Hill_climber):
@@ -271,14 +269,16 @@ class Hill_climber_restart(Hill_climber):
             self.state = copy.deepcopy(self.current_state)
             self.restart_counter += 1
 
-    def run(self, iterations: int, algorithm_id: int, change_light: bool = True) -> 'State':
+    def run(self, iterations: int, algorithm_id: int, change_light: bool = True) -> tuple[float, 'State', list]:
         """
         runs the hillclimber
 
         pre:
             iterations is a integer
         returns:
-            the last state after the hill-climber
+            best score
+            sleeper string of the state with best score
+            list of all scores
         """
 
         self.state.reset()
@@ -286,8 +286,11 @@ class Hill_climber_restart(Hill_climber):
         self.current_state = copy.deepcopy(self.state)
         self.restart_counter = 0
 
-        hillclimber_list_variables = []
-        for iteration in range(iterations):
+        best_score = 0
+        best_state = None
+
+        hillclimber_score_list = []
+        for _ in range(iterations):
             if not change_light:
                 self.make_change_heavy()
             else:
@@ -297,8 +300,16 @@ class Hill_climber_restart(Hill_climber):
                 self.state.reset()
                 self.create_state()
                 self.current_state = copy.deepcopy(self.state)
-            variables_list = self.get_variables(
-                self.current_state, algorithm_id, iteration)
-            hillclimber_list_variables.append(variables_list)
+                self.restart_counter = 0
 
-        return hillclimber_list_variables
+            new_score = self.current_state.calculate_score()
+
+            # check for new best score
+            if new_score > best_score:
+                best_score = new_score
+                best_state = copy.deepcopy(self.current_state)
+
+            hillclimber_score_list.append(new_score)
+        print(hillclimber_score_list)
+
+        return best_score, best_state, hillclimber_score_list

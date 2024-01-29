@@ -6,7 +6,7 @@ from code.algorithms.hill_climber import Hill_climber
 from code.algorithms.algorithm import *
 from code.scripts.baseline import baseline
 from code.scripts.experiment_hill_climber_choices import experiment_hill_climber_choices
-from code.scripts.experiment_hill_climber_grid_search import experiment_hill_climber_grid_search as hcgs
+from code.scripts.experiment_hill_climber_grid_search import experiment_hill_climber_grid_search as hcgs, experiment_hill_climber_restart_grid_search as hcrgs
 from code.classes.state import State
 
 # path.append("code/classes")
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     else:
         max_number_routes = int(argv[2])
         time_frame = int(argv[3])
-        seconds_grid = 600
+        seconds_grid = 10
 
     # make State object
     state: object = State(file_path_stations,
@@ -46,8 +46,9 @@ if __name__ == "__main__":
 
     # grid search experiment hill climber
     hcgs(argv[1], state, seconds_grid)
-    # hcgs("netherlands", State("data/stations_netherlands.csv",
-    #      "data/routes_netherlands.csv", 20, 180), 60)
+
+    # grid search experiment hill climber restart
+    hcrgs(argv[1], state, seconds_grid, 50)
 
     # experiment with hill climber choices
     # experiment_hill_climber_choices(argv[1], state)
