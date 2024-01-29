@@ -171,3 +171,5 @@ data/hill_climber_restart/
 
 test_state.py
 test.py
+
+grid_search_run.py

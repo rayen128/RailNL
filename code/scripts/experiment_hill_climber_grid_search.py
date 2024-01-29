@@ -106,6 +106,7 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
                 writer.writerow(get_csv_row(
                     counter, best_state, "valid", "light", list_to_str(score_list), best_score=best_score))
 
+                print(counter)
                 counter += 1
 
             # experiment with valid start start state and heavy mutations
@@ -117,6 +118,8 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
                     1000, counter, change_light=False)
                 writer.writerow(get_csv_row(
                     counter, best_state, "valid", "heavy", list_to_str(score_list), best_score=best_score))
+
+                print(counter)
                 counter += 1
 
         # experiment with random start state and light mutations
@@ -128,6 +131,8 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
             best_score, best_state, score_list = hcr.run(1000, counter)
             writer.writerow(get_csv_row(
                 counter, best_state, "random", "light", list_to_str(score_list), best_score=best_score))
+
+            print(counter)
             counter += 1
 
         # experiment with random start start state and heavy mutations
@@ -140,4 +145,6 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
                 1000, counter, change_light=False)
             writer.writerow(get_csv_row(
                 counter, best_state, "random", "heavy", list_to_str(score_list), best_score=best_score))
+
+            print(counter)
             counter += 1
