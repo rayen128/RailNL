@@ -21,7 +21,7 @@ class Plant_Propagation(Hill_climber):
         self.runner_population: list[object] = []
 
         # choose: valid, random, hill_climber
-        self.initial_population_type = 'random'
+        self.initial_population_type = 'hill_climber'
 
         # saves overall highest achieved score
         self.high_score: float = 0
@@ -78,6 +78,8 @@ class Plant_Propagation(Hill_climber):
         """
         type = self.initial_population_type
 
+        print(f"creating the initial {type}-population")
+
         if type == 'valid':
             # create population
             for i in range(self.population_size):
@@ -96,8 +98,14 @@ class Plant_Propagation(Hill_climber):
             state.valid_start_state = False
 
             for i in range(self.population_size):
-                state.run(50, 1)
+                state.run(1000, 1)
                 self.population.append(copy.deepcopy(state.current_state))
+
+    def change_population_type(self, type: str) -> None:
+        """
+        method to change intitial population-type
+        """
+        self.initial_population_type = type
 
     ### SCORE FUNCTIONS ###
 
@@ -264,9 +272,10 @@ class Plant_Propagation(Hill_climber):
                 counter = 0
 
                 # TODO: Experimenteren
-                while distance_goal > self.likeness(current_state, self.state) and counter < 10000:
+                while distance_goal > self.likeness(current_state, self.state) and counter < 1000:
                     for i in range(distance_goal):
-                        if distance_goal > 100:
+                        r = random.random()
+                        if r > 0.3:
                             self.make_change_heavy()
                         else:
                             self.make_change_light()
@@ -311,8 +320,8 @@ class Plant_Propagation(Hill_climber):
         determines a distance (semi-random) based on a fitness-value  
         """
         # TODO: Experimenteren
-        scale_factor = 10
-        variability = 1
+        scale_factor = 3
+        variability = scale_factor / 2
         r = random.random()
 
         distance = max(int((1 - fitness_value) *
