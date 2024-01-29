@@ -20,11 +20,17 @@ class Plant_Propagation(Hill_climber):
         self.max_nr_runners = max_nr_runners
         self.runner_population: list[object] = []
 
+        # choose: valid, random, hill_climber
+        self.initial_population_type = 'random'
+
         # saves overall highest achieved score
         self.high_score: float = 0
 
-        # TODO: Experimenteren
+        # tournament size (potentially) affects population_filter method
         self.tournament_size = 3
+
+        # choose: best, sequential or random
+        self.filter_type = 'sequential'
 
     ### GENERAL FUNCTIONS ###
 
@@ -41,15 +47,22 @@ class Plant_Propagation(Hill_climber):
             print(f"Generation {generation + 1}: {self.high_score}")
 
             # determine fitness of current population
-            self.fitness_function()
+            converge_status = self.fitness_function()
+
+            # check if population has converged to a certain local optimum
+            if converge_status == 'converged':
+                return generation
 
             # create runner
             self.make_runners()
 
             # update population
-            self.filter_population_sequential()
+            self.filter_population(self.filter_type)
 
     def reset(self) -> None:
+        """
+        resets class by clearing all (relevant) variables
+        """
         self.scores = []
         self.sorted_fitness_values = []
         self.population = []
@@ -60,16 +73,23 @@ class Plant_Propagation(Hill_climber):
         """
         set the initial population by running a certain amount of hill-climber algorithms  
         """
-        # FIXME: Gebruik hier de hill-climbers
-        hill_climber = Hill_climber(self.state)
+        type = self.initial_population_type
 
-        # TODO: Experimenteren
-        hill_climber.valid_start_state = True
-        # create the hill-climbers
-        for i in range(self.population_size):
-            self.state.reset()
-            self.create_state()
-            self.population.append(copy.deepcopy(self.state))
+        if type == 'valid':
+            # create population
+            for i in range(self.population_size):
+                self.state.reset()
+                self.create_valid_state()
+                self.population.append(copy.deepcopy(self.state))
+        elif type == 'random':
+            # create population
+            for i in range(self.population_size):
+                self.state.reset()
+                self.create_random_state()
+                self.population.append(copy.deepcopy(self.state))
+
+        elif type == 'hill_climber':
+            pass
 
     ### SCORE FUNCTIONS ###
 
@@ -81,7 +101,7 @@ class Plant_Propagation(Hill_climber):
             self.scores.append([self.get_mutated_score(
                 self.population[i]), self.population[i]])
 
-    def fitness_function(self) -> list[float]:
+    def fitness_function(self):  # None or str
         """
         calulate and the fitness (=normalized score) of the whole population  
         """
@@ -92,73 +112,103 @@ class Plant_Propagation(Hill_climber):
         max_score = max(scores_only)
         min_score = min(scores_only)
 
+        # if scores are equal end algorithm by returning exit-statement
+        if max_score == min_score:
+            print(f'Algorithm converged to a score of: {self.high_score}')
+            return 'converged'
+
         for i in range(len(self.population)):
             score = self.scores[i][0]
             value = (score - min_score) / (max_score - min_score)
             self.fitness_values.append([value, self.scores[i][1]])
 
+    def update_high_score(self, score) -> None:
+        """
+        updates high-score if applicable
+        """
+        if score > self.high_score:
+            self.high_score = score
+
     ### POPULATION FUNCTIONS ###
 
-    def filter_population(self) -> None:
+    def filter_population(self, filter_type: str) -> None:
+        """
+        filters the population and creates the next generation 
+        """
         # add runners to population
         self.merge_population()
 
         # calculate all scores
         self.get_scores()
 
-        tournament_size = self.tournament_size
-
+        # clear population
         self.population = []
 
-        # call type of filter #
+        if filter_type == 'best':
+            self.filter_population_best_only()
 
-    def filter_population_sequential(self) -> None:
-        # add runners to population
-        self.merge_population()
+        elif filter_type == 'sequential' or filter_type == 'random':
 
-        # calculate all scores
-        self.get_scores()
+            tournament_size = self.tournament_size
 
-        self.population = []
-
-        tournament_size = self.tournament_size
-
-        # shuffle the scores list to ensure randomness
-        random.shuffle(self.scores)
-
-        tournament_index = 0
-
-        while len(self.population) < self.population_size and tournament_index < len(self.scores):
-            tournament = self.scores[tournament_index:
-                                     tournament_index + tournament_size]
-
-            winner = max(tournament, key=lambda x: x[0])
-            tournament_index += tournament_size
-            # update high-score
-
-            if winner[0] > self.high_score:
-                self.high_score = winner[0]
-
-            # add winner to population of the next generation
-            self.population.append(winner[1])
+            if filter_type == 'sequential':
+                self.filter_population_sequential(tournament_size)
+            else:
+                self.filter_population_random(tournament_size)
 
         self.scores = []
         self.sorted_fitness_values = []
 
-    def filter_population_random(self) -> None:
+    def filter_population_best_only(self) -> None:
+        """
+        filters the population based 
+        on score
+        """
+        # sort self.scores
+        sorted_scores = sorted(
+            self.scores, key=lambda item: item[0], reverse=True)
+
+        # get the highest scoring states
+        for state in sorted_scores[:self.population_size]:
+            self.population.append(state[1])
+
+        self.update_high_score(sorted_scores[0][0])
+
+    def filter_population_sequential(self, tournament_size: int) -> None:
+        """
+        sequentially filters the population. 
+
+        TIP: making population_size to be dividable by tournament_size ensures that the whole population will be looked at
+        """
+        # shuffle the scores list to ensure randomness
+        random.shuffle(self.scores)
+
+        # index variable to keep track
+        tournament_index = 0
+
+        # loop until population_size is reached or too little scores are left
+        while len(self.population) < self.population_size and tournament_index < len(self.scores):
+
+            # select a group
+            tournament = self.scores[tournament_index:
+                                     tournament_index + tournament_size]
+
+            # pick highest score as winner
+            winner = max(tournament, key=lambda x: x[0])
+
+            # update tournament_index
+            tournament_index += tournament_size
+
+            # update high-score
+            self.update_high_score(winner[0])
+
+            # add winner to population of the next generation
+            self.population.append(winner[1])
+
+    def filter_population_random(self, tournament_size: int) -> None:
         """
         filter the best of the original and runner population 
         """
-        # add runners to population
-        self.merge_population()
-
-        # calculate all scores
-        self.get_scores()
-
-        tournament_size = self.tournament_size
-
-        self.population = []
-
         while len(self.population) < self.population_size:
             # ensure tournament_size doesn't exceed number of remaining states
             current_tournament_size = min(tournament_size, len(self.scores))
@@ -168,30 +218,13 @@ class Plant_Propagation(Hill_climber):
             winner = max(tournament, key=lambda x: x[0])
 
             # update high-score
-            if float(winner[0]) > self.high_score:
-                self.high_score = winner[0]
+            self.update_high_score(winner[0])
 
             # add winner to population of the next generation
             self.population.append(winner[1])
 
             # remove from scores (so that it is not chosen anymore)
             self.scores.remove(winner)
-
-        self.scores = []
-        self.sorted_fitness_values = []
-
-    def sort_population(self) -> None:
-        """
-        sorts the population on score
-        """
-        # combine scores, population and sort this
-        combined_list = list(zip(self.population, self.scores[0]))
-        sorted_combined_list = sorted(
-            combined_list, key=lambda x: x[1], reverse=True)
-
-        # update scores and population
-        self.population = [state for state, score in sorted_combined_list]
-        self.scores = [score for state, score in sorted_combined_list]
 
     def merge_population(self) -> None:
         """
@@ -219,11 +252,16 @@ class Plant_Propagation(Hill_climber):
 
                 self.state = current_runner
 
+                counter = 0
+
                 # TODO: Experimenteren
-                while distance_goal > self.likeness(current_state, self.state):
+                while distance_goal > self.likeness(current_state, self.state) or counter < 100:
                     for i in range(distance_goal):
-                        # TODO: Experimenteren (met change_heavy ook)
-                        self.make_change_light()
+                        if distance_goal > 3:
+                            self.make_change_heavy()
+                        else:
+                            self.make_change_light()
+                        counter += 1
 
                 self.runner_population.append(self.state)
 
@@ -261,8 +299,8 @@ class Plant_Propagation(Hill_climber):
         determines a distance (semi-random) based on a fitness-value  
         """
         # TODO: Experimenteren
-        scale_factor = 20
-        variability = 4
+        scale_factor = 8
+        variability = 1
         r = random.random()
 
         distance = max(int((1 - fitness_value) *
@@ -272,7 +310,7 @@ class Plant_Propagation(Hill_climber):
 
     def count_route_difference(self, original_state: object, new_state: object):
         """
-        checks and checks the route differences between two states
+        counts the route differences between two states
         """
         connections_overlapping = 0
         connections_different = 0
