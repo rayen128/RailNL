@@ -5,8 +5,8 @@ from code.algorithms.baseline_algorithm import *
 from code.algorithms.hill_climber import Hill_climber
 from code.algorithms.algorithm import *
 from code.scripts.baseline import baseline
-from code.scripts.experiment_hill_climber_choices import experiment_hill_climber_choices
 from code.scripts.experiment_hill_climber_grid_search import experiment_hill_climber_grid_search as hcgs, experiment_hill_climber_restart_grid_search as hcrgs
+from code.scripts.experiment_annealing_grid_search import experiment_annealing_grid_search as sags
 from code.classes.state import State
 
 # path.append("code/classes")
@@ -47,8 +47,16 @@ if __name__ == "__main__":
     # grid search experiment hill climber
     hcgs(argv[1], state, seconds_grid)
 
-    # grid search experiment hill climber restart
-    hcrgs(argv[1], state, seconds_grid, 50)
+    state.reset()
 
-    # experiment with hill climber choices
-    # experiment_hill_climber_choices(argv[1], state)
+    # grid search experiment hill climber restart
+    hcrgs(argv[1], state, seconds_grid, 20)
+
+    state.reset()
+
+    # grid search experiment simulated annealing
+    for temperature in [100, 200, 500]:
+        for cooling_scheme in ['logaritmic', 'exponential', 'lineair']:
+            sags(argv[1], state, seconds_grid, cooling_scheme, temperature)
+
+    state.reset()

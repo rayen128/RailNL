@@ -3,40 +3,16 @@ import time
 
 from sys import path
 from code.algorithms.hill_climber import *
+from .helpers import *
 
 path.append("code/classes")
 from state import State
 
 
-def list_to_str(score_list):
-    score_str = ""
-    for index, score in enumerate(score_list):
-        score_str += str(score)
-        if index < len(score_list) - 1:
-            score_str += "~"
-    return score_str
-
-
-def get_csv_row_hc(id: int, state: 'State', start: str, mutation: str, score_str: str, best_score: float = 0.0):
-    if best_score:
-        score = best_score
-    else:
-        score = state.calculate_score()
-    return [id,
-            score,
-            state.fraction_used_connections,
-            state.number_routes,
-            state.total_minutes,
-            start,
-            mutation,
-            score_str,
-            state.show_sleeper_string()]
-
-
 def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_seconds: int):
     with open(f"data/hill_climber/experiment_hill_climber_grid_search_{case_name}.csv", "w") as file:
         writer = csv.writer(file)
-        writer.writerow(["id",
+        writer.writerow(["run_id",
                          "score",
                          "p",
                          "T",
@@ -60,7 +36,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
                 score_list = hc.run(1000, counter)
 
                 # write results to csv
-                writer.writerow(get_csv_row_hc(counter, hc.current_state,
+                writer.writerow(get_csv_row(counter, hc.current_state,
                                 "valid", "light", list_to_str(score_list)))
                 print(counter)
                 counter += 1
@@ -71,7 +47,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
 
             while time.time() - start < time_seconds:
                 score_list = hc.run(1000, counter, change_light=False)
-                writer.writerow(get_csv_row_hc(counter, hc.current_state,
+                writer.writerow(get_csv_row(counter, hc.current_state,
                                 "valid", "heavy", list_to_str(score_list)))
                 print(counter)
                 counter += 1
@@ -82,7 +58,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
 
         while time.time() - start < time_seconds:
             score_list = hc.run(1000, counter)
-            writer.writerow(get_csv_row_hc(counter, hc.current_state,
+            writer.writerow(get_csv_row(counter, hc.current_state,
                             "random", "light", list_to_str(score_list)))
             print(counter)
             counter += 1
@@ -93,7 +69,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
 
         while time.time() - start < time_seconds:
             score_list = hc.run(1000, counter, change_light=False)
-            writer.writerow(get_csv_row_hc(counter, hc.current_state,
+            writer.writerow(get_csv_row(counter, hc.current_state,
                             "random", "heavy", list_to_str(score_list)))
             print(counter)
             counter += 1
@@ -102,7 +78,7 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
 def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', time_seconds: int, restart_number: int):
     with open(f"data/hill_climber_restart/experiment_hill_climber_restart_grid_search_{case_name}.csv", "w") as file:
         writer = csv.writer(file)
-        writer.writerow(["id",
+        writer.writerow(["run_id",
                          "score",
                          "p",
                          "T",
@@ -127,7 +103,7 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
                     1000, counter)
 
                 # write iterations to csv
-                writer.writerow(get_csv_row_hc(
+                writer.writerow(get_csv_row(
                     counter, best_state, "valid", "light", list_to_str(score_list), best_score=best_score))
 
                 counter += 1
@@ -139,7 +115,7 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
             while time.time() - start < time_seconds:
                 best_score, best_state, score_list = hcr.run(
                     1000, counter, change_light=False)
-                writer.writerow(get_csv_row_hc(
+                writer.writerow(get_csv_row(
                     counter, best_state, "valid", "heavy", list_to_str(score_list), best_score=best_score))
                 counter += 1
 
@@ -150,7 +126,7 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
 
         while time.time() - start < time_seconds:
             best_score, best_state, score_list = hcr.run(1000, counter)
-            writer.writerow(get_csv_row_hc(
+            writer.writerow(get_csv_row(
                 counter, best_state, "random", "light", list_to_str(score_list), best_score=best_score))
             counter += 1
 
@@ -162,6 +138,6 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
         while time.time() - start < time_seconds:
             best_score, best_state, score_list = hcr.run(
                 1000, counter, change_light=False)
-            writer.writerow(get_csv_row_hc(
+            writer.writerow(get_csv_row(
                 counter, best_state, "random", "heavy", list_to_str(score_list), best_score=best_score))
             counter += 1
