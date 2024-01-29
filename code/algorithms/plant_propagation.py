@@ -15,6 +15,8 @@ class Plant_Propagation(Hill_climber):
         self.scores: list[float] = []
         self.fitness_values: list[list[float, object]] = []
 
+        self.high_scores: list[float] = []
+
         self.max_generations = max_generations
 
         self.max_nr_runners = max_nr_runners
@@ -24,6 +26,7 @@ class Plant_Propagation(Hill_climber):
         self.initial_population_type = 'hill_climber'
 
         # saves overall highest achieved score
+        self.start_score: float = 0
         self.high_score: float = 0
 
         # tournament size (potentially) affects population_filter method
@@ -46,7 +49,6 @@ class Plant_Propagation(Hill_climber):
             # get all scores of the current population
             self.get_scores()
 
-            print(f"Generation {generation + 1}: {self.high_score}")
             # print(f"p= {self.best_state.fraction_used_connections}, t= {self.best_state.number_routes}, min= {self.best_state.total_minutes}")
 
             # determine fitness of current population
@@ -60,7 +62,11 @@ class Plant_Propagation(Hill_climber):
             self.make_runners()
 
             # update population
-            self.filter_population(self.filter_type)
+            self.filter_population(self.filter_type, generation)
+
+            print(f"Generation {generation + 1}: {self.high_score}")
+
+            self.high_scores.append(self.high_score)
 
     def reset(self) -> None:
         """
@@ -79,6 +85,7 @@ class Plant_Propagation(Hill_climber):
         type = self.initial_population_type
 
         print(f"creating the initial {type}-population")
+        print('...')
 
         if type == 'valid':
             # create population
@@ -146,9 +153,15 @@ class Plant_Propagation(Hill_climber):
             self.high_score = score
             self.best_state = state
 
+    def set_start_score(self, score: float) -> None:
+        """
+        saves the highest score of generation 1
+        """
+        self.start_score = score
+
     ### POPULATION FUNCTIONS ###
 
-    def filter_population(self, filter_type: str) -> None:
+    def filter_population(self, filter_type: str, generation) -> None:
         """
         filters the population and creates the next generation 
         """
@@ -162,21 +175,24 @@ class Plant_Propagation(Hill_climber):
         self.population = []
 
         if filter_type == 'best':
-            self.filter_population_best_only()
+            high_score = self.filter_population_best_only()
 
         elif filter_type == 'sequential' or filter_type == 'random':
 
             tournament_size = self.tournament_size
 
             if filter_type == 'sequential':
-                self.filter_population_sequential(tournament_size)
+                high_score = self.filter_population_sequential(tournament_size)
             else:
-                self.filter_population_random(tournament_size)
+                high_score = self.filter_population_random(tournament_size)
+
+        if generation == 0:
+            self.set_start_score(high_score)
 
         self.scores = []
         self.sorted_fitness_values = []
 
-    def filter_population_best_only(self) -> None:
+    def filter_population_best_only(self) -> float:
         """
         filters the population based 
         on score
@@ -189,9 +205,13 @@ class Plant_Propagation(Hill_climber):
         for state in sorted_scores[:self.population_size]:
             self.population.append(state[1])
 
-        self.update_high_score(sorted_scores[0][0], sorted_scores[0][1])
+        high_score = sorted_scores[0][0]
 
-    def filter_population_sequential(self, tournament_size: int) -> None:
+        self.update_high_score(high_score, sorted_scores[0][1])
+
+        return high_score
+
+    def filter_population_sequential(self, tournament_size: int) -> float:
         """
         sequentially filters the population. 
 
@@ -222,7 +242,9 @@ class Plant_Propagation(Hill_climber):
             # add winner to population of the next generation
             self.population.append(winner[1])
 
-    def filter_population_random(self, tournament_size: int) -> None:
+        return self.high_score
+
+    def filter_population_random(self, tournament_size: int) -> float:
         """
         filter the best of the original and runner population 
         """
@@ -242,6 +264,8 @@ class Plant_Propagation(Hill_climber):
 
             # remove from scores (so that it is not chosen anymore)
             self.scores.remove(winner)
+
+        return self.high_score
 
     def merge_population(self) -> None:
         """
