@@ -275,6 +275,7 @@ class Hill_climber_restart(Hill_climber):
 
         pre:
             iterations is a integer
+        
         returns:
             best score
             sleeper string of the state with best score
