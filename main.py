@@ -25,14 +25,17 @@ if __name__ == "__main__":
     if argv[1].lower() == "holland":
         max_number_routes = 7
         time_frame = 120
+        seconds_grid = 600
 
     elif argv[1].lower() == "netherlands":
         max_number_routes = 20
         time_frame = 180
+        seconds_grid = 900
 
     else:
         max_number_routes = int(argv[2])
         time_frame = int(argv[3])
+        seconds_grid = 600
 
     # make State object
     state: object = State(file_path_stations,
@@ -42,7 +45,7 @@ if __name__ == "__main__":
     # baseline(argv[1], state)
 
     # grid search experiment hill climber
-    hcgs(argv[1], state, 7200)
+    hcgs(argv[1], state, seconds_grid)
     # hcgs("netherlands", State("data/stations_netherlands.csv",
     #      "data/routes_netherlands.csv", 20, 180), 60)
 

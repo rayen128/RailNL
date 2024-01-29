@@ -1,5 +1,17 @@
 import csv
 
+
+def str_to_list(string: str, delimiter: str = '~') -> list[float]:
+    """
+    converts inputted string with score floats and specific delimiters to a list
+
+    returns:
+        list of scores
+    """
+    score_list = string.split(delimiter)
+    return [float(score) for score in score_list]
+
+
 def read_csv(csv_filepath: str, id_name: str) -> dict:
     """
     reads csv file with states and saves every state in a dictionary
@@ -26,6 +38,7 @@ def read_csv(csv_filepath: str, id_name: str) -> dict:
 
     return states_dict
 
+
 def filter_states(states_dict: dict, variable: str, value: str) -> dict:
     """
     filters the dictionary with states based on the given variable and value
@@ -49,6 +62,7 @@ def filter_states(states_dict: dict, variable: str, value: str) -> dict:
 
     return filtered_scores
 
+
 def export_states(states_dict: dict, file_path: str) -> None:
     """
     makes a csv file with the given dictionary with states
@@ -60,20 +74,21 @@ def export_states(states_dict: dict, file_path: str) -> None:
     post:   
         saves a csv file with all the values from the states
     """
-    
+
     # make a list with the column names
     field_names = list(states_dict[list(states_dict.keys())[0]].keys())
-    
+
     # make a list with all states
     states_list = []
     for state in states_dict.values():
         states_list.append(state)
-    
+
     # write all states in csv
-    with open(f'{file_path}.csv', 'w') as csvfile: 
-        writer = csv.DictWriter(csvfile, fieldnames = field_names) 
-        writer.writeheader() 
-        writer.writerows(states_list) 
+    with open(f'{file_path}.csv', 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=field_names)
+        writer.writeheader()
+        writer.writerows(states_list)
+
 
 def all_scores(states_dict: dict) -> list:
     """
@@ -94,5 +109,3 @@ def all_scores(states_dict: dict) -> list:
         scores.append(int(round(float(state["score"]), 0)))
 
     return scores
-
-    
