@@ -1,4 +1,5 @@
 import csv
+import random
 
 from sys import argv, path
 from code.algorithms.baseline_algorithm import *
@@ -9,8 +10,10 @@ from code.scripts.experiment_hill_climber_grid_search import experiment_hill_cli
 from code.scripts.experiment_annealing_grid_search import experiment_annealing_grid_search as sags
 from code.classes.state import State
 
-# path.append("code/classes")
-# from state import State
+path.append("code/classes")
+from state import State
+
+random.seed(42)
 
 if __name__ == "__main__":
     # make sure a .csv is given for both stations and routes
