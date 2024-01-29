@@ -15,6 +15,5 @@ def experiment_PPA():
     # Max_runners: 3, 5, 10
     # Filter_methods: random, sequential, best
     # Starting_states: Hill-Climbers, Random
-    #
 
     pass
