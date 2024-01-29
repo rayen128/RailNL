@@ -27,7 +27,7 @@ class Plant_Propagation(Hill_climber):
         self.high_score: float = 0
 
         # tournament size (potentially) affects population_filter method
-        self.tournament_size = 3
+        self.tournament_size = 2
 
         # choose: best, sequential or random
         self.filter_type = 'sequential'
@@ -352,9 +352,15 @@ class Plant_Propagation(Hill_climber):
                         best_match = new_route
 
             if best_match:
+                routes_used.append(original_route)
                 routes_used.append(best_match)
                 connections_different += difference
                 connections_overlapping += max_overlap
+
+        # if 1 has more routes than the other
+        # loop-over routes the one who is longer
+        # if route not in routes.used:
+            # add all connections to the connections_different
 
         proportion = connections_overlapping / connection_counter
 
