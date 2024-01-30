@@ -35,9 +35,18 @@ def grid_search_PPA_hill_climber(state: object, time_seconds: int, case_name: st
 
         counter = 0
 
-        for population_size in [6, 12, 30]:
-            for generation_count in [10, 50, 100]:
-                for max_runners in [3, 7, 15]:
+        if case_name == 'holland':
+            population_size_list = [6, 12, 30]
+            generation_count_list = [10, 50, 100]
+            max_runners_list = [3, 7, 15]
+        elif case_name == 'netherlands':
+            population_size_list = [6, 12, 30]
+            generation_count_list = [100, 200, 300]
+            max_runners_list = [3, 7, 15]
+
+        for population_size in population_size_list:
+            for generation_count in generation_count_list:
+                for max_runners in max_runners_list:
                     ppa = Plant_Propagation(
                         state, True, population_size, generation_count, max_runners)
 
@@ -76,4 +85,11 @@ def grid_search_PPA_random():
 
 
 def experiment_best_filter():
+    # (short) results showing the best_filter_method
+    pass
+
+
+def experiment_long_ppa():
+    # experiment showing that even after many many generations there are increases in scores
+    # save ook hoe lang elke generatie erover doet
     pass
