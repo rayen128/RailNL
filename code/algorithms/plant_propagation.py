@@ -30,17 +30,19 @@ class Plant_Propagation(Hill_climber):
         # choose: valid, random, hill_climber
         self.initial_population_type = 'hill_climber'
 
+        # save how many connections can be returned
+        self.max_connection_returns = 0
+
         # saves overall highest achieved score
         self.start_score: float = 0
         self.high_score: float = 0
+        self.best_state = self.state
 
         # tournament size (potentially) affects population_filter method
         self.tournament_size = 2
 
         # choose: best, sequential or random
         self.filter_type = 'sequential'
-
-        self.best_state = self.state
 
         # heuristic(s)
         self.no_return_connection_heuristic = False
@@ -76,7 +78,6 @@ class Plant_Propagation(Hill_climber):
 
             # save most important info of best_state
             self.add_info()
-
 
     def reset(self) -> None:
         """
@@ -115,7 +116,7 @@ class Plant_Propagation(Hill_climber):
                 self.population.append(copy.deepcopy(self.state))
 
         elif type == 'hill_climber':
-            state = Hill_climber(self.state)
+            state = Hill_climber(self.state, True, self.max_connection_returns)
             state.valid_start_state = False
 
             for i in range(self.population_size):
