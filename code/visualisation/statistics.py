@@ -33,6 +33,8 @@ def make_histogram(values: list, title_histogram: str, filepath: str) -> None:
     plt.title(title_histogram)
     plt.xlabel("scores", labelpad=10)
     plt.ylabel("relative frequency", labelpad=10)
+    plt.xlim(4000, 9200)
+    plt.ylim(0, 0.005)
     plt.subplots_adjust(left=0.17, right=0.9, top=0.9, bottom=0.15)
     plt.savefig(
         f'{filepath}.png')
@@ -98,7 +100,7 @@ def make_line_diagram(scores: list, title_diagram: str, filepath: str) -> None:
     plt.savefig(
         f'{filepath}.png')
     
-def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, filepath: str, comparison: bool, legend: list[str] = None) -> None:
+def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, filepath: str, comparison: bool, legend: list[str] = None, xlabel: str = 'Iterations') -> None:
     """
     makes a line diagram with multiple lines of the scores against the iterations
 
@@ -119,8 +121,8 @@ def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, fil
         else:
             plt.plot(x, scores[i])
             plt.legend(legend, loc = "lower right")
-
-    plt.xlabel("Iterations")
+    
+    plt.xlabel(xlabel)
     plt.ylabel("Scores")
     plt.title(f"{title_diagram}")
     plt.savefig(

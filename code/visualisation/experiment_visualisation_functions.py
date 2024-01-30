@@ -6,18 +6,26 @@ def lines_onegrid_short_experiments(results_dict: dict, export_file_path: str, t
     makes line diagram with multiple lines for one grid
 
     pre:
-
+        results_dict is a dictionary with dictionaries for every iteration
+        export_file_path, title_diagram, start and mutation are strings
+    
+    post:
+        makes line diagram with multiple lines for every run in a certain grid
     """
     
-    scores_lists = []
+    # get filtered results
     filtered_results_start = filter_states(results_dict, 'start', start)
     filtered_results_mutation = filter_states(filtered_results_start, 'mutation', mutation)
     
+    # get iterations from grid
     key_first_run = list(filtered_results_mutation.keys())[0]
     first_run = filtered_results_mutation[key_first_run]['run_id']
 
     key_last_run = list(filtered_results_mutation.keys())[-1]
     last_run = filtered_results_mutation[key_last_run]['run_id']
+
+    # make a list with lists in it with all scores for that grid
+    scores_lists = []
 
     for run in range(int(first_run), int(last_run) + 1):
         filtered_results = filter_states(results_dict, 'run_id', str(run))
@@ -27,6 +35,10 @@ def lines_onegrid_short_experiments(results_dict: dict, export_file_path: str, t
     make_line_diagram_multiple_lines(scores_lists, title_diagram, export_file_path, False)
 
 def lines_comparison_short_experiments(results_dict: dict, export_file_path: str, title_diagram: str):
+    """
+
+    
+    """
     best_scores_lists = []
     start_parameters = ['valid', 'random']
     mutation_parameters = ['light', 'heavy']
@@ -106,7 +118,7 @@ def onegrid_ppa(results_dict: dict, export_file_path: str, title_diagram: str, p
     if plot == 'histogram':
         histogram_onegrid(results_dict, filtered_results, title_diagram, export_file_path)
     elif plot == 'linediagram':
-        lines_onegrid_long_experiments(filtered_results, export_file_path, title_diagram)
+        lines_onegrid_long_experiments(filtered_results, export_file_path, title_diagram, 'Generations')
     
 def histogram_onegrid(results_dict: dict, filtered_results: dict, title_diagram: str, export_file_path: str) -> None:
     end_scores_list = []
@@ -124,11 +136,12 @@ def histogram_onegrid(results_dict: dict, filtered_results: dict, title_diagram:
 
     make_histogram(end_scores_list, title_diagram, export_file_path)
 
-def lines_onegrid_long_experiments(filtered_results: dict, export_file_path: str, title_diagram: str):
+def lines_onegrid_long_experiments(filtered_results: dict, export_file_path: str, title_diagram: str, xlabel: str = 'Iterations'):
     scores_lists = []
-    
+    score_list_subtract = []
     for run in filtered_results.values():
-        scores_lists.append(str_to_list(run['score_list']))
-        
-
-    make_line_diagram_multiple_lines(scores_lists, title_diagram, export_file_path, False)
+        score_list = str_to_list(run['score_list'])[len(score_list_subtract)::]
+        scores_lists.append(score_list)
+        score_list_subtract = str_to_list(run['score_list'])
+    
+    make_line_diagram_multiple_lines(scores_lists, title_diagram, export_file_path, False, None, xlabel)

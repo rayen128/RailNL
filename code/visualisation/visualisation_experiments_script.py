@@ -41,5 +41,5 @@ def make_plots_ppa(case_name: str, starting_states: str, filter_method: str):
                 onegrid_ppa(results_dict, f"../../docs/graphs/ppa/histo_{case_name}_{starting_states}_{filter_method}_{population_size}_{generation_count}_{max_runners}", f"ppa {case_name} {starting_states} {filter_method} {population_size} {generation_count} {max_runners}", population_size, generation_count, max_runners, 'histogram')
 
 if __name__ == "__main__":
-    make_plots_hill_climber()
-    #make_plots_ppa('holland', 'hill_climber', 'sequential')
+    #make_plots_hill_climber()
+    make_plots_ppa('holland', 'hill_climber', 'sequential')
