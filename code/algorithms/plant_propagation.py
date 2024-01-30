@@ -11,14 +11,18 @@ class Plant_Propagation(Hill_climber):
 
         self.population_size = population_size
         self.population: list[object] = []
+        self.max_generations = max_generations
 
         self.scores: list[float] = []
         self.fitness_values: list[list[float, object]] = []
 
+        # lists to save results in
         self.high_scores: list[float] = []
+        self.fraction_scores: list[float] = []
+        self.routes_scores: list[int] = []
+        self.minute_scores: list[int] = []
 
-        self.max_generations = max_generations
-
+        # all runner-related variables
         self.max_nr_runners = max_nr_runners
         self.runner_population: list[object] = []
 
@@ -66,7 +70,8 @@ class Plant_Propagation(Hill_climber):
 
             print(f"Generation {generation + 1}: {self.high_score}")
 
-            self.high_scores.append(self.high_score)
+            # save most important info of best_state
+            self.add_info()
 
     def reset(self) -> None:
         """
@@ -97,7 +102,7 @@ class Plant_Propagation(Hill_climber):
             # create population
             for i in range(self.population_size):
                 self.state.reset()
-                self.create_random_state()
+                self.create_random_state(static=True)
                 self.population.append(copy.deepcopy(self.state))
 
         elif type == 'hill_climber':
@@ -113,6 +118,15 @@ class Plant_Propagation(Hill_climber):
         method to change intitial population-type
         """
         self.initial_population_type = type
+
+    def add_info(self):
+        """
+        saves the most important information from the best state, this methods is called every generation
+        """
+        self.high_scores.append(self.high_score)
+        self.fraction_scores.append(self.best_state.fraction_used_connections)
+        self.routes_scores.append(self.best_state.number_routes)
+        self.minute_scores.append(self.best_state.total_minutes)
 
     ### SCORE FUNCTIONS ###
 
@@ -294,7 +308,7 @@ class Plant_Propagation(Hill_climber):
                 self.state = current_runner
 
                 counter = 0
-                
+
                 # TODO: Experimenteren
                 while distance_goal > self.likeness(current_state, self.state) and counter < 1000:
                     for i in range(distance_goal):
@@ -304,7 +318,7 @@ class Plant_Propagation(Hill_climber):
                         else:
                             self.make_change_light()
                         counter += 1
-            
+
                 self.runner_population.append(self.state)
 
     def generate_runner_distances(self):
@@ -362,7 +376,7 @@ class Plant_Propagation(Hill_climber):
 
         routes_used = []
         connection_counter = 0
-        
+
         for original_route in original_state.routes:
             max_overlap = -1
             best_match = None
@@ -382,17 +396,20 @@ class Plant_Propagation(Hill_climber):
                         difference = len(original_connections.symmetric_difference(
                             new_connections))
                         best_match = new_route
-            
+
             if best_match:
                 routes_used.append(original_route)
                 routes_used.append(best_match)
                 connections_different += difference
                 connections_overlapping += max_overlap
 
-        # if 1 has more routes than the other
-        # loop-over routes the one who is longer
-        # if route not in routes.used:
-            # add all connections to the connections_different
+        if original_state.number_routes != new_state.number_routes:
+            bigger_state = max(original_state, new_state,
+                               key=lambda state: state.number_routes)
+
+            for route in bigger_state.routes:
+                if route not in routes_used:
+                    connections_different += len(set(route.connection_ids))
 
         proportion = connections_overlapping / connection_counter
 
@@ -404,5 +421,5 @@ class Plant_Propagation(Hill_climber):
         """
         connections_different, connections_overlapping, proportion = self.count_route_difference(
             original_state, new_state)
-        
+
         return connections_different

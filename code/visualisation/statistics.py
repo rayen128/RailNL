@@ -118,8 +118,8 @@ def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, fil
             plt.plot(x, scores[i], alpha=0.2, color='magenta')
         else:
             plt.plot(x, scores[i])
+            plt.legend(legend, loc = "lower right")
 
-    plt.legend(legend, loc = "lower right")
     plt.xlabel("Iterations")
     plt.ylabel("Scores")
     plt.title(f"{title_diagram}")
