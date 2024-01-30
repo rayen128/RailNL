@@ -1,7 +1,7 @@
 from .hill_climber import Hill_climber
 from sys import path
 path.append("../classes")
-from state import State
+from code.classes.state import State
 
 import random
 import copy
@@ -84,9 +84,14 @@ class Simulated_annealing(Hill_climber):
         score_old_state = self.get_score_state(self.current_state)
         score_new_state = self.get_score_state(self.state)
 
-        # calculate the accept chance
-        chance = 2 ** ((score_new_state - score_old_state) / temperature)
+        delta = score_new_state - score_old_state
 
+        # if the score is better, return a 100% acceptance chance
+        if delta > 0:
+            return 1
+
+        # calculate the accept chance
+        chance = 2 ** ((delta) / temperature)
         return chance
 
     def change_state(self, iteration: int, cooling_scheme: str) -> None:
@@ -115,7 +120,7 @@ class Simulated_annealing(Hill_climber):
         random_number = random.random()
 
         # decide to accept change or not
-        if random_number < accept_chance:
+        if random_number <= accept_chance:
             self.current_state = copy.deepcopy(self.state)
         else:
             self.state = copy.deepcopy(self.current_state)
