@@ -169,6 +169,7 @@ data/experiment_hill_climber_grid_search_holland.csv
 data/annealing/
 data/hill_climber/ 
 data/hill_climber_restart/
+data/ppa/
 
 test_state.py
 test.py
