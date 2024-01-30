@@ -115,7 +115,7 @@ class Simulated_annealing(Hill_climber):
         random_number = random.random()
 
         # decide to accept change or not
-        if random_number < accept_chance:
+        if random_number <= accept_chance:
             self.current_state = copy.deepcopy(self.state)
         else:
             self.state = copy.deepcopy(self.current_state)
