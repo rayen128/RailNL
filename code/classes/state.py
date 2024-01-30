@@ -1,6 +1,7 @@
 import csv
 import sys
 import copy
+import os
 
 from typing import Union
 
@@ -16,11 +17,18 @@ class State():
         """
         Initiates State class.
 
+        pre:
+            max number of routes is greater than 0
+            timeframe is greater than 0
+
         post:
             Creates list of stations, connections and routes
             Fills list of stations and connections 
             Creates constraint relaxation variables     
         """
+        assert max_number_routes > 0, "Max number of routes should be greater than 0"
+        assert time_frame > 0, "Timeframe should be greater than 0"
+
         self.total_number_connections: int = 0
 
         # add relations to all other objects
@@ -46,6 +54,8 @@ class State():
         # route id tracker for defining the name of a route
         self.route_id_tracker: int = 1
 
+        # connection usage lists are for checking if all connections are used,
+        # and can be used to only add unused connections
         self.used_connections: list = []
         self.unused_connections: list = [
             connection for connection in self.connections]
@@ -57,28 +67,33 @@ class State():
         returns:
             description of the state object
         """
-        return ("State object")
+        return (f"State object with score {self.calculate_score()}")
 
-    def _add_stations(self, file_path: str) -> list:
+    def _add_stations(self, file_path: str) -> list['Station']:
         """
-        Adds stations from stations.csv file to the list.
+        Returns stations from stations.csv
 
         pre: 
-            file path to stations.csv
+            file path to stations.csv exists
 
-        post: 
-            returns list of station objects
+        returns: 
+            list of Station objects
         """
+        assert os.path.exists(file_path), f"path {file_path} does not exist."
+
         with open(file_path) as stations:
             stations_reader: object = csv.DictReader(stations)
 
             # add stations to the station list
             station_list: list = []
             for row in stations_reader:
+
                 # check if columns are right
                 assert "station" in row.keys() and "x" in row.keys() and "y" in row.keys(
                 ), "Station csv should have station, y and x headers"
-                new_station: object = Station(
+
+                # create new Station object
+                new_station: 'Station' = Station(
                     row["station"], float(row["x"]), float(row["y"]))
                 station_list.append(new_station)
 
@@ -86,39 +101,47 @@ class State():
 
     def _add_connections(self, file_path: str) -> list:
         """
-        Adds connections from connections.csv to the list.
+        Returns connections from connections.csv
 
         pre: 
-            file path to connections.csv
+            file path to connections.csv exists
 
         post: 
             updates total number of connections
-            returns list of connection objects and adds connections to stations
+            adds connections to stations from stations list
+
+        returns:
+            list of Connection objects
         """
+        assert os.path.exists(file_path), f"path {file_path} does not exist."
+
         with open(file_path) as connections:
             connections_reader: object = csv.DictReader(connections)
-
-            # add connections to connections list
             connections_list: list[object] = []
+
             for row in connections_reader:
+
+                # check if columns are right
                 assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(
                 ), "connections csv should have station1, station2 and distance headers"
-                # look up station object by name
-                station1: object = next(
-                    station for station in self.stations if station.name == row["station1"])
-                station2: object = next(
-                    station for station in self.stations if station.name == row["station2"])
 
                 # add connection to connection list
                 new_connection: object = Connection(
                     self.total_number_connections, station1, station2, float(row["distance"]))
                 connections_list.append(new_connection)
 
+                # look up Station objects by name
+                station1: 'Station' = next(
+                    station for station in self.stations if station.name == row["station1"])
+                station2: 'Station' = next(
+                    station for station in self.stations if station.name == row["station2"])
+
                 # add connection to Station objects
                 for station in self.stations:
                     if station.name == row["station1"] or station.name == row["station2"]:
                         station.add_connection(new_connection)
 
+                # update number of connections
                 self.total_number_connections += 1
 
             return connections_list
@@ -128,7 +151,7 @@ class State():
         Checks if the maximum number of routes is reached.
 
         returns:
-            True if number of routes is not reached
+            True if number of routes is not reached and if max routes constraint is relaxed
             False otherwise    
         """
         if not self.relaxed_max_routes and self.number_routes == self.max_number_routes:
@@ -138,8 +161,6 @@ class State():
     def add_route(self, connection: 'Connection') -> None:
         """
         Adds a new route.
-        pre: 
-            first connection for a route
 
         post: 
             creates and adds Route object to routes list
@@ -148,9 +169,11 @@ class State():
             true if addition was succesful
             false if addition was not succesful
         """
+
+        # if max number of routes is not reached
         if self._check_number_routes():
 
-            # determine route name
+            # determine route name, using id tracker
             name = f"train_{self.route_id_tracker}"
             self.route_id_tracker += 1
 
@@ -171,9 +194,6 @@ class State():
         """
         Deletes given route
 
-        pre: 
-            route to be deleted exists
-
         post:
             removes route from routes list
 
@@ -181,6 +201,8 @@ class State():
             True if operation was succesful    
         """
         if route in self.routes:
+
+            # fetch all connections in route
             connections = copy.copy(route.route_connections)
 
             self.routes.remove(route)
@@ -191,6 +213,7 @@ class State():
                 self.set_unused(connection)
 
             self._update_number_routes()
+
             return True
         else:
             return False
@@ -215,6 +238,8 @@ class State():
             removes connection from used connections list (if not in any route)
             adds connection to unused connections list (if not in any route)  
         """
+
+        # removal does not work if the connection is not in used_connections
         if connection in self.used_connections:
 
             # check if connection is not in any route
@@ -234,6 +259,8 @@ class State():
             True if action is successfull,
             False otherwise    
         """
+
+        # add_connection implicitly adds the connection if possible
         if route.add_connection(connection):
             self.set_used(connection)
             return True
@@ -245,6 +272,7 @@ class State():
 
         pre: 
             route is in routes list
+            route is not empty
 
         post:
             deletes end connection of given route
@@ -253,7 +281,12 @@ class State():
         returns:
             boolean indicating successfulness of operation      
         """
+        assert route in self.routes, "Route not in routes list of current state"
+        assert len(route.route_connections) != 0, "Route is empty already"
+
         connection = route.route_connections[-1]
+
+        # method implicitly deletes last connection
         if route.delete_connection_end():
             self.set_unused(connection)
             return True
@@ -265,6 +298,7 @@ class State():
 
         pre: 
             route is in routes list
+            route is not empty
 
         post:
             deletes start connection of given route
@@ -274,7 +308,11 @@ class State():
             boolean indicating successfulness of operation      
         """
         assert route in self.routes, "Route not in routes list of current state"
+        assert len(route.route_connections) != 0, "Route is empty already"
+
         connection = route.route_connections[0]
+
+        # method implicitly deletes start connection
         if route.delete_connection_start():
             self.set_unused(connection)
             return True

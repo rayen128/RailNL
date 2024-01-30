@@ -9,14 +9,22 @@ path.append("code/classes")
 from state import State
 
 
-def grid_search_PPA_hill_climber(state: object, time_seconds: int, case_name: str, initial_population: str, filter_type: str):
-    # Map: holland & NL
-    # Generations: 10, 50, 100
-    # Population: 6, 12, 30
-    # Max_runners: 3, 7, 15
-    # Filter_methods: sequential
-    # Starting_states: Hill-Climbers
-    # 15 min p/grid
+def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_population: str, filter_type: str):
+    """
+    does a grid search based on the PlantPropagation algorithm with the following parameters:
+
+        map: Holland or NL 
+        generations
+            - Holland: 10, 50, 100
+            - NL: 400
+
+        population: 6, 30
+        max_runners: 3, 15
+        filter_methods: sequential
+        starting_states: hill_climber, random OR valid (states)
+        time_seconds is per/grid 
+
+    """
 
     with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
         writer = csv.writer(file)
@@ -53,21 +61,16 @@ def grid_search_PPA_hill_climber(state: object, time_seconds: int, case_name: st
                     ppa = Plant_Propagation(
                         state, True, population_size, generation_count, max_runners)
 
+                    ppa.change_population_type(type)
+
                     start = time.time()
 
                     # run grid element for given amount of time
                     while time.time() - start < time_seconds:
                         ppa.run()
 
-                        info_list = [counter, ppa.start_score,
-                                     ppa.high_score, ppa.best_state.fraction_used_connections,
-                                     ppa.best_state.number_routes, ppa.best_state.total_minutes,
-                                     initial_population, generation_count, population_size, max_runners,
-                                     list_to_str(ppa.high_scores),
-                                     list_to_str(ppa.fraction_scores),
-                                     list_to_str(ppa.routes_scores),
-                                     list_to_str(ppa.minute_scores),
-                                     ppa.best_state.show_sleeper_string()]
+                        info_list = get_csv_row_ppa(
+                            ppa, counter, initial_population, generation_count, population_size, max_runners)
 
                         writer.writerow(info_list)
 
@@ -75,23 +78,116 @@ def grid_search_PPA_hill_climber(state: object, time_seconds: int, case_name: st
                         counter += 1
 
 
-def grid_search_PPA_random():
-    # Map: holland & NL
-    # Generations: 10, 50, 100
-    # Population: 6, 12, 30
-    # Max_runners: 3, 7, 15
-    # Filter_methods: sequential
-    # Starting_states: random
-    # 15 min p/grid
-    pass
+def experiment_best_filter(state: object, time_seconds: int, case_name: str, initial_population: str):
+    """
+    NL
+    3 filters
+    30 400 7
+    12 400 15
+    """
+
+    if case_name != 'netherlands':
+        print('pick netherlands as case')
+        return False
+    else:
+        population_size_list = [12, 30]
+        max_runners_list = [15, 7]
+        generation_count = 400
+
+    for filter_type in ['best', 'sequential', 'random']:
+        for i in range(2):
+            population_size = population_size_list[i]
+            max_runners = max_runners_list[i]
+
+            start = time.time()
+
+            with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
+                writer = csv.writer(file)
+                writer.writerow(["run_id",
+                                "start_score",
+                                 "score",
+                                 "p",
+                                 "T",
+                                 "Min",
+                                 "initial_population",
+                                 "generation_count",
+                                 "population_size",
+                                 "max_runners",
+                                 "score_list",
+                                 "fraction_used_list",
+                                 "number_of_routes_list",
+                                 "minutes_list",
+                                 "sleeper_string"])
+
+                ppa = Plant_Propagation(
+                    state, True, population_size, generation_count, max_runners)
+
+                while time.time() - start < time_seconds:
+                    ppa.run()
+
+                    info_list = get_csv_row_ppa(
+                        ppa, counter, initial_population, generation_count, population_size, max_runners)
+
+                    writer.writerow(info_list)
+
+                    print(counter)
+                    counter += 1
 
 
-def experiment_best_filter():
-    # (short) results showing the best_filter_method
-    pass
+def experiment_long_ppa(state: object, case_name: str, initial_population: str, filter_type: str):
+    """
+    NL
+    30 10000 7
+    12 10000 15
+    """
+    with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(["run_id",
+                         "start_score",
+                         "score",
+                         "p",
+                         "T",
+                         "Min",
+                         "initial_population",
+                         "generation_count",
+                         "population_size",
+                         "max_runners",
+                         "score_list",
+                         "fraction_used_list",
+                         "number_of_routes_list",
+                         "minutes_list",
+                         "sleeper_string",
+                         "time_taken"])
 
+        counter = 0
 
-def experiment_long_ppa():
+        if case_name != 'netherlands':
+            print('pick netherlands as case')
+            return False
+        else:
+            population_size_list = [12, 30]
+            max_runners_list = [15, 7]
+            generation_count = 10000
+
+        while True:
+            start = time.time()
+            index = counter % 2
+            ppa = Plant_Propagation(
+                state, True, population_size_list[index], generation_count, max_runners_list[index])
+
+            ppa.run()
+
+            info_list = get_csv_row_ppa(
+                ppa, counter, initial_population, generation_count, population_size_list[index], max_runners_list[index])
+
+            end = time.time() - start
+            info_list.append(end)
+
+            writer.writerow(info_list)
+
+            print(counter)
+            counter += 1
+
     # experiment showing that even after many many generations there are increases in scores
     # save ook hoe lang elke generatie erover doet
     pass

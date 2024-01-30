@@ -2,6 +2,7 @@ from .hill_climber import Hill_climber
 from math import tanh
 import random
 import copy
+from ..visualisation.visualisation import *
 
 
 class Plant_Propagation(Hill_climber):
@@ -41,6 +42,9 @@ class Plant_Propagation(Hill_climber):
 
         self.best_state = self.state
 
+        # heuristic(s)
+        self.no_return_connection_heuristic = False
+
     ### GENERAL FUNCTIONS ###
 
     def run(self):
@@ -48,6 +52,8 @@ class Plant_Propagation(Hill_climber):
 
         # create initial population
         self.initial_population()
+
+        self.station_dict = get_station_info(self.state)
 
         for generation in range(self.max_generations):
             # get all scores of the current population
@@ -73,6 +79,9 @@ class Plant_Propagation(Hill_climber):
             # save most important info of best_state
             self.add_info()
 
+        station_dict = get_station_info(self.state)
+        show_plot(station_dict, self.best_state, 'netherlands')
+
     def reset(self) -> None:
         """
         resets class by clearing all (relevant) variables
@@ -82,6 +91,10 @@ class Plant_Propagation(Hill_climber):
         self.population = []
         self.runner_population = []
         self.high_score = 0
+        self.high_scores = []
+        self.fraction_scores = []
+        self.routes_scores = []
+        self.minute_scores = []
 
     def initial_population(self) -> None:
         """
@@ -181,6 +194,9 @@ class Plant_Propagation(Hill_climber):
         """
         # add runners to population
         self.merge_population()
+
+        # for state in self.population:
+        #     show_plot(self.station_dict, state, 'netherlands')
 
         # calculate all scores
         self.get_scores()
@@ -313,16 +329,16 @@ class Plant_Propagation(Hill_climber):
                 print(runner_index)
                 while distance_goal > self.likeness(current_state, self.state) and counter < 1000:
                     for i in range(distance_goal):
-                        r = random.random()
-                        if r > 0.3:
-                            print("heavy change")
+                        r = self.state.fraction_used_connections
+                        if r < 0.8:
                             self.make_change_heavy()
                         else:
                             print("light change")
                             self.make_change_light()
                         counter += 1
                     print(f"distance_goal: {distance_goal}")
-                    print(f"likeness: {self.likeness(current_state, self.state)}")
+                    print(
+                        f"likeness: {self.likeness(current_state, self.state)}")
 
                 self.runner_population.append(self.state)
 
