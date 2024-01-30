@@ -275,7 +275,7 @@ class Hill_climber_restart(Hill_climber):
 
         pre:
             iterations is a integer
-        
+
         returns:
             best score
             sleeper string of the state with best score
@@ -288,7 +288,7 @@ class Hill_climber_restart(Hill_climber):
         self.restart_counter = 0
 
         best_score = 0
-        best_state = None
+        best_state = copy.deepcopy(self.state)
 
         hillclimber_score_list = []
         for _ in range(iterations):
@@ -311,6 +311,5 @@ class Hill_climber_restart(Hill_climber):
                 best_state = copy.deepcopy(self.current_state)
 
             hillclimber_score_list.append(new_score)
-        print(hillclimber_score_list)
 
         return best_score, best_state, hillclimber_score_list
