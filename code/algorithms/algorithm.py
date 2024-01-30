@@ -23,6 +23,9 @@ class Algorithm():
         self.heuristic_difficult_connections = heuristic_difficult_connections
         self.heuristic_non_valid = heuristic_non_valid
 
+        self.number_of_routes = random.randint(1, self.state.max_number_routes)
+        self.number_of_connections = random.randint(1, 20)
+
     def __str__(self):
         return "Algorithm object"
 
@@ -122,9 +125,9 @@ class Algorithm():
         """
         self.state.add_route(random.choice(self.state.connections))
 
-    def create_random_state(self) -> None:
+    def create_random_state(self, static: bool = False) -> None:
         """
-        randomly generates a state with random 1-length routes (default=1)
+        generates a state with a random amount of random-length routes
 
         pre: 
             number_of_connections is an integer
@@ -132,9 +135,13 @@ class Algorithm():
         post:
             self.state.routes contains specified number of 1-length routes
         """
-        # TODO: aanpassen zodat maar 1x number_of_routes & connections wordt bepaald/kan worden vastgezet (zodat meerdere keren aanroepen states van dezelfde grootte geeft)
-        number_of_routes = random.randint(1, self.state.max_number_routes)
-        number_of_connections = random.randint(1, 20)
+        if static:
+            number_of_connections = self.number_of_connections
+            number_of_routes = self.number_of_routes
+
+        else:
+            number_of_routes = random.randint(1, self.state.max_number_routes)
+            number_of_connections = random.randint(1, 20)
 
         for new_route in range(number_of_routes):
             # pick random connection and create route
@@ -338,6 +345,7 @@ class Algorithm():
                 return connection
 
     #### MINUS POINTS MULTIPLE USE CONNECTION HEURISTIC ####
+
     def _get_points_multiple_use_connection(self, connection: 'Connection'):
         """
         gives minus points if a connection is used multiple times. The minus points get progressively more, the more a connection is used.
