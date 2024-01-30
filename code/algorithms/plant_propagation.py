@@ -53,8 +53,6 @@ class Plant_Propagation(Hill_climber):
         # create initial population
         self.initial_population()
 
-        self.station_dict = get_station_info(self.state)
-
         for generation in range(self.max_generations):
             # get all scores of the current population
             self.get_scores()
@@ -79,8 +77,6 @@ class Plant_Propagation(Hill_climber):
             # save most important info of best_state
             self.add_info()
 
-        station_dict = get_station_info(self.state)
-        show_plot(station_dict, self.best_state, 'netherlands')
 
     def reset(self) -> None:
         """
@@ -326,19 +322,14 @@ class Plant_Propagation(Hill_climber):
                 counter = 0
 
                 # TODO: Experimenteren
-                print(runner_index)
                 while distance_goal > self.likeness(current_state, self.state) and counter < 1000:
                     for i in range(distance_goal):
                         r = self.state.fraction_used_connections
                         if r < 0.8:
                             self.make_change_heavy()
                         else:
-                            print("light change")
                             self.make_change_light()
                         counter += 1
-                    print(f"distance_goal: {distance_goal}")
-                    print(
-                        f"likeness: {self.likeness(current_state, self.state)}")
 
                 self.runner_population.append(self.state)
 
@@ -419,8 +410,6 @@ class Plant_Propagation(Hill_climber):
                         best_match = new_route
 
             if best_match:
-                print(f"original route:{original_route.connection_ids}")
-                print(f"best_match: {best_match.connection_ids}")
                 routes_used.append(original_route)
                 routes_used.append(best_match)
                 connections_different += difference

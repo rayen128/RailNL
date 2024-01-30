@@ -124,17 +124,17 @@ class State():
                 # check if columns are right
                 assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(
                 ), "connections csv should have station1, station2 and distance headers"
-
-                # add connection to connection list
-                new_connection: object = Connection(
-                    self.total_number_connections, station1, station2, float(row["distance"]))
-                connections_list.append(new_connection)
-
+                
                 # look up Station objects by name
                 station1: 'Station' = next(
                     station for station in self.stations if station.name == row["station1"])
                 station2: 'Station' = next(
                     station for station in self.stations if station.name == row["station2"])
+                
+                # add connection to connection list
+                new_connection: object = Connection(
+                    self.total_number_connections, station1, station2, float(row["distance"]))
+                connections_list.append(new_connection)
 
                 # add connection to Station objects
                 for station in self.stations:

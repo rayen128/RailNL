@@ -92,32 +92,34 @@ def experiment_best_filter(state: object, time_seconds: int, case_name: str, ini
     else:
         population_size_list = [12, 30]
         max_runners_list = [15, 7]
-        generation_count = 400
+        generation_count = 200
+    
+    counter = 0
 
-    for filter_type in ['best', 'sequential', 'random']:
-        for i in range(2):
-            population_size = population_size_list[i]
-            max_runners = max_runners_list[i]
+    for filter_type in ['best', 'random']:
+        with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
+            writer = csv.writer(file)
+            writer.writerow(["run_id",
+                            "start_score",
+                            "score",
+                            "p",
+                            "T",
+                            "Min",
+                            "initial_population",
+                            "generation_count",
+                            "population_size",
+                            "max_runners",
+                            "score_list",
+                            "fraction_used_list",
+                            "number_of_routes_list",
+                            "minutes_list",
+                            "sleeper_string"])
 
-            start = time.time()
+            for i in range(2):
+                population_size = population_size_list[i]
+                max_runners = max_runners_list[i]
 
-            with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
-                writer = csv.writer(file)
-                writer.writerow(["run_id",
-                                "start_score",
-                                 "score",
-                                 "p",
-                                 "T",
-                                 "Min",
-                                 "initial_population",
-                                 "generation_count",
-                                 "population_size",
-                                 "max_runners",
-                                 "score_list",
-                                 "fraction_used_list",
-                                 "number_of_routes_list",
-                                 "minutes_list",
-                                 "sleeper_string"])
+                start = time.time()
 
                 ppa = Plant_Propagation(
                     state, True, population_size, generation_count, max_runners)
@@ -140,7 +142,7 @@ def experiment_long_ppa(state: object, case_name: str, initial_population: str, 
     30 10000 7
     12 10000 15
     """
-    with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
+    with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}_5000generations.csv", "w") as file:
         writer = csv.writer(file)
         writer.writerow(["run_id",
                          "start_score",
@@ -167,7 +169,7 @@ def experiment_long_ppa(state: object, case_name: str, initial_population: str, 
         else:
             population_size_list = [12, 30]
             max_runners_list = [15, 7]
-            generation_count = 10000
+            generation_count = 5000
 
         while True:
             start = time.time()
