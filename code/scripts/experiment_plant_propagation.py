@@ -31,6 +31,9 @@ def grid_search_PPA_hill_climber(state: object, time_seconds: int, case_name: st
                          "population_size",
                          "max_runners",
                          "score_list",
+                         "fraction_used_list",
+                         "number_of_routes_list",
+                         "minutes_list",
                          "sleeper_string"])
 
         counter = 0
@@ -60,17 +63,16 @@ def grid_search_PPA_hill_climber(state: object, time_seconds: int, case_name: st
                                      ppa.high_score, ppa.best_state.fraction_used_connections,
                                      ppa.best_state.number_routes, ppa.best_state.total_minutes,
                                      initial_population, generation_count, population_size, max_runners,
-                                     list_to_str(ppa.high_scores), ppa.best_state.show_sleeper_string()]
+                                     list_to_str(ppa.high_scores),
+                                     list_to_str(ppa.fraction_scores),
+                                     list_to_str(ppa.routes_scores),
+                                     list_to_str(ppa.minute_scores),
+                                     ppa.best_state.show_sleeper_string()]
 
                         writer.writerow(info_list)
 
                         print(counter)
                         counter += 1
-
-                        # get_csv_row met daarin:
-                        # ppa.high_score (elke keer weer)
-                        # ppa.high_score (uiteindelijke)
-                        # sleeper-string
 
 
 def grid_search_PPA_random():
