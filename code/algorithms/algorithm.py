@@ -76,6 +76,68 @@ class Algorithm():
 
         self.state.awaken_state(sleeper_string)
 
+    #### METHODS FOR STATE CREATION ####
+
+    def create_state(self) -> None:
+        """
+        creates a start state
+
+        pre:
+            self.valid_start_state is a boolean
+
+        post:
+            a random or a valid start state is created 
+        """
+        if self.valid_start_state:
+            self.create_valid_state()
+        else:
+            self.create_random_state()
+
+    def create_valid_state(self) -> None:
+        """
+        creates for self.state a start-state that is valid 
+
+        pre:
+            self.state doesn't consist of any routes
+            there aren't any used connections in self.state
+
+        post:
+            self.state is now valid solved state
+        """
+        assert not self.state.routes, "there are already routes in this state"
+        assert not self.state.used_connections, "there are used connections"
+
+        self.current_route_index = 0
+        # add routes until state is valid
+        while not self.state.is_valid_solution():
+            # add route if the max amount is not reached
+            if self.state.number_routes < self.state.max_number_routes:
+                self.add_random_route()
+            # if max is reached delete random route and add route after that
+            else:
+                self.delete_random_route()
+                self.add_random_route()
+                self.current_route_index -= 1
+
+            # add connections until timeframe is reached
+            while self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
+                connection_added = False
+                # try to add unused connections
+                for connection in self.state.unused_connections:
+                    if self.state.add_connection_to_route(self.state.routes[self.current_route_index], connection):
+                        connection_added = True
+                        break
+                if not connection_added:
+                    for connection in self.state.connections:
+                        if self.state.add_connection_to_route(self.state.routes[self.current_route_index], connection):
+                            break
+            # delete connections above timeframe
+            while not self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
+                self.state.delete_end_connection_from_route(
+                    self.state.routes[self.current_route_index])
+
+            self.current_route_index += 1
+
     #### METHODS FOR BONUS AND MALUS POINT CALCULATION ####
 
     def get_total_bonus_malus(self, state) -> int:
@@ -174,12 +236,12 @@ class Algorithm():
             choice = random.choice(['start', 'end'])
 
         if choice == 'start':
-            new_connection = random.choice(
-                self.state.routes[route_index].get_start_station().get_connections())
+            new_connection = random.choice(self.get_allowed_connections_start(
+                self.state.routes[route_index], self.state.routes[route_index].get_start_station()))
 
         elif choice == 'end':
-            new_connection = random.choice(
-                self.state.routes[route_index].get_end_station().get_connections())
+            new_connection = random.choice(self.get_allowed_connections_end(
+                self.state.routes[route_index], self.state.routes[route_index].get_end_station()))
 
         self.state.add_connection_to_route(
             self.state.routes[route_index], new_connection)
@@ -283,10 +345,6 @@ class Algorithm():
         returns:
             number of times a connection is used at end of route
         """
-        assert isinstance(
-            Connection, connection), f"connection should be a Connection object, is a {type(connection)} (value: {connection})"
-        assert isinstance(
-            Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
         return self._connection_used_consecutively(connection, reversed(route.route_connections))
 
     def connection_used_after_start(self, connection: 'Connection', route: 'Route'):
@@ -300,49 +358,86 @@ class Algorithm():
         returns:
             number of times a connection is used at end of route
         """
-        assert isinstance(
-            Connection, connection), f"connection should be a Connection object, is a {type(connection)} (value: {connection})"
-        assert isinstance(
-            Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
         return self._connection_used_consecutively(connection, route.route_connections)
 
-    def get_forbidden_connection_start(self, route: 'Route', station: 'Station') -> Union['Connection', None]:
+    # def get_forbidden_connection_start(self, route: 'Route', station: 'Station') -> Union['Connection', None]:
+    #     """
+    #     gives connection that is used too much right after the start station
+
+    #     pre:
+    #         station is Station object
+    #     """
+    #     assert isinstance(
+    #         Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
+
+    #     assert isinstance(
+    #         Station, station), f"station should be a station object, is a {type(station)} (value: {station})"
+
+    #     for connection in station.connections:
+    #         if self.max_connection_returns and self.connection_used_after_start(connection, route) >= self.max_connection_returns:
+    #             return connection
+
+    # def get_forbidden_connection_end(self, route: 'Route', station: 'Station') -> Union['Connection', None]:
+    #     """
+    #     gives connection that is used too much right before the end station
+
+    #     pre:
+    #         station is Station object
+
+    #     returns:
+    #         forbidden connection
+    #         None if there is no forbidden connection
+    #     """
+    #     assert isinstance(
+    #         Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
+
+    #     assert isinstance(
+    #         Station, station), f"station should be a station object, is a {type(station)} (value: {station})"
+
+    #     for connection in station.connections:
+    #         if self.max_connection_returns and self.connection_used_before_end(connection, route) >= self.max_connection_returns:
+    #             return connection
+
+    def get_allowed_connections_start(self, route: 'Route', station: 'Station') -> list['Connection']:
         """
-        gives connection that is used too much right after the start station
-
-        pre: 
-            station is Station object
-        """
-        assert isinstance(
-            Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
-
-        assert isinstance(
-            Station, station), f"station should be a station object, is a {type(station)} (value: {station})"
-
-        for connection in station.connections:
-            if self.max_connection_returns and self.connection_used_after_start(connection, route) >= self.max_connection_returns:
-                return connection
-
-    def get_forbidden_connection_end(self, route: 'Route', station: 'Station') -> Union['Connection', None]:
-        """
-        gives connection that is used too much right before the end station
-
-        pre: 
-            station is Station object
+        gives all connections at start of route that are not used too much according to self.max_connection_returns
+        exception: if there is only one connection in the possible connections, that one is returned
 
         returns:
-            forbidden connection
-            None if there is no forbidden connection
+            list of allowed connections
         """
-        assert isinstance(
-            Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
+        start_connections: list['Connection'] = station.get_connections()
 
-        assert isinstance(
-            Station, station), f"station should be a station object, is a {type(station)} (value: {station})"
+        # the heuristic does not count if there is only one way back
+        if len(start_connections) == 1:
+            return start_connections
 
-        for connection in station.connections:
-            if self.max_connection_returns and self.connection_used_before_end(connection, route) >= self.max_connection_returns:
-                return connection
+        allowed_connections: list['Connection'] = []
+        for connection in start_connections:
+            if not self.max_connection_returns or self.connection_used_after_start(connection, route) < self.max_connection_returns:
+                allowed_connections.append(connection)
+
+        return allowed_connections
+
+    def get_allowed_connections_end(self, route: 'Route', station: 'Station'):
+        """
+        gives all connections at end of route that are not used too much according to self.max_connection_returns
+        exception: if there is only one connection in the possible connections, that one is returned
+
+        returns:
+            list of allowed connections
+        """
+        end_connections: list['Connection'] = station.get_connections()
+
+        # the heuristic does not count if there is only one way back
+        if len(end_connections) == 1:
+            return end_connections
+
+        allowed_connections: list['Connection'] = []
+        for connection in end_connections:
+            if not self.max_connection_returns or self.connection_used_before_end(connection, route) < self.max_connection_returns:
+                allowed_connections.append(connection)
+        return allowed_connections
 
     #### MINUS POINTS MULTIPLE USE CONNECTION HEURISTIC ####
 

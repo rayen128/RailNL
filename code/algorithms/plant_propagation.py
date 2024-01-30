@@ -6,8 +6,8 @@ import copy
 
 class Plant_Propagation(Hill_climber):
 
-    def __init__(self, state: object, valid_states: bool, population_size: int, max_generations: int, max_nr_runners: int):
-        super().__init__(state, valid_states)
+    def __init__(self, state: object, valid_states: bool, population_size: int, max_generations: int, max_nr_runners: int, max_connection_returns: int = 0):
+        super().__init__(state, valid_states, max_connection_returns=max_connection_returns)
 
         self.population_size = population_size
         self.population: list[object] = []
