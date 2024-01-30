@@ -78,24 +78,116 @@ def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_po
                         counter += 1
 
 
-def experiment_best_filter():
+def experiment_best_filter(state: object, time_seconds: int, case_name: str, initial_population: str):
     """
     NL
     3 filters
     30 400 7
     12 400 15
     """
-    #
-    # (short) results showing the best_filter_method
-    pass
+
+    if case_name != 'netherlands':
+        print('pick netherlands as case')
+        return False
+    else:
+        population_size_list = [12, 30]
+        max_runners_list = [15, 7]
+        generation_count = 400
+
+    for filter_type in ['best', 'sequential', 'random']:
+        for i in range(2):
+            population_size = population_size_list[i]
+            max_runners = max_runners_list[i]
+
+            start = time.time()
+
+            with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
+                writer = csv.writer(file)
+                writer.writerow(["run_id",
+                                "start_score",
+                                 "score",
+                                 "p",
+                                 "T",
+                                 "Min",
+                                 "initial_population",
+                                 "generation_count",
+                                 "population_size",
+                                 "max_runners",
+                                 "score_list",
+                                 "fraction_used_list",
+                                 "number_of_routes_list",
+                                 "minutes_list",
+                                 "sleeper_string"])
+
+                ppa = Plant_Propagation(
+                    state, True, population_size, generation_count, max_runners)
+
+                while time.time() - start < time_seconds:
+                    ppa.run()
+
+                    info_list = get_csv_row_ppa(
+                        ppa, counter, initial_population, generation_count, population_size, max_runners)
+
+                    writer.writerow(info_list)
+
+                    print(counter)
+                    counter += 1
 
 
-def experiment_long_ppa():
+def experiment_long_ppa(state: object, case_name: str, initial_population: str, filter_type: str):
     """
     NL
     30 10000 7
     12 10000 15
     """
+    with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(["run_id",
+                         "start_score",
+                         "score",
+                         "p",
+                         "T",
+                         "Min",
+                         "initial_population",
+                         "generation_count",
+                         "population_size",
+                         "max_runners",
+                         "score_list",
+                         "fraction_used_list",
+                         "number_of_routes_list",
+                         "minutes_list",
+                         "sleeper_string",
+                         "time_taken"])
+
+        counter = 0
+
+        if case_name != 'netherlands':
+            print('pick netherlands as case')
+            return False
+        else:
+            population_size_list = [12, 30]
+            max_runners_list = [15, 7]
+            generation_count = 10000
+
+        while True:
+            start = time.time()
+            index = counter % 2
+            ppa = Plant_Propagation(
+                state, True, population_size_list[index], generation_count, max_runners_list[index])
+
+            ppa.run()
+
+            info_list = get_csv_row_ppa(
+                ppa, counter, initial_population, generation_count, population_size_list[index], max_runners_list[index])
+
+            end = time.time() - start
+            info_list.append(end)
+
+            writer.writerow(info_list)
+
+            print(counter)
+            counter += 1
+
     # experiment showing that even after many many generations there are increases in scores
     # save ook hoe lang elke generatie erover doet
     pass
