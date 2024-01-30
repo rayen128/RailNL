@@ -310,14 +310,19 @@ class Plant_Propagation(Hill_climber):
                 counter = 0
 
                 # TODO: Experimenteren
+                print(runner_index)
                 while distance_goal > self.likeness(current_state, self.state) and counter < 1000:
                     for i in range(distance_goal):
                         r = random.random()
                         if r > 0.3:
+                            print("heavy change")
                             self.make_change_heavy()
                         else:
+                            print("light change")
                             self.make_change_light()
                         counter += 1
+                    print(f"distance_goal: {distance_goal}")
+                    print(f"likeness: {self.likeness(current_state, self.state)}")
 
                 self.runner_population.append(self.state)
 
@@ -358,7 +363,7 @@ class Plant_Propagation(Hill_climber):
         determines a distance (semi-random) based on a fitness-value  
         """
         # TODO: Experimenteren
-        scale_factor = 3
+        scale_factor = 10
         variability = scale_factor / 2
         r = random.random()
 
@@ -398,6 +403,8 @@ class Plant_Propagation(Hill_climber):
                         best_match = new_route
 
             if best_match:
+                print(f"original route:{original_route.connection_ids}")
+                print(f"best_match: {best_match.connection_ids}")
                 routes_used.append(original_route)
                 routes_used.append(best_match)
                 connections_different += difference

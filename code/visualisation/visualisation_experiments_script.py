@@ -28,8 +28,8 @@ def make_plots_hill_climber():
 
             for start in starts:
                 for mutation in ["light", "heavy"]:
-                    onegrid_hc(results_dict, f"../../docs/graphs/{algorithm}/line_{algorithm}_{case_name}_{start}_{mutation}", f"{algorithm} holland {start} {mutation}", start, mutation, 'linediagram')
-                    onegrid_hc(results_dict, f"../../docs/graphs/{algorithm}/histo_{algorithm}_{case_name}_{start}_{mutation}", f"{algorithm} holland {start} {mutation}", start, mutation, 'histogram')
+                    onegrid_hc(results_dict, f"../../docs/graphs/{algorithm}/line_{algorithm}_{case_name}_{start}_{mutation}", f"{algorithm} {case_name} {start} {mutation}", start, mutation, 'linediagram')
+                    onegrid_hc(results_dict, f"../../docs/graphs/{algorithm}/histo_{algorithm}_{case_name}_{start}_{mutation}", f"{algorithm} {case_name} {start} {mutation}", start, mutation, 'histogram')
                     
 def make_plots_ppa(case_name: str, starting_states: str, filter_method: str):
     results_dict = read_csv(f"../../data/ppa/experiment_ppa_grid_search_{case_name}_{starting_states}_{filter_method}.csv", 'run_id')
@@ -41,4 +41,5 @@ def make_plots_ppa(case_name: str, starting_states: str, filter_method: str):
                 onegrid_ppa(results_dict, f"../../docs/graphs/ppa/histo_{case_name}_{starting_states}_{filter_method}_{population_size}_{generation_count}_{max_runners}", f"ppa {case_name} {starting_states} {filter_method} {population_size} {generation_count} {max_runners}", population_size, generation_count, max_runners, 'histogram')
 
 if __name__ == "__main__":
-    make_plots_ppa('holland', 'hill_climber', 'sequential')
+    make_plots_hill_climber()
+    #make_plots_ppa('holland', 'hill_climber', 'sequential')
