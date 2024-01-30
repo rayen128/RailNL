@@ -270,7 +270,7 @@ def plot_map(p: figure, map: str) -> None:
 
     elif map == 'netherlands':
         # Read GeoJSON file
-        with open('../../data/nl_regions.geojson', 'r') as geojson_file:
+        with open('data/nl_regions.geojson', 'r') as geojson_file:
             geojson_data = json.load(geojson_file)
 
         # Create GeoJSONDataSource

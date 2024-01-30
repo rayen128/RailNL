@@ -9,14 +9,22 @@ path.append("code/classes")
 from state import State
 
 
-def grid_search_PPA_hill_climber(state: object, time_seconds: int, case_name: str, initial_population: str, filter_type: str):
-    # Map: holland & NL
-    # Generations: 10, 50, 100
-    # Population: 6, 12, 30
-    # Max_runners: 3, 7, 15
-    # Filter_methods: sequential
-    # Starting_states: Hill-Climbers
-    # 15 min p/grid
+def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_population: str, filter_type: str):
+    """
+    does a grid search based on the PlantPropagation algorithm with the following parameters:
+
+        map: Holland or NL 
+        generations
+            - Holland: 10, 50, 100
+            - NL: 400
+
+        population: 6, 30
+        max_runners: 3, 15
+        filter_methods: sequential
+        starting_states: hill_climber, random OR valid (states)
+        time_seconds is per/grid 
+
+    """
 
     with open(f"data/ppa/experiment_ppa_grid_search_{case_name}_{initial_population}_{filter_type}.csv", "w") as file:
         writer = csv.writer(file)
@@ -53,37 +61,21 @@ def grid_search_PPA_hill_climber(state: object, time_seconds: int, case_name: st
                     ppa = Plant_Propagation(
                         state, True, population_size, generation_count, max_runners)
 
+                    ppa.change_population_type(type)
+
                     start = time.time()
 
                     # run grid element for given amount of time
                     while time.time() - start < time_seconds:
                         ppa.run()
 
-                        info_list = [counter, ppa.start_score,
-                                     ppa.high_score, ppa.best_state.fraction_used_connections,
-                                     ppa.best_state.number_routes, ppa.best_state.total_minutes,
-                                     initial_population, generation_count, population_size, max_runners,
-                                     list_to_str(ppa.high_scores),
-                                     list_to_str(ppa.fraction_scores),
-                                     list_to_str(ppa.routes_scores),
-                                     list_to_str(ppa.minute_scores),
-                                     ppa.best_state.show_sleeper_string()]
+                        info_list = get_csv_row_ppa(
+                            ppa, counter, initial_population, generation_count, population_size, max_runners)
 
                         writer.writerow(info_list)
 
                         print(counter)
                         counter += 1
-
-
-def grid_search_PPA_random():
-    # Map: holland & NL
-    # Generations: 10, 50, 100
-    # Population: 6, 12, 30
-    # Max_runners: 3, 7, 15
-    # Filter_methods: sequential
-    # Starting_states: random
-    # 15 min p/grid
-    pass
 
 
 def experiment_best_filter():
