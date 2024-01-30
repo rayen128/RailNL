@@ -47,7 +47,7 @@ if __name__ == "__main__":
     # make a baseline
     # baseline(argv[1], state)
 
-    # # grid search experiment hill climber
+    # grid search experiment hill climber
     # hcgs(argv[1], state, seconds_grid)
 
     # state.reset()

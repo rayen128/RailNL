@@ -338,6 +338,7 @@ class Algorithm():
                 return connection
 
     #### MINUS POINTS MULTIPLE USE CONNECTION HEURISTIC ####
+
     def _get_points_multiple_use_connection(self, connection: 'Connection'):
         """
         gives minus points if a connection is used multiple times. The minus points get progressively more, the more a connection is used.
