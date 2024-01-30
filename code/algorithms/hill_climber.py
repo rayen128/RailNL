@@ -9,7 +9,7 @@ from sys import path
 
 
 class Hill_climber(Algorithm):
-    def __init__(self, state: object, valid_start_state: bool = True) -> None:
+    def __init__(self, state: object, valid_start_state: bool = True, max_connection_returns: int = 0) -> None:
         """
         initializes the hillclimber with a starting state
 
@@ -20,71 +20,11 @@ class Hill_climber(Algorithm):
             creates a start state for self.state and copies that to self.current_state
         """
 
-        super().__init__(state)
+        super().__init__(state, max_connection_returns=max_connection_returns)
 
         self.valid_start_state = valid_start_state
 
         self.current_state = copy.deepcopy(self.state)
-
-    def create_state(self) -> None:
-        """
-        creates a start state
-
-        pre:
-            self.valid_start_state is a boolean
-
-        post:
-            a random or a valid start state is created 
-        """
-        if self.valid_start_state:
-            self.create_valid_state()
-        else:
-            self.create_random_state()
-
-    def create_valid_state(self) -> None:
-        """
-        creates for self.state a start-state that is valid 
-
-        pre:
-            self.state doesn't consist of any routes
-            there aren't any used connections in self.state
-
-        post:
-            self.state is now valid solved state
-        """
-        assert not self.state.routes, "there are already routes in this state"
-        assert not self.state.used_connections, "there are used connections"
-
-        self.current_route_index = 0
-        # add routes until state is valid
-        while not self.state.is_valid_solution():
-            # add route if the max amount is not reached
-            if self.state.number_routes < self.state.max_number_routes:
-                self.add_random_route()
-            # if max is reached delete random route and add route after that
-            else:
-                self.delete_random_route()
-                self.add_random_route()
-                self.current_route_index -= 1
-
-            # add connections until timeframe is reached
-            while self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
-                connection_added = False
-                # try to add unused connections
-                for connection in self.state.unused_connections:
-                    if self.state.add_connection_to_route(self.state.routes[self.current_route_index], connection):
-                        connection_added = True
-                        break
-                if not connection_added:
-                    for connection in self.state.connections:
-                        if self.state.add_connection_to_route(self.state.routes[self.current_route_index], connection):
-                            break
-            # delete connections above timeframe
-            while not self.state.routes[self.current_route_index].is_valid_time(self.state.time_frame):
-                self.state.delete_end_connection_from_route(
-                    self.state.routes[self.current_route_index])
-
-            self.current_route_index += 1
 
     def make_change_heavy(self) -> None:
         """
@@ -241,8 +181,8 @@ class Hill_climber(Algorithm):
 
 
 class Hill_climber_restart(Hill_climber):
-    def __init__(self, state: 'State', restart_number: int, valid_start_state: bool = True) -> None:
-        super().__init__(state)
+    def __init__(self, state: 'State', restart_number: int, valid_start_state: bool = True, max_connection_returns: int = 0) -> None:
+        super().__init__(state, max_connection_returns=max_connection_returns)
         self.restart = restart_number
         self.restart_counter = 0
         self.valid_start_state = valid_start_state

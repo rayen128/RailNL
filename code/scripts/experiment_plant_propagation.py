@@ -79,11 +79,23 @@ def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_po
 
 
 def experiment_best_filter():
+    """
+    NL
+    3 filters
+    30 400 7
+    12 400 15
+    """
+    #
     # (short) results showing the best_filter_method
     pass
 
 
 def experiment_long_ppa():
+    """
+    NL
+    30 10000 7
+    12 10000 15
+    """
     # experiment showing that even after many many generations there are increases in scores
     # save ook hoe lang elke generatie erover doet
     pass

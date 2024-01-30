@@ -1,16 +1,39 @@
 import csv
 import time
 
-from sys import path
 from code.algorithms.simulated_annealing import *
+from code.classes.state import State
 from .helpers import *
 
-path.append("code/classes")
-from state import State
 
+def experiment_annealing_grid_search(case_name: str, state: 'State', time_seconds: int, cooling_scheme: str, temperature: int) -> None:
+    """
+    does a grid search experiment on the simulated annealing algorithm.
+    parameters:
+        - start state: valid (only for Holland) or random
+        - type of mutation: light or heavy
 
-def experiment_annealing_grid_search(case_name: str, state: 'State', time_seconds: int, cooling_scheme: str, temperature: int):
+    pre:
+        time_seconds is an integer greater than zero
+        temperature is an integer greater than zero
+
+    post:
+        writes following results to a csv:
+            - id
+            - score
+            - fraction of used connections
+            - number of used routes
+            - total minutes
+            - type of start state (valid or random)
+            - type of mutation (light or heavy)
+            - list of scores after every iteration
+            - sleeper string of last state
+    """
+    assert time_seconds > 0, "time_seconds should be larger than 0"
+    assert temperature > 0, "temperature should be larger than 0"
+
     with open(f"data/annealing/experiment_annealing_grid_search_{case_name}_{cooling_scheme}_{temperature}.csv", "w") as file:
+
         writer = csv.writer(file)
         writer.writerow(["run_id",
                          "score",
@@ -22,52 +45,33 @@ def experiment_annealing_grid_search(case_name: str, state: 'State', time_second
                          "score_list",
                          "sleeper_string"])
 
-        counter = 0
+        # configure grid items
+        valid_start_state: dict = {'random': False}
+        change_light: dict = {'light': True, 'heavy': False}
 
-        if case_name != "netherlands":
-            # experiment with valid start state and light mutations
-            sa = Simulated_annealing(state, temperature, 1000, True)
-            start = time.time()
+        # making a valid state for the Netherlands case is skipped,
+        # because it takes too long to make such a state
+        if case_name != 'netherlands':
+            valid_start_state['valid'] = True
 
-            # run grid element for given amount of time
-            while time.time() - start < time_seconds:
+        counter: int = 0
 
-                # run gives a list with lists of results of each iteration
-                score_list = sa.run(counter, cooling_scheme, True)
-                writer.writerow(get_csv_row(
-                    counter, sa.current_state, "valid", "light", list_to_str(score_list)))
-                print(counter)
-                counter += 1
+        for start_state in valid_start_state:
+            for change in change_light:
+                sa = Simulated_annealing(
+                    state, temperature, 1000, valid_start_state=valid_start_state[start_state])
+                start = time.time()
 
-            # experiment with valid start state and heavy mutations
-            sa = Simulated_annealing(state, temperature, 1000, True)
-            start = time.time()
+                # run grid element for given amount of time
+                while time.time() - start < time_seconds:
 
-            while time.time() - start < time_seconds:
-                score_list = sa.run(counter, cooling_scheme, False)
-                writer.writerow(get_csv_row(
-                    counter, sa.current_state, "valid", "heavy", list_to_str(score_list)))
-                print(counter)
-                counter += 1
+                    # run gives list of scores of every iteration
+                    score_list = sa.run(
+                        counter, cooling_scheme, change_light=change_light[change])
 
-        # experiment with random start state and light mutations
-        sa = Simulated_annealing(state, temperature, 1000, False)
-        start = time.time()
+                    writer.writerow(get_csv_row(
+                        counter, sa.current_state, start_state, change, list_to_str(score_list)))
 
-        while time.time() - start < time_seconds:
-            score_list = sa.run(counter, cooling_scheme, True)
-            writer.writerow(get_csv_row(
-                counter, sa.current_state, "random", "light", list_to_str(score_list)))
-            print(counter)
-            counter += 1
-
-        # experiment with random start state and heavy mutations
-        sa = Simulated_annealing(state, temperature, 1000, False)
-        start = time.time()
-
-        while time.time() - start < time_seconds:
-            score_list = sa.run(counter, cooling_scheme, False)
-            writer.writerow(get_csv_row(
-                counter, sa.current_state, "random", "heavy", list_to_str(score_list)))
-            print(counter)
-            counter += 1
+                    print(
+                        f"SA. Case: {case_name}, cooling scheme: {cooling_scheme}, temperature: {temperature}, counter: {counter}")
+                    counter += 1

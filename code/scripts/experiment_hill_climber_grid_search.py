@@ -1,17 +1,38 @@
 import csv
 import time
-
-from sys import path
 from code.algorithms.hill_climber import *
+from code.classes.state import State
 from .helpers import *
 
-path.append("code/classes")
-from state import State
 
+def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_seconds: int) -> None:
+    """
+    does a grid search experiment on the hill climber algorithm.
+    parameters:
+        - start state: valid (only for Holland) or random
+        - type of mutation: light or heavy
 
-def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_seconds: int):
+    pre:
+        time_seconds is an integer greater than zero
+
+    post:
+        writes following results to a csv:
+            - id
+            - score
+            - fraction of used connections
+            - number of used routes
+            - total minutes
+            - type of start state (valid or random)
+            - type of mutation (light or heavy)
+            - list of scores after every iteration
+            - sleeper string of last state
+    """
+    assert time_seconds > 0, "time_seconds should be larger than 0"
+
     with open(f"data/hill_climber/experiment_hill_climber_grid_search_{case_name}.csv", "w") as file:
         writer = csv.writer(file)
+
+        # write column heads
         writer.writerow(["run_id",
                          "score",
                          "p",
@@ -22,62 +43,70 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
                          "score_list",
                          "sleeper_string"])
 
-        counter = 0
+        # configure grid items
+        valid_start_state: dict = {'random': False}
+        change_light: dict = {'light': True, 'heavy': False}
 
-        if case_name != "netherlands":
-            # experiment with valid start state and light mutations
-            hc = Hill_climber(state)
-            start = time.time()
+        # making a valid state for the Netherlands case is skipped,
+        # because it takes too long to make such a state
+        if case_name != 'netherlands':
+            valid_start_state['valid'] = True
 
-            # run grid element for given amount of seconds
-            while time.time() - start < time_seconds:
+        counter: int = 0
 
-                # run gives a list with lists of results of each iteration
-                score_list = hc.run(1000, counter)
+        # do a grid search for every grid item
+        for start_state in valid_start_state:
+            for change in change_light:
+                hc = Hill_climber(
+                    state, valid_start_state=valid_start_state[start_state])
+                start = time.time()
 
-                # write results to csv
-                writer.writerow(get_csv_row(counter, hc.current_state,
-                                "valid", "light", list_to_str(score_list)))
-                print(counter)
-                counter += 1
+                # run grid element for given amount of seconds
+                while time.time() - start < time_seconds:
 
-            # experiment with valid start state and heavy mutations
-            hc = Hill_climber(state)
-            start = time.time()
+                    # run gives a list with list of results of each iteration
+                    score_list = hc.run(
+                        1000, counter, change_light=change_light[change])
 
-            while time.time() - start < time_seconds:
-                score_list = hc.run(1000, counter, change_light=False)
-                writer.writerow(get_csv_row(counter, hc.current_state,
-                                "valid", "heavy", list_to_str(score_list)))
-                print(counter)
-                counter += 1
+                    # write results to csv
+                    writer.writerow(get_csv_row(
+                        counter, hc.current_state, start_state, change, list_to_str(score_list)))
 
-        # experiment with random start state and light mutations
-        hc = Hill_climber(state, valid_start_state=False)
-        start = time.time()
-
-        while time.time() - start < time_seconds:
-            score_list = hc.run(1000, counter)
-            writer.writerow(get_csv_row(counter, hc.current_state,
-                            "random", "light", list_to_str(score_list)))
-            print(counter)
-            counter += 1
-
-        # experiment with random start state and heavy mutations
-        hc = Hill_climber(state, valid_start_state=False)
-        start = time.time()
-
-        while time.time() - start < time_seconds:
-            score_list = hc.run(1000, counter, change_light=False)
-            writer.writerow(get_csv_row(counter, hc.current_state,
-                            "random", "heavy", list_to_str(score_list)))
-            print(counter)
-            counter += 1
+                    # show progress to user
+                    print(counter)
+                    counter += 1
 
 
-def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', time_seconds: int, restart_number: int):
+def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', time_seconds: int, restart_number: int) -> None:
+    """
+    does a grid search experiment on the hill climber algorithm.
+    parameters:
+        - start state: valid (only for Holland) or random
+        - type of mutation: light or heavy
+
+    pre:
+        time_seconds is an integer greater than zero
+        restart_number is an integer greater than zero
+
+    post:
+        writes following results to a csv:
+            - id
+            - best score found
+            - fraction of used connections
+            - number of used routes
+            - total minutes
+            - type of start state (valid or random)
+            - type of mutation (light or heavy)
+            - list of scores after every iteration
+            - sleeper string of state with best score
+    """
+    assert time_seconds > 0, "time_seconds should be larger than 0"
+    assert restart_number > 0, "restart_number should be larger than 0"
+
     with open(f"data/hill_climber_restart/experiment_hill_climber_restart_grid_search_{case_name}.csv", "w") as file:
         writer = csv.writer(file)
+
+        # write column headers
         writer.writerow(["run_id",
                          "score",
                          "p",
@@ -88,63 +117,35 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
                          "score_list",
                          "sleeper_string"])
 
-        counter = 0
+        # configure grid items
+        valid_start_state: dict = {'random': False}
+        change_light: dict = {'light': True, 'heavy': False}
 
+        # making a valid state for the Netherlands case is skipped,
+        # because it takes too long to make such a state
         if case_name != 'netherlands':
-            # experiment with valid start state and light mutations
-            hcr = Hill_climber_restart(state, restart_number)
-            start = time.time()
+            valid_start_state['valid'] = True
 
-            # run grid element for 1/4 of the time
-            while time.time() - start < time_seconds:
+        # the counter is used to show progress to the user
+        counter: int = 0
 
-                # run gives a list with lists of results of each iteration
-                best_score, best_state, score_list = hcr.run(
-                    1000, counter)
+        # run hill climber restart for every combination of grit items
+        for start_state in valid_start_state:
+            for change in change_light:
+                hcr = Hill_climber_restart(
+                    state, restart_number, valid_start_state=valid_start_state[start_state])
+                start = time.time()
 
-                # write iterations to csv
-                writer.writerow(get_csv_row(
-                    counter, best_state, "valid", "light", list_to_str(score_list), best_score=best_score))
+                # run grid element for given amount of time
+                while time.time() - start < time_seconds:
 
-                print(counter)
-                counter += 1
+                    # run gives a list with lists of results of each iteration,
+                    # and the best score, with the state that belongs to it
+                    best_score, best_state, score_list = hcr.run(
+                        1000, counter, change_light=change_light[change])
 
-            # experiment with valid start start state and heavy mutations
-            hcr = Hill_climber_restart(state, restart_number)
-            start = time.time()
+                    writer.writerow(get_csv_row(
+                        counter, best_state, start_state, change, list_to_str(score_list), best_score=best_score))
 
-            while time.time() - start < time_seconds:
-                best_score, best_state, score_list = hcr.run(
-                    1000, counter, change_light=False)
-                writer.writerow(get_csv_row(
-                    counter, best_state, "valid", "heavy", list_to_str(score_list), best_score=best_score))
-
-                print(counter)
-                counter += 1
-
-        # experiment with random start state and light mutations
-        hcr = Hill_climber_restart(
-            state, restart_number, valid_start_state=False)
-        start = time.time()
-
-        while time.time() - start < time_seconds:
-            best_score, best_state, score_list = hcr.run(1000, counter)
-            writer.writerow(get_csv_row(
-                counter, best_state, "random", "light", list_to_str(score_list), best_score=best_score))
-
-            print(counter)
-            counter += 1
-
-        # experiment with random start start state and heavy mutations
-        hcr = Hill_climber_restart(
-            state, restart_number, valid_start_state=False)
-        start = time.time()
-
-        while time.time() - start < time_seconds:
-            best_score, best_state, score_list = hcr.run(
-                1000, counter, change_light=False)
-            writer.writerow(get_csv_row(
-                counter, best_state, "random", "heavy", list_to_str(score_list), best_score=best_score))
-
-            print(counter)
-            counter += 1
+                    print(counter)
+                    counter += 1
