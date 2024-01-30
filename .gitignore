@@ -161,7 +161,7 @@ cython_debug/
 
 /.vscode
 
-/data/
+data/
 data/baseline_data_netherlands.csv
 data/baseline_data_holland.csv
 data/experiment_hill_climber_grid_search_netherlands.csv
