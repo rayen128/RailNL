@@ -6,9 +6,12 @@ from code.classes.state import State
 from .helpers import *
 
 
-def experiment_annealing_grid_search(case_name: str, state: 'State', time_seconds: int, cooling_scheme: str, temperature: int):
+def experiment_annealing_grid_search(case_name: str, state: 'State', time_seconds: int, cooling_scheme: str, temperature: int) -> None:
     """
     does a grid search experiment on the simulated annealing algorithm.
+    parameters:
+        - start state: valid (only for Holland) or random
+        - type of mutation: light or heavy
 
     pre:
         time_seconds is an integer greater than zero

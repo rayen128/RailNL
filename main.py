@@ -48,14 +48,14 @@ if __name__ == "__main__":
     # baseline(argv[1], state)
 
     # grid search experiment hill climber
-    # hcgs(argv[1], state, seconds_grid)
+    hcgs(argv[1], state, seconds_grid)
 
-    # state.reset()
+    state.reset()
 
-    # # grid search experiment hill climber restart
-    # hcrgs(argv[1], state, seconds_grid, 50)
+    # grid search experiment hill climber restart
+    hcrgs(argv[1], state, seconds_grid, 50)
 
-    # state.reset()
+    state.reset()
 
     # grid search experiment simulated annealing
     for temperature in [100, 200, 500]:

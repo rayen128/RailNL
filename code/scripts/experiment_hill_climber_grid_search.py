@@ -8,6 +8,9 @@ from .helpers import *
 def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_seconds: int) -> None:
     """
     does a grid search experiment on the hill climber algorithm.
+    parameters:
+        - start state: valid (only for Holland) or random
+        - type of mutation: light or heavy
 
     pre:
         time_seconds is an integer greater than zero
@@ -74,9 +77,12 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
                     counter += 1
 
 
-def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', time_seconds: int, restart_number: int):
+def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', time_seconds: int, restart_number: int) -> None:
     """
     does a grid search experiment on the hill climber algorithm.
+    parameters:
+        - start state: valid (only for Holland) or random
+        - type of mutation: light or heavy
 
     pre:
         time_seconds is an integer greater than zero
