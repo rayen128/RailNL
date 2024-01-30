@@ -39,3 +39,7 @@ def get_csv_row(id: int, state: 'State', start: str, mutation: str, score_str: s
             mutation,
             score_str,
             state.show_sleeper_string()]
+
+
+def get_csv_row_ppa():
+    pass
