@@ -14,6 +14,7 @@
     - Random heel erg slecht, tekortkomingen van random_start duidelijk
     - Valid hele hoge score, maar duurt super
 
+
 ### Simulated Annealing:
     - Heavy is altijd beter (ook bij de andere shizzle)    
 
@@ -45,7 +46,6 @@
     - Beste algoritme 
 
 
-
 ## Extra slides:
     - hill_climber NL histogrammen
     - Valid state voor NL resultaat
@@ -53,8 +53,9 @@
 
 
 ## Computing:
-    - 1u nog Hill_climber valid runnen
-    - PPA voor NL ?
+    - 1u nog Hill_climber NL valid runnen
+    - 1u PPA NL valid?
+    - PPA voor NL
 
 
 ## Ideeën:

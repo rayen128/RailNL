@@ -16,7 +16,7 @@ def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_po
         map: Holland or NL 
         generations
             - Holland: 10, 50, 100
-            - NL: 400
+            - NL: 200
 
         population: 6, 30
         max_runners: 3, 15
@@ -196,7 +196,4 @@ def experiment_long_ppa(state: object, case_name: str, initial_population: str, 
 
             print(counter)
             counter += 1
-
-    # experiment showing that even after many many generations there are increases in scores
-    # save ook hoe lang elke generatie erover doet
     pass

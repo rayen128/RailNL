@@ -99,6 +99,7 @@ class Plant_Propagation(Hill_climber):
             self.filter_population(self.filter_type, generation)
 
             print(f"Generation {generation + 1}: {self.high_score}")
+            print(f"p= {self.best_state.fraction_used_connections}")
 
             # save most important info of best_state
             self.add_info()
@@ -156,8 +157,8 @@ class Plant_Propagation(Hill_climber):
                 self.population.append(copy.deepcopy(self.state))
         # create hill_climber population
         elif type == 'hill_climber':
-            state = Hill_climber(self.state, True, self.max_connection_returns)
-            state.valid_start_state = False
+            state = Hill_climber(
+                self.state, False, self.max_connection_returns)
 
             # run hill_climbers
             for i in range(self.population_size):
@@ -470,8 +471,11 @@ class Plant_Propagation(Hill_climber):
                 # do changes until distance is reached or counter is exceeded
                 while distance_goal > self.likeness(current_state, self.state) and counter < max_changes:
                     for i in range(distance_goal):
-                        r = self.state.fraction_used_connections
-                        if r < 0.8:
+
+                        # calculate the proportion of used connections
+                        p = self.state.fraction_used_connections
+
+                        if p < 0.8:
                             self.make_change_heavy()
                         else:
                             self.make_change_light()
