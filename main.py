@@ -1,3 +1,6 @@
+import subprocess
+import os
+
 from sys import argv
 
 from code.algorithms.hill_climber import Hill_climber, Hill_climber_restart
@@ -100,6 +103,29 @@ def run_plant_propagation(state: 'State', valid_start_state: bool) -> 'State':
     return ppa.best_state
 
 
+def check_state(state: 'State', case_name: str) -> None:
+    """
+    runs check50 test on state, and prints the output to the terminal
+
+    post:
+        a temporary file called 'output.csv' is created and deleted
+        check50 output is printed to the terminal
+    """
+
+    # create a temporary output.csv file to let check50 run
+    state.write_output('output.csv')
+
+    # get correct case input
+    if case_name == "netherlands":
+        case_name = "national"
+
+    check50_result = subprocess.call(
+        ["check50", "-l", f"minprog/theorie-check50/master/railnl/{case_name}"])
+
+    # remove temporary file
+    os.remove('output.csv')
+
+
 if __name__ == "__main__":
 
     #### ARGUMENT CHECKING ####
@@ -156,3 +182,7 @@ if __name__ == "__main__":
         visualisation.get_station_info(state),
         state,
         case_name)
+
+    print("Getting check50 results...")
+    # run check50 for result state
+    check_state(state, case_name)
