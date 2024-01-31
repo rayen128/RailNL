@@ -29,7 +29,7 @@ def read_csv(csv_filepath: str, id_name: str) -> dict:
     """
     # make dictionary for saving the states
     states_dict: dict = {}
-
+    
     # add every row to the dictionary with state id as key
     with open(csv_filepath) as states:
         csv_reader = csv.DictReader(states)

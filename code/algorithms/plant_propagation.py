@@ -2,17 +2,36 @@ from .hill_climber import Hill_climber
 from math import tanh
 import random
 import copy
+from ..visualisation.visualisation import *
 
 
 class Plant_Propagation(Hill_climber):
 
     def __init__(self, state: object, valid_states: bool, population_size: int, max_generations: int, max_nr_runners: int, max_connection_returns: int = 0):
+        """
+        initializes the plant propagation algorithm (PPA) with the following parameters: 
+            population_size
+            amount of generations
+            max_runners
+
+
+        pre: 
+            state is a state object
+            population_size is an integer
+            max_runners an integer
+
+        post:
+            PPA object is created with all necesarry aspects
+            the PPA is ready to be run
+        """
         super().__init__(state, valid_states, max_connection_returns=max_connection_returns)
 
+        # all population and generation variables
         self.population_size = population_size
         self.population: list[object] = []
         self.max_generations = max_generations
 
+        # scores lists
         self.scores: list[float] = []
         self.fitness_values: list[list[float, object]] = []
 
@@ -29,9 +48,13 @@ class Plant_Propagation(Hill_climber):
         # choose: valid, random, hill_climber
         self.initial_population_type = 'hill_climber'
 
+        # save how many connections can be returned
+        self.max_connection_returns = 0
+
         # saves overall highest achieved score
         self.start_score: float = 0
         self.high_score: float = 0
+        self.best_state = self.state
 
         # tournament size (potentially) affects population_filter method
         self.tournament_size = 2
@@ -39,11 +62,15 @@ class Plant_Propagation(Hill_climber):
         # choose: best, sequential or random
         self.filter_type = 'sequential'
 
-        self.best_state = self.state
+        # heuristic(s)
+        self.no_return_connection_heuristic = False
 
     ### GENERAL FUNCTIONS ###
 
     def run(self):
+        """
+
+        """
         self.reset()
 
         # create initial population
@@ -82,6 +109,10 @@ class Plant_Propagation(Hill_climber):
         self.population = []
         self.runner_population = []
         self.high_score = 0
+        self.high_scores = []
+        self.fraction_scores = []
+        self.routes_scores = []
+        self.minute_scores = []
 
     def initial_population(self) -> None:
         """
@@ -106,7 +137,7 @@ class Plant_Propagation(Hill_climber):
                 self.population.append(copy.deepcopy(self.state))
 
         elif type == 'hill_climber':
-            state = Hill_climber(self.state)
+            state = Hill_climber(self.state, True, self.max_connection_returns)
             state.valid_start_state = False
 
             for i in range(self.population_size):
@@ -181,6 +212,9 @@ class Plant_Propagation(Hill_climber):
         """
         # add runners to population
         self.merge_population()
+
+        # for state in self.population:
+        #     show_plot(self.station_dict, state, 'netherlands')
 
         # calculate all scores
         self.get_scores()
@@ -310,19 +344,14 @@ class Plant_Propagation(Hill_climber):
                 counter = 0
 
                 # TODO: Experimenteren
-                print(runner_index)
                 while distance_goal > self.likeness(current_state, self.state) and counter < 1000:
                     for i in range(distance_goal):
-                        r = random.random()
-                        if r > 0.3:
-                            print("heavy change")
+                        r = self.state.fraction_used_connections
+                        if r < 0.8:
                             self.make_change_heavy()
                         else:
-                            print("light change")
                             self.make_change_light()
                         counter += 1
-                    print(f"distance_goal: {distance_goal}")
-                    print(f"likeness: {self.likeness(current_state, self.state)}")
 
                 self.runner_population.append(self.state)
 
@@ -403,8 +432,6 @@ class Plant_Propagation(Hill_climber):
                         best_match = new_route
 
             if best_match:
-                print(f"original route:{original_route.connection_ids}")
-                print(f"best_match: {best_match.connection_ids}")
                 routes_used.append(original_route)
                 routes_used.append(best_match)
                 connections_different += difference
