@@ -122,11 +122,12 @@ def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, fil
     """
     plt.clf()
     for i in range(len(scores)):
-        x = list(range(len(scores[i])))
+        x = list(range(1, 2001))
+        y = scores[i]
         if not comparison:
-            plt.plot(x, scores[i], alpha=0.2, color='magenta')
+            plt.plot(x, y[:2000], alpha=0.2, color='magenta')
         else:
-            plt.plot(x, scores[i])
+            plt.plot(x, y[:2000])
             plt.legend(legend, loc = "lower right")
     
     plt.xlabel(xlabel)
