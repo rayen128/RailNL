@@ -47,42 +47,42 @@ def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_po
 
         counter = 0
 
+        population_size_list = [12, 30]
+        max_runners_list = [3, 15]
+        generation_count = 200
+
         if case_name == 'holland':
-            population_size_list = [6, 12, 30]
-            generation_count_list = [10, 50, 100]
-            max_runners_list = [3, 7, 15]
-            heuristic_list = 0
+            heuristic_list = [0]
         elif case_name == 'netherlands':
-            population_size_list = [12, 30]
-            generation_count_list = 200
-            max_runners_list = [3, 15]
             heuristic_list = [0, 1, 2]
 
         for population_size in population_size_list:
-            for generation_count in generation_count_list:
-                for max_runners in max_runners_list:
-                    for heuristic_value in heuristic_list:
-                        ppa = Plant_Propagation(
-                            state, True, population_size, generation_count, max_runners)
+            for max_runners in max_runners_list:
+                for heuristic_value in heuristic_list:
+                    ppa = Plant_Propagation(
+                        state, True, population_size, generation_count, max_runners)
 
-                        ppa.change_population_type(type)
-                        ppa.max_connection_returns = heuristic_value
+                    ppa.change_population_type(initial_population)
+                    ppa.max_connection_returns = heuristic_value
 
-                        start = time.time()
+                    start = time.time()
 
-                        # run grid element for given amount of time
-                        while time.time() - start < time_seconds:
-                            ppa.run()
+                    # run grid element for given amount of time
+                    while time.time() - start < time_seconds:
+                        ppa.run()
 
-                            info_list = get_csv_row_ppa(
-                                ppa, counter, initial_population, generation_count, population_size, max_runners)
+                        info_list = get_csv_row_ppa(
+                            ppa, counter, initial_population, generation_count, population_size, max_runners)
 
-                            info_list.append(heuristic_value)
+                        info_list.append(heuristic_value)
 
-                            writer.writerow(info_list)
+                        print(info_list)
 
-                            print(counter)
-                            counter += 1
+                        writer.writerow(info_list)
+                        file.flush()
+
+                        print(counter)
+                        counter += 1
 
 
 def experiment_best_filter(state: object, time_seconds: int, case_name: str, initial_population: str):
