@@ -20,7 +20,7 @@ Hierin zijn de opties weergegeven voor ieder van de argumenten. Voor een snelle 
 python main.py holland hillclimber
 ```
 
-Na het runnen van het algoritme zal in de terminal de best gevonden configuratie worden weergegeven, met de score. Daarnaast zal een visualisatie daarvan worden geladen in de browser.
+Na het runnen van het algoritme zal in de terminal de best gevonden configuratie worden weergegeven, met de score, en de uitkomst van een check50-check van het resultaat. Daarnaast zal een visualisatie daarvan worden geladen in de browser.
 
 ## Structuur
 In dit project zijn de volgende mappen belangrijk:
@@ -53,7 +53,8 @@ Verdere belangrijke documentatie:
 
 ## Future work
 De volgende experimenten kunnen nog worden uitgevoerd, om het onderzoek te verbeteren:
-- **Implementatie van heuristieken**: het implementeren van meer heuristieken kan de algoritmen, vooral plant propagation, nog een boost geven. Er kan onderzocht worden hoe deze heuristieken het best helpen om een sneller/beter resultaat te vinden.
+- **Implementatie van heuristieken**: het implementeren van meer heuristieken kan de algoritmen mogelijk verbeteren. Er kan onderzocht worden hoe deze heuristieken het best helpen om een sneller/beter resultaat te vinden.
+- **Onderzoek naar parameters van plant propagation**: de parameters van het plant propagation-algoritme kunnen nog meer worden gefinetuned, om zo tot betere resultaten te komen.
 
 ## Auteurs
 - Lieke Zeldenrijk
