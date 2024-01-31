@@ -3,21 +3,24 @@ Voor Holland (Noord- en Zuid-Holland) of voor Nederland moet een lijnvoering gem
 
 ## Vereisten
 Om deze code te runnen zijn een aantal dingen nodig. Deze kunnen worden geïnstalleerd met pip:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ## Gebruik
-De algoritmen kunnen worden voor de case van Holland gerund door het volgende command:
+Een voorbeeld van een algoritme kan gerund worden door het aanroepen van main.py. Hierbij is het eerste argument de case, en het tweede argument het algoritme. Vervolgens wordt, afhankelijk van het algoritme, om input gevraagd voor de configuratie van het algoritme. Het gebruik van `main.py` werkt als volgt:
 
 ```bash
-python main.py holland
+python main.py [holland|netherlands] [hillclimber|hillclimber_restart|simulated_annealing|plant_propagation]
 ```
-Of voor de case van Nederland met dit command:
+Hierin zijn de opties weergegeven voor ieder van de argumenten. Voor een snelle run van een algoritme kan het volgende voorbeeld genomen worden:
 
 ```bash
-python main.py netherlands
+python main.py holland hillclimber
 ```
+
+Na het runnen van het algoritme zal in de terminal de best gevonden configuratie worden weergegeven, met de score. Daarnaast zal een visualisatie daarvan worden geladen in de browser.
 
 ## Structuur
 In dit project zijn de volgende mappen belangrijk:
@@ -43,16 +46,14 @@ De algoritmen die wij hebben geïmplementeerd, zijn:
 
 ## Verdere documentatie
 Verdere belangrijke documentatie:
+- [slides presentatie](docs/presentation/slides.html): slides voor de eindpresentatie van het project.
 - [definitions.md](docs/definitions.md): uitleg van de gebruikte terminologie.
 - [styleguide.md](docs/styleguide.md): conventies over de layout van de code.
 - [usage_state.md](docs/usage_state.md): overview van het gebruik van de datastructuur
 
 ## Future work
 De volgende experimenten kunnen nog worden uitgevoerd, om het onderzoek te verbeteren:
-- **Aantal iteraties hill climber**: het aantal iteraties bepalen dat het hill climber algoritme nodig heeft om een lokaal optimum te vinden.
-- **Temperatuur simulated annealing**: de optimale starttemperatuur en afkoeling van het simulated annealing algoritme bepalen.
-- **Implementatie van heuristieken**: onderzoeken welke combinatie van heuristieken een algoritme beter maakt
-- **Vergelijkingen tussen algoritmen**: vergelijking van score, runtime en aantal iteraties tussen verschillende algoritmen, om een conclusie te kunnen trekken over het 'beste' algoritme.
+- **Implementatie van heuristieken**: het implementeren van meer heuristieken kan de algoritmen, vooral plant propagation, nog een boost geven. Er kan onderzocht worden hoe deze heuristieken het best helpen om een sneller/beter resultaat te vinden.
 
 ## Auteurs
 - Lieke Zeldenrijk

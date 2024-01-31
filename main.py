@@ -119,7 +119,7 @@ if __name__ == "__main__":
     # check if second algorithm is a valid algorithm name
     if alg_name not in ('hillclimber', 'hillclimber_restart', 'simulated_annealing', 'plant_propagation'):
         print(
-            "usage: python main.py [case name] [baseline|hillclimber|hillclimber_restart|simulated_annealing|plant_propagation]")
+            "usage: python main.py [case name] [hillclimber|hillclimber_restart|simulated_annealing|plant_propagation]")
         exit()
 
     state: 'State' = create_state(case_name)
