@@ -98,8 +98,6 @@ K = p * 10000 - (T * 100 + Min)
 ## Het probleem - constraints
 - Maximum routes
 - Timeframe
-<br>
-- Alle connecties berijden
 
 ![bg right](assets/empty_state.png)
 
@@ -120,33 +118,37 @@ K = p * 10000 - (T * 100 + Min)
 <br>
 <br>
 
-# Methoden
+# Algoritmen & Methoden
+
 
 ---
 
 ## Baseline
 
-- 3 random algoritmes
+- Holland
+  - Realistisch: ``8300-8600``
+  - Maximum : ``9219``
+<br>
+- NL: 
+  - Realistisch: ``+/- 4000``
+  - Maximum: ``7549``
 
-- Relaxed constraints:
-  - Algoritme 1 - **Tijdsframe p/route**
-  - Algoritme 2 - **Hoeveelheid routes**
-  - Algoritme 3 - **Alle connecties**
+
+---
+
+(Overzicht van alle algoritme)
 
 ---
 
-Histogram totaal            |  Boxplot alle algoritmen
-:-------------------------:|:-------------------------:
-  ![height:500 width:550](assets/baseline/scores_van_alle_algoritmes_holland.png) | ![height:500 width:550](assets/baseline/boxplot.png)
+## Heuristieken
 
----
-# Baseline
+- Aan de voorkant
+  - Geïsoleerde stations
+- Bij evaluatie van scores
+  - Plus- en minpunten
+  - Meervoudig gebruik connecties
 
-- ``20`` daadwerkelijke valide states
-
-- Scores liggen tussen ``8300-8600``
-
-- Dit is ons streven
+![bg right](assets/empty_state_holland.png)
 
 ---
 
@@ -178,17 +180,7 @@ Histogram totaal            |  Boxplot alle algoritmen
 
 
 ---
-## Heuristieken
 
-- Aan de voorkant
-  - Geïsoleerde stations
-- Bij evaluatie van scores
-  - Plus- en minpunten
-  - Meervoudig gebruik connecties
-
-![bg right](assets/empty_state_holland.png)
-
----
 
 ## Plant propagation - Overview
 
@@ -205,6 +197,84 @@ Histogram totaal            |  Boxplot alle algoritmen
   - Heuristieken
 
 ---
+
+## Resulaten
+
+
+---
+## Resultaten - Hill Climber
+
+- High-scores
+  - Holland: ``9200``
+  - NL: ``6500``
+
+
+---
+
+## Resultaten - Hill Climber
+
+- Heavy vs. Light  
+
+[histo_hill_climber_netherlands_random_heavy.png]
+[histo_hill_climber_netherlands_random_light.png]
+--> TODO: deze op schaal 0 - 4000
+
+---
+## Resultaten - Hill Climber
+
+- Random vs. valid
+
+[histo_hill_climber_holland_random_heavy.png] 
+
+[histo_hill_climber_holland_random_light.png]
+
+
+
+---
+
+## Resultaten - Hill Climber
+
+- Random vs. valid
+- Disclaimer: valid duurt lang bij grote state-space
+ 
+
+
+---
+
+## Resultaten - Simulated Annealing
+
+- 200 beste temperatuur
+- Log vs. Linear vs. Expo
+ 
+
+
+---
+
+## Resultaten - Simulated Annealing
+
+- Log vs. Linear vs. Expo
+ 
+TODO: grafiek met beste scores van de 3 coolingschemes
+
+---
+
+## Resultaten - Simulated Annealing
+
+- Logaritmisch
+ 
+TODO: line_plaatje valid 200 logaritmisch (wel/niet NL) 
+
+---
+## Resultaten - Plant Propagation
+
+- Filters
+- Parameters
+- heuristiek
+- valid vs. random
+- verandering is niet goed
+
+---
+
 <!-- _paginate: skip -->
 ---
 
@@ -229,24 +299,46 @@ Histogram totaal            |  Boxplot alle algoritmen
 ![width:500](assets/state_space/deel_2.png)
 
 ---
-## Baseline - Results Table
+
+## Baseline - Holland
+Histogram totaal            |  Boxplot alle algoritmen
+:-------------------------:|:-------------------------:
+  ![height:500 width:550](assets/baseline/scores_van_alle_algoritmes_holland.png) | ![height:500 width:550](assets/baseline/boxplot.png)
+
+---
+
+## Baseline Holland  - Results Table
 
 ![width:1000](assets/baseline/baseline_results_table.png)
 
 
 ---
 
-## Baseline - Algorithm Histograms
+## Baseline Holland - Algorithm Histograms
 | Algoritme 1              | Algoritme 2 | Algoritme 3 |
 | :----------------: | :------: | :----: |
 | ![width:350](assets/baseline/scores_van_algoritme_1_holland.png) | ![width:350](assets/baseline/scores_van_algoritme_2_holland.png) | ![width:350](assets/baseline/scores_van_algoritme_3_Holland.png)
 
 --- 
-## Baseline (extra) - Solved State Results
+## Baseline Holland - Solved State Results
 
 ![width:1200px](assets/baseline/ranking_solved.png)
 
 ---
+
+## Baseline NL - Histogram & Boxplot
+
+TODO:
+
+---
+
+
+## Baseline NL - Solved States Results
+
+TODO:
+
+---
+
 ## PPA - Uitleg
 
 Originale Paper            |  ChatGPT
@@ -274,3 +366,10 @@ Originale Paper            |  ChatGPT
 ## UML
 
 ![width:800 bg center](assets/UML.png)
+
+---
+## Simulated Annealing - Results
+
+TODO: opvullen
+
+---

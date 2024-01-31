@@ -1,6 +1,6 @@
 import csv
 
-from code.algorithms.baseline_algorithm import *
+from code.algorithms.baseline_algorithm import Baseline_Algorithm
 
 from code.classes.state import State
 

@@ -1,4 +1,4 @@
-from results import *
+from results import filter_states, all_scores, str_to_list
 from statistics import make_line_diagram_multiple_lines, make_histogram
 
 def lines_onegrid_short_experiments(results_dict: dict, export_file_path: str, title_diagram: str, start: str, mutation: str) -> None:
@@ -140,7 +140,7 @@ def lines_comparison_long_experiments_ppa(results_dict: dict, export_file_path: 
         max_runners = [3, 7, 15]
     elif case_name == 'netherlands':
         population_sizes = [12, 30]
-        generation_counters = 200
+        generation_counters = [200]
         max_runners = [3, 15]
     
     # filter the results for the right grid
@@ -153,17 +153,18 @@ def lines_comparison_long_experiments_ppa(results_dict: dict, export_file_path: 
                 
                 # sort results
                 sorted_results = dict(sorted(filtered_results.items(), key=lambda x: float(x[1]['score']), reverse=True))
-
+                
                  # get results of the best run
-                key_run = list(sorted_results.keys())[0]
-                best_scores = str_to_list(filtered_results[key_run]['score_list'])
-                best_scores_lists.append(best_scores)
+                if sorted_results != {}:
+                    key_run = list(sorted_results.keys())[0]
+                    best_scores = str_to_list(filtered_results[key_run]['score_list'])
+                    best_scores_lists.append(best_scores)
 
                 # save legend values
                 legend.append(f"Population-size:{population_size}, generation-count:{generation_count}, max-runners:{max_runner}")
 
     # plot diagram    
-    make_line_diagram_multiple_lines(best_scores_lists, title_diagram, export_file_path, True, legend)
+    make_line_diagram_multiple_lines(best_scores_lists, title_diagram, export_file_path, True, None, legend)
 
 def onegrid_hc(results_dict: dict, export_file_path: str, title_diagram: str, start: str, mutation: str, plot: str) -> None:
     """
@@ -176,7 +177,7 @@ def onegrid_hc(results_dict: dict, export_file_path: str, title_diagram: str, st
     post:
         gives the results to a function to make the plot
 
-    """
+    """             
     # filter results
     filtered_results_start = filter_states(results_dict, 'start', start)
     filtered_results_mutation = filter_states(filtered_results_start, 'mutation', mutation)
@@ -188,7 +189,7 @@ def onegrid_hc(results_dict: dict, export_file_path: str, title_diagram: str, st
         lines_onegrid_long_experiments(filtered_results_mutation, export_file_path, title_diagram)
 
 
-def onegrid_ppa(results_dict: dict, export_file_path: str, title_diagram: str, population_size: int, generation_count: int, max_runners: int, plot: str) -> None:
+def onegrid_ppa(results_dict: dict, export_file_path: str, title_diagram: str, population_size: int, generation_count: int, max_runners: int, plot: str, heuristic_value: int = None) -> None:
     """
     filters the results for the right grid for the ppa experiments
 
@@ -205,12 +206,15 @@ def onegrid_ppa(results_dict: dict, export_file_path: str, title_diagram: str, p
     filtered_results_population_size = filter_states(results_dict, 'population_size', str(population_size))
     filtered_results_generation = filter_states(filtered_results_population_size, 'generation_count', str(generation_count))
     filtered_results = filter_states(filtered_results_generation, 'max_runners', str(max_runners))
+    if heuristic_value:
+        filtered_results = filter_states(filtered_results, 'heuristic_value', str(heuristic_value))
 
     # plot the right plot
-    if plot == 'histogram':
+    if plot == 'histogram' and filtered_results != {}:
         histogram_onegrid(results_dict, filtered_results, title_diagram, export_file_path)
-    elif plot == 'linediagram':
+    elif plot == 'linediagram' and filtered_results != {}:
         lines_onegrid_long_experiments(filtered_results, export_file_path, title_diagram, 'Generations')
+
     
 def histogram_onegrid(results_dict: dict, filtered_results: dict, title_diagram: str, export_file_path: str) -> None:
     """
@@ -229,6 +233,7 @@ def histogram_onegrid(results_dict: dict, filtered_results: dict, title_diagram:
     end_scores_list = []
     
     # get the first and last run id
+    
     key_first_run = list(filtered_results.keys())[0]
     first_run = filtered_results[key_first_run]['run_id']
 
