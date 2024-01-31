@@ -1,62 +1,158 @@
-import csv
-import random
+from sys import argv
 
-from sys import argv, path
-from code.algorithms.baseline_algorithm import *
-from code.algorithms.hill_climber import Hill_climber
-from code.algorithms.algorithm import *
-from code.scripts.baseline import baseline
-from code.scripts.experiment_hill_climber_grid_search import experiment_hill_climber_grid_search as hcgs, experiment_hill_climber_restart_grid_search as hcrgs
-from code.scripts.experiment_annealing_grid_search import experiment_annealing_grid_search as sags
+from code.algorithms.hill_climber import Hill_climber, Hill_climber_restart
+from code.algorithms.simulated_annealing import Simulated_annealing
+from code.algorithms.plant_propagation import Plant_Propagation
+
+from code.visualisation import visualisation
+
 from code.classes.state import State
 
-random.seed(42)
+
+def create_state(case_name: str) -> 'State':
+    """
+    creates State object, based on case name.
+
+    pre:
+        case name is 'holland' or 'netherlands'
+    """
+    assert case_name == "holland" or case_name == "netherlands", \
+        f"invalid case name: {case_name}"
+
+    file_path_stations: str = f"data/stations_{case_name}.csv"
+    file_path_routes: str = f"data/routes_{case_name}.csv"
+
+    # get correct contraints per case
+    if case_name == "holland":
+        max_routes: int = 7
+        timeframe: int = 120
+    elif case_name == "netherlands":
+        max_routes: int = 20
+        timeframe: int = 180
+
+    state = State(file_path_stations, file_path_routes, max_routes, timeframe)
+
+    return state
+
+
+def run_hillclimber(state: 'State', valid_start_state: bool) -> 'State':
+    """
+    runs a hillclimber algorithm and returns endstate
+
+    returns:
+        State object
+    """
+    hc = Hill_climber(state, valid_start_state=valid_start_state)
+    hc.run(10000, 0)
+    return hc.current_state
+
+
+def run_hillclimber_restart(state: 'State', valid_start_state) -> 'State':
+    """
+    runs a hillclimber restart algorithm and returns state with best result
+
+    returns: 
+        State object
+    """
+    restarts: int = int(input(
+        "After how many same scores should the algorithm restart? (recommended: 50) "))
+    hcr = Hill_climber_restart(
+        state, restarts, valid_start_state=valid_start_state)
+    score, best_state, scorelist = hcr.run(10000, 0)
+    return best_state
+
+
+def run_simulated_annealing(state: 'State', valid_start_state: bool) -> 'State':
+    """
+    runs a simulated annealing algorithm and returns endstate
+
+    returns: 
+        State object
+    """
+    temperature: int = int(
+        input("Pick a temperature for simulated annealing. (recommended: 200) "))
+    cooling_scheme: str = input(
+        "Pick a cooling scheme. (possibilities: lineair, exponential, logaritmic) ")
+    assert cooling_scheme == 'lineair' or cooling_scheme == 'exponential' or cooling_scheme == 'logaritmic', "wrong spelling of cooling scheme"
+    print("Running...")
+    sa = Simulated_annealing(
+        state, temperature, 10000, valid_start_state=valid_start_state)
+    sa.run(0, cooling_scheme)
+    return sa.current_state
+
+
+def run_plant_propagation(state: 'State', valid_start_state: bool) -> 'State':
+    """
+    runs a plant propagation algorithm and returns best state
+
+    returns:
+        State object
+    """
+    population_size: int = int(
+        input("Pick a population size for plant propagation. (recommended: 10) "))
+    max_generations: int = int(
+        input("Choose a maximum number of generations. (recommended: 200) "))
+    n_runners: int = int(
+        input("Choose the number of runners. (recommended: 10) "))
+    ppa = Plant_Propagation(state, valid_start_state,
+                            population_size, max_generations, n_runners)
+    ppa.run()
+    return ppa.best_state
+
 
 if __name__ == "__main__":
-    # make sure a .csv is given for both stations and routes
-    if (len(argv) != 2 or (argv[1].lower() != "holland" and argv[1].lower() != "netherlands")) and len(argv) != 4:
-        print(
-            "Usage: main.py [case name] [max number of routes] [time frame]")
+
+    #### ARGUMENT CHECKING ####
+    # check if enough arguments are given
+    if len(argv) < 3:
+        print("usage: python main.py [case name] [algorithm]")
         exit()
 
-    file_path_stations = f"data/stations_{argv[1]}.csv"
-    file_path_routes = f"data/routes_{argv[1]}.csv"
+    case_name: str = argv[1].lower()
+    alg_name: str = argv[2].lower()
 
-    if argv[1].lower() == "holland":
-        max_number_routes = 7
-        time_frame = 120
-        seconds_grid = 600
+    # check if first argument is a valid case name
+    if case_name != "holland" and case_name != "netherlands":
+        print("usage: python main.py [holland|netherlands] [algorithm]")
+        exit()
 
-    elif argv[1].lower() == "netherlands":
-        max_number_routes = 20
-        time_frame = 180
-        seconds_grid = 900
+    # check if second algorithm is a valid algorithm name
+    if alg_name not in ('hillclimber', 'hillclimber_restart', 'simulated_annealing', 'plant_propagation'):
+        print(
+            "usage: python main.py [case name] [baseline|hillclimber|hillclimber_restart|simulated_annealing|plant_propagation]")
+        exit()
 
+    state: 'State' = create_state(case_name)
+
+    start_state: str = input(
+        "Choose a start state for your algorithm [valid|random] (Valid can take very long for the Netherlands case): ")
+
+    if start_state.lower() == "valid":
+        valid_start_state = True
+    elif start_state.lower() == "random":
+        valid_start_state = False
     else:
-        max_number_routes = int(argv[2])
-        time_frame = int(argv[3])
-        seconds_grid = 10
+        print("Start state should either be random or valid!")
+        exit()
 
-    # make State object
-    state: object = State(file_path_stations,
-                          file_path_routes, max_number_routes, time_frame)
+    # run chosen algorithm
+    print(f"\nRunning {alg_name} algorithm. This may take a while.")
+    if alg_name == "hillclimber":
+        state = run_hillclimber(state, valid_start_state)
+    elif alg_name == "hillclimber_restart":
+        state = run_hillclimber_restart(state, valid_start_state)
+    elif alg_name == "simulated_annealing":
+        state = run_simulated_annealing(state, valid_start_state)
+    elif alg_name == "plant_propagation":
+        state = run_plant_propagation(state, valid_start_state)
 
-    # make a baseline
-    # baseline(argv[1], state)
+    # show result state
+    print("\nResult state:")
+    print(state.show())
 
-    # grid search experiment hill climber
-    hcgs(argv[1], state, seconds_grid)
-
-    state.reset()
-
-    # grid search experiment hill climber restart
-    hcrgs(argv[1], state, seconds_grid)
-
-    state.reset()
-
-    # grid search experiment simulated annealing
-    for temperature in [100, 200, 500]:
-        for cooling_scheme in ['logaritmic', 'exponential', 'lineair']:
-            sags(argv[1], state, seconds_grid, cooling_scheme, temperature)
-
-    state.reset()
+    # visualize result state
+    print("\nLoading visualisation into your browser...")
+    visualisation.show_plot(
+        visualisation.get_station_info(state),
+        state,
+        case_name)

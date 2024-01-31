@@ -175,3 +175,7 @@ test_state.py
 test.py
 
 grid_search_run.py
+
+# visualisation files
+test.html
+main.html
