@@ -50,7 +50,7 @@ def experiment_annealing_specific(case_name: str, state: 'State', start_state: s
         else:
             valid_start_state = False
 
-        change = 'Heavy'
+        change = 'heavy'
 
         counter: int = 0
 
