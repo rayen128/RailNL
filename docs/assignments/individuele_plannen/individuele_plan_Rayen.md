@@ -42,6 +42,8 @@ Ik heb echter wel ideeën van dit idee gebruikt. Zo heb ik wel nog een 'likeness
 
 Verder is het implementeren van de heuristieken maar tot op een zekere hoogte gelukt. Het is uiteindelijk wel gelukt om te implementeren om een limiet te stellen aan 'hoeveel heen en weer' er mag worden gegaan binnen 1 route. De resultaten hiervan gaan we (mogelijk) behandelen in de presentatie. Echter is door de tijdsplanning, voornamelijk omdat de andere experimenten en functionaliteiten langer duurden dan verwacht, het hier bij gebleven. Zowel Gert als ik zijn er niet meer aan toe gekomen om (samen) de heuristieken in de PPA te implementeren. Dit is echter wel heel jammer omdat de basis hiervoor wel al door Gert geschreven is. Maar aan de andere kant heeft het er (impliciet) ook voor gezorgd dat we iets meer gefocust te werk zijn/konden gaan.
 
+Daarnaast heb ik wel ook nog wat extra's. Zo heb ik geïmplementeert dat er 3 manieren zijn om de initial populatie te maken (valid, random of hill-climbers). Dit stuk code leunt voornamelijk op de code van Gert en Lieke. Daarnaast heb ik ook nog 3 manieren om de generaties te filteren (na comments van Quinten). Dit kan gewoon door de beste te selecteren (best) of 2 tournament-style filters (random & sequential).
+
 ## Git-links
 
 1. [Start PPA](https://github.com/Hachenberger02/AHRailNL/commit/20b91e9ca1d156dd7bb68a33ba448d5a9a9fe942)

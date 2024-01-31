@@ -1,7 +1,9 @@
-from .hill_climber import Hill_climber
 from math import tanh
 import random
 import copy
+
+from .hill_climber import Hill_climber
+from typing import Union
 from ..visualisation.visualisation import *
 
 
@@ -67,20 +69,21 @@ class Plant_Propagation(Hill_climber):
 
     ### GENERAL FUNCTIONS ###
 
-    def run(self):
+    def run(self) -> None:
+        """
+        TODO: doc-string
         """
 
-        """
+        # reset the state
         self.reset()
 
         # create initial population
         self.initial_population()
 
+        # run the algorithm generation amount time
         for generation in range(self.max_generations):
             # get all scores of the current population
             self.get_scores()
-
-            # print(f"p= {self.best_state.fraction_used_connections}, t= {self.best_state.number_routes}, min= {self.best_state.total_minutes}")
 
             # determine fitness of current population
             converge_status = self.fitness_function()
@@ -103,6 +106,9 @@ class Plant_Propagation(Hill_climber):
     def reset(self) -> None:
         """
         resets class by clearing all (relevant) variables
+
+        post:
+            all variables listed down-below are cleared 
         """
         self.scores = []
         self.sorted_fitness_values = []
@@ -116,30 +122,44 @@ class Plant_Propagation(Hill_climber):
 
     def initial_population(self) -> None:
         """
-        set the initial population by running a certain amount of hill-climber algorithms  
+        set the initial population. type is based on self.initial_population_type
+
+        options are:
+            'valid' (semi-randomly created valid states)
+            'random' (completely random states)
+            'hill_climber' (hill_climbers)
+
+        pre: 
+            initial_population_type is one of the options above 
+
+        post:
+            prints informative message to terminal
+            starting population is created
         """
+        # set population type
         type = self.initial_population_type
 
         print(f"creating the initial {type}-population")
         print('...')
 
+        # create valid_state population
         if type == 'valid':
-            # create population
             for i in range(self.population_size):
                 self.state.reset()
                 self.create_valid_state()
                 self.population.append(copy.deepcopy(self.state))
+        # create random_state population
         elif type == 'random':
-            # create population
             for i in range(self.population_size):
                 self.state.reset()
                 self.create_random_state(static=True)
                 self.population.append(copy.deepcopy(self.state))
-
+        # create hill_climber population
         elif type == 'hill_climber':
             state = Hill_climber(self.state, True, self.max_connection_returns)
             state.valid_start_state = False
 
+            # run hill_climbers
             for i in range(self.population_size):
                 state.run(1000, 1)
                 self.population.append(copy.deepcopy(state.current_state))
@@ -147,12 +167,21 @@ class Plant_Propagation(Hill_climber):
     def change_population_type(self, type: str) -> None:
         """
         method to change intitial population-type
+
+        pre:
+            type is either random, valid or hill_climber
+
+        post:
+            initial_population_type is changed
         """
         self.initial_population_type = type
 
     def add_info(self):
         """
-        saves the most important information from the best state, this methods is called every generation
+        saves the most important information off the best state, is used to save/write out info for experiments
+
+        post:
+            all variables down-below are added to it respective list  
         """
         self.high_scores.append(self.high_score)
         self.fraction_scores.append(self.best_state.fraction_used_connections)
@@ -164,14 +193,36 @@ class Plant_Propagation(Hill_climber):
     def get_scores(self) -> None:
         """
         fills self.score with the current population_scores
+
+        pre: 
+            self.population is filled with (full) states
+
+        post: 
+            self.scores is populated by tuples with the corresponding (score, state)
         """
+        # loop over population
         for i in range(len(self.population)):
+
+            # append info to self.scores
             self.scores.append([self.get_mutated_score(
                 self.population[i]), self.population[i]])
 
-    def fitness_function(self):  # None or str
+    def fitness_function(self) -> Union[None, str]:
         """
-        calulate and the fitness (=normalized score) of the whole population  
+        calulates the fitness (=normalized score) of the whole population, used for distance calculation 
+
+        calculation is with the following formula:
+            (state_score - lowest score) / (highest score - lowest score) 
+
+        pre:
+            self.scores is (correctly) filled with (score, state) tuples
+            minimum & maximum are not the same
+
+        post:
+            self.fitness_values is populated with tuples consisting of:
+                (fitness_values, state, absolute_score)
+
+
         """
         # Extract just the scores from self.scores
         scores_only = [score_state_pair[0] for score_state_pair in self.scores]
@@ -192,7 +243,14 @@ class Plant_Propagation(Hill_climber):
 
     def update_high_score(self, score: float, state: object) -> None:
         """
-        updates high-score if applicable
+        checks if provided score is the high-score and updates accordingly
+
+        pre:
+            score is a float
+            state is a state
+
+        post:
+            if score is higher than current high_score, update this
         """
         if score > self.high_score:
             self.high_score = score
@@ -200,21 +258,36 @@ class Plant_Propagation(Hill_climber):
 
     def set_start_score(self, score: float) -> None:
         """
-        saves the highest score of generation 1
+        saves a score as start score, is used to save (best) score of generation 1
+
+        pre:
+            score is a float
+
+        post:
+            self.start_score has this score
+
         """
         self.start_score = score
 
     ### POPULATION FUNCTIONS ###
 
-    def filter_population(self, filter_type: str, generation) -> None:
+    def filter_population(self, filter_type: str, generation, visualize_states: bool = False) -> None:
         """
-        filters the population and creates the next generation 
+        filters the (best of) the current population using the selected filter_method 
+        if set visualize is set to True, also visualizes whole population
+
+        options are:
+            'best': (select the highest scoring-states)
+            'random' (tournament-style, randomly select buckets)
+            'sequential' (tournament-style, loops over population for buckets) 
         """
         # add runners to population
         self.merge_population()
 
-        # for state in self.population:
-        #     show_plot(self.station_dict, state, 'netherlands')
+        # potentially visualize states
+        if visualize_states:
+            for state in self.population:
+                show_plot(self.station_dict, state, 'netherlands')
 
         # calculate all scores
         self.get_scores()
@@ -222,28 +295,43 @@ class Plant_Propagation(Hill_climber):
         # clear population
         self.population = []
 
+        # apply the 'best' filter
         if filter_type == 'best':
             high_score = self.filter_population_best_only()
 
         elif filter_type == 'sequential' or filter_type == 'random':
 
+            # set bucket_size
             tournament_size = self.tournament_size
 
+            # apply the sequential filter
             if filter_type == 'sequential':
                 high_score = self.filter_population_sequential(tournament_size)
+
+            # apply the random filter
             else:
                 high_score = self.filter_population_random(tournament_size)
 
+        # set the start_score if applicable
         if generation == 0:
             self.set_start_score(high_score)
 
         self.scores = []
         self.sorted_fitness_values = []
 
-    def filter_population_best_only(self) -> float:
+    def filter_population_best_only(self) -> tuple[float, object]:
         """
-        filters the population based 
-        on score
+        filter method that only chooses highest scoring-states & (potentially) update high_score
+
+        pre:
+            self.scores is populated with (score, state) tuples
+
+        post:
+            population is back to population_size
+            only highest performing states are left
+
+        returns:
+            highest performing score & state
         """
         # sort self.scores
         sorted_scores = sorted(
@@ -253,17 +341,28 @@ class Plant_Propagation(Hill_climber):
         for state in sorted_scores[:self.population_size]:
             self.population.append(state[1])
 
+        # save & update high_score
         high_score = sorted_scores[0][0]
-
         self.update_high_score(high_score, sorted_scores[0][1])
 
         return high_score
 
-    def filter_population_sequential(self, tournament_size: int) -> float:
+    def filter_population_sequential(self, tournament_size: int) -> tuple[float, object]:
         """
-        sequentially filters the population. 
+        tournament-style filter that sequentially loops through the population
 
-        TIP: making population_size to be dividable by tournament_size ensures that the whole population will be looked at
+        TIP: if population_size is dividable by tournament_size, the whole population willtaken into account
+
+        pre:
+            self.scores is populated with (score, state) tuples
+
+        post:
+            population is back to population_size
+            all the highest scoring states p/bucket are left
+
+        returns:
+            highest performing score & state
+
         """
         # shuffle the scores list to ensure randomness
         random.shuffle(self.scores)
@@ -292,9 +391,20 @@ class Plant_Propagation(Hill_climber):
 
         return self.high_score
 
-    def filter_population_random(self, tournament_size: int) -> float:
+    def filter_population_random(self, tournament_size: int) -> tuple[float, object]:
         """
-        filter the best of the original and runner population 
+        tournament-style filter that semi randomly filters through population based on score. 
+
+        pre:
+            self.scores is populated with (score, state) tuples
+
+        post:
+            population is back to population_size
+            all the highest scoring states p/bucket are left
+
+        returns:
+            highest performing score & state
+
         """
         while len(self.population) < self.population_size:
             # ensure tournament_size doesn't exceed number of remaining states
@@ -317,7 +427,13 @@ class Plant_Propagation(Hill_climber):
 
     def merge_population(self) -> None:
         """
-        merge runner and original population
+        adds all created runners to the original population
+
+        pre:
+            self.runner_population is populated with states
+
+        post:
+            self.population now also includes runners
         """
         for runner in self.runner_population:
             self.population.append(runner)
@@ -326,25 +442,33 @@ class Plant_Propagation(Hill_climber):
 
     def make_runners(self):
         """
-        creates runner population
+        creates all the runners for all states in the population based on distance and amount of runners p/state
         """
+        # generate all distances for all parent states in current population
         distance_dict = self.generate_runner_distances()
 
         # loop over population
         for state_index in range(len(self.population)):
-            # loop over all runners
+
+            # set current used state
             current_state = self.population[state_index]
 
+            # loop over all runners
             for runner_index in range(len(distance_dict[state_index])):
-                distance_goal = distance_dict[state_index][runner_index]
-                current_runner = copy.deepcopy(current_state)
 
+                # set goal
+                distance_goal = distance_dict[state_index][runner_index]
+
+                # set current runner
+                current_runner = copy.deepcopy(current_state)
                 self.state = current_runner
 
+                # set counter and max_amount of changes
                 counter = 0
+                max_changes = 300
 
-                # TODO: Experimenteren
-                while distance_goal > self.likeness(current_state, self.state) and counter < 1000:
+                # do changes until distance is reached or counter is exceeded
+                while distance_goal > self.likeness(current_state, self.state) and counter < max_changes:
                     for i in range(distance_goal):
                         r = self.state.fraction_used_connections
                         if r < 0.8:
