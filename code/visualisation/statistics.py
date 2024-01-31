@@ -35,14 +35,12 @@ def make_histogram(values: list, title_histogram: str, filepath: str, text: str 
     plt.title(title_histogram)
     plt.xlabel("scores", labelpad=10)
     plt.ylabel("relative frequency", labelpad=10)
-    if 'netherlands' in title_list:
-        plt.xlim(0, 9300)
-        #plt.text(4100, 0.0045, text, fontsize = 10)
-    elif 'holland' in title_list:
-        plt.xlim(7000, 9300)
-        #plt.text(7100, 0.0045, text, fontsize = 10)
+    #if 'netherlands' in title_list:
+       # plt.xlim(0, 9300)
+    #elif 'holland' in title_list:
+       # plt.xlim(7000, 9300)
     plt.annotate(text, xy=(0.3, 0.7), fontsize = 10, xycoords='figure fraction')
-    plt.ylim(0, 0.005)
+    #plt.ylim(0, 0.005)
     plt.subplots_adjust(left=0.17, right=0.9, top=0.9, bottom=0.15)
     plt.savefig(
         f'{filepath}.png')
@@ -122,12 +120,11 @@ def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, fil
     """
     plt.clf()
     for i in range(len(scores)):
-        x = list(range(1, 2001))
-        y = scores[i]
+        x = list(range(len(scores[i])))
         if not comparison:
-            plt.plot(x, y[:2000], alpha=0.2, color='magenta')
+            plt.plot(x, scores[i], alpha=0.2, color='magenta')
         else:
-            plt.plot(x, y[:2000])
+            plt.plot(x, scores[i])
             plt.legend(legend, loc = "lower right")
     
     plt.xlabel(xlabel)

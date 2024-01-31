@@ -2,8 +2,8 @@ import csv
 import time
 
 from sys import path
-from code.algorithms.plant_propagation import *
-from .helpers import *
+from code.algorithms.plant_propagation import Plant_Propagation
+from .helpers import get_csv_row_ppa
 
 path.append("code/classes")
 from state import State

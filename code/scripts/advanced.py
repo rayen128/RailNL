@@ -1,5 +1,5 @@
 import random
-from ..algorithms.hill_climber import *
+from ..algorithms.hill_climber import Hill_climber
 
 
 class Advanced_7():
