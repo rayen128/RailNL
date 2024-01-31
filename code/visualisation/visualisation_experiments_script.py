@@ -1,7 +1,20 @@
 from experiment_visualisation_functions import onegrid_hc, lines_comparison_long_experiments_hc, lines_comparison_long_experiments_ppa, onegrid_ppa
 from results import read_csv
+import sys
+import csv
+csv.field_size_limit(sys.maxsize)
 
 def make_plots_annealing():
+    """
+    makes all the plots for the annealing experiments
+
+    pre:
+        all the experiments are saved in a csv in a certain format
+
+    post:
+        created and saved all plots
+    """
+    # set right parameters 
     for case_name in ['holland', 'netherlands']:
         if case_name == 'holland':
             starts = ['valid', 'random']
@@ -9,19 +22,25 @@ def make_plots_annealing():
             starts = ['random']
         for temperature in [100, 200, 500]:
             for cooling_scheme in ['exponential', 'logaritmic', 'lineair']:
+
+                # read csv with results
                 results_dict = read_csv(f"../../data/annealing/experiment_annealing_grid_search_{case_name}_{cooling_scheme}_{temperature}.csv", 'run_id')
-                lines_comparison_long_experiments_hc(results_dict, f"../../docs/graphs/annealing/annealing_{temperature}_{cooling_scheme}_{case_name}", f"annealing {temperature} {cooling_scheme}")
+                
+                # make line diagram with different lines for best runs for every grid
+                lines_comparison_long_experiments_hc(results_dict, f"../../docs/graphs/annealing/2000/annealing_{temperature}_{cooling_scheme}_{case_name}", f"annealing {temperature} {cooling_scheme}", case_name)
+                
+                # create linediagram and histogram 
                 for start in starts:
                     for mutation in ["light", "heavy"]:
-                        onegrid_hc(results_dict, f"../../docs/graphs/annealing/line_annealing_{case_name}_{cooling_scheme}_{temperature}_{start}_{mutation}", f"Annealing {case_name} {cooling_scheme} {temperature} {start} {mutation}", start, mutation, 'linediagram')
-                        onegrid_hc(results_dict, f"../../docs/graphs/annealing/histo_annealing_{case_name}_{cooling_scheme}_{temperature}_{start}_{mutation}", f"Annealing {case_name} {cooling_scheme} {temperature} {start} {mutation}", start, mutation, 'histogram')
+                        onegrid_hc(results_dict, f"../../docs/graphs/annealing/2000/line_annealing_{case_name}_{cooling_scheme}_{temperature}_{start}_{mutation}", f"Annealing {case_name} {cooling_scheme} {temperature} {start} {mutation}", start, mutation, 'linediagram')
+                        #onegrid_hc(results_dict, f"../../docs/graphs/annealing/histo_annealing_{case_name}_{cooling_scheme}_{temperature}_{start}_{mutation}", f"Annealing {case_name} {cooling_scheme} {temperature} {start} {mutation}", start, mutation, 'histogram')
 
 def make_plots_hill_climber():
     for algorithm in ['hill_climber', 'hill_climber_restart']:
         for case_name in ['holland', 'netherlands']:
             if case_name == 'holland':
                 starts = ['valid', 'random']
-            else:
+            elif case_name == 'netherlands':
                 starts = ['random']
             results_dict = read_csv(f"../../data/{algorithm}/experiment_{algorithm}_grid_search_{case_name}.csv", 'run_id')
             lines_comparison_long_experiments_hc(results_dict, f"../../docs/graphs/{algorithm}/{algorithm}_{case_name}", f"{algorithm}", case_name)
@@ -42,4 +61,5 @@ def make_plots_ppa(case_name: str, starting_states: str, filter_method: str):
 
 if __name__ == "__main__":
     #make_plots_hill_climber()
-    make_plots_ppa('holland', 'hill_climber', 'sequential')
+    make_plots_annealing()
+    #make_plots_ppa('holland', 'hill_climber', 'sequential')

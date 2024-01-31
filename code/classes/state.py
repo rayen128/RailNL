@@ -3,8 +3,6 @@ import sys
 import copy
 import os
 
-from typing import Union
-
 sys.path.append("code/classes")
 from station import Station
 from connection import Connection
@@ -13,7 +11,13 @@ from route import Route
 
 class State():
 
-    def __init__(self, stations_file_path: str, connections_file_path: str, max_number_routes: int, time_frame: int, relaxed_all_connections: bool = False, relaxed_max_routes: bool = False, relaxed_time_frame: bool = False):
+    def __init__(self, stations_file_path: str,
+                 connections_file_path: str,
+                 max_number_routes: int,
+                 time_frame: int,
+                 relaxed_all_connections: bool = False,
+                 relaxed_max_routes: bool = False,
+                 relaxed_time_frame: bool = False):
         """
         Initiates State class.
 
@@ -23,22 +27,24 @@ class State():
 
         post:
             Creates list of stations, connections and routes
-            Fills list of stations and connections 
-            Creates constraint relaxation variables     
+            Fills list of stations and connections
+            Creates constraint relaxation variables
         """
-        assert max_number_routes > 0, "Max number of routes should be greater than 0"
-        assert time_frame > 0, "Timeframe should be greater than 0"
+        assert max_number_routes > 0, \
+            "Max number of routes should be greater than 0"
+        assert time_frame > 0, \
+            "Timeframe should be greater than 0"
 
         self.total_number_connections: int = 0
 
         # add relations to all other objects
-        self.stations: list[object] = self._add_stations(stations_file_path)
-        self.connections: list[object] = self._add_connections(
+        self.stations: list['Station'] = self._add_stations(stations_file_path)
+        self.connections: list['Connection'] = self._add_connections(
             connections_file_path)
-        self.routes: list[object] = []
+        self.routes: list['Route'] = []
 
-        self.max_number_routes: Union(int, None) = int(max_number_routes)
-        self.time_frame: Union(int, None) = time_frame
+        self.max_number_routes: int = int(max_number_routes)
+        self.time_frame: int = time_frame
 
         # add parameters for quality score function
         self.score: float = 0.0
@@ -73,24 +79,26 @@ class State():
         """
         Returns stations from stations.csv
 
-        pre: 
+        pre:
             file path to stations.csv exists
 
-        returns: 
+        returns:
             list of Station objects
         """
         assert os.path.exists(file_path), f"path {file_path} does not exist."
 
         with open(file_path) as stations:
-            stations_reader: object = csv.DictReader(stations)
+            stations_reader: 'csv.DictReader' = csv.DictReader(stations)
 
             # add stations to the station list
             station_list: list = []
             for row in stations_reader:
 
                 # check if columns are right
-                assert "station" in row.keys() and "x" in row.keys() and "y" in row.keys(
-                ), "Station csv should have station, y and x headers"
+                assert "station" in row.keys() and \
+                    "x" in row.keys() and \
+                    "y" in row.keys(), \
+                    "Station csv should have station, y and x headers"
 
                 # create new Station object
                 new_station: 'Station' = Station(
@@ -103,10 +111,10 @@ class State():
         """
         Returns connections from connections.csv
 
-        pre: 
+        pre:
             file path to connections.csv exists
 
-        post: 
+        post:
             updates total number of connections
             adds connections to stations from stations list
 
@@ -116,29 +124,39 @@ class State():
         assert os.path.exists(file_path), f"path {file_path} does not exist."
 
         with open(file_path) as connections:
-            connections_reader: object = csv.DictReader(connections)
-            connections_list: list[object] = []
+            connections_reader: 'csv.DictReader' = csv.DictReader(connections)
+            connections_list: list['Connection'] = []
 
             for row in connections_reader:
 
                 # check if columns are right
-                assert "station1" in row.keys() and "station2" in row.keys() and "distance" in row.keys(
-                ), "connections csv should have station1, station2 and distance headers"
-                
+                assert "station1" in row.keys() and \
+                    "station2" in row.keys() and \
+                    "distance" in row.keys(), \
+                    "csv should have station1, station2 and distance headers"
+
                 # look up Station objects by name
                 station1: 'Station' = next(
-                    station for station in self.stations if station.name == row["station1"])
+                    station for station in self.stations
+                    if station.name == row["station1"])
                 station2: 'Station' = next(
-                    station for station in self.stations if station.name == row["station2"])
-                
+                    station for station in self.stations
+                    if station.name == row["station2"])
+
                 # add connection to connection list
-                new_connection: object = Connection(
-                    self.total_number_connections, station1, station2, float(row["distance"]))
+                new_connection: 'Connection' = Connection(
+                    self.total_number_connections,
+                    station1,
+                    station2,
+                    float(row["distance"]))
                 connections_list.append(new_connection)
 
                 # add connection to Station objects
                 for station in self.stations:
-                    if station.name == row["station1"] or station.name == row["station2"]:
+                    if (
+                            station.name == row["station1"] or
+                            station.name == row["station2"]
+                    ):
                         station.add_connection(new_connection)
 
                 # update number of connections
@@ -151,18 +169,22 @@ class State():
         Checks if the maximum number of routes is reached.
 
         returns:
-            True if number of routes is not reached and if max routes constraint is relaxed
-            False otherwise    
+            True if number of routes is not reached, and
+            if max routes constraint is relaxed
+            False otherwise
         """
-        if not self.relaxed_max_routes and self.number_routes == self.max_number_routes:
+        if (
+                not self.relaxed_max_routes and
+                self.number_routes == self.max_number_routes
+        ):
             return False
         return True
 
-    def add_route(self, connection: 'Connection') -> None:
+    def add_route(self, connection: 'Connection') -> bool:
         """
         Adds a new route.
 
-        post: 
+        post:
             creates and adds Route object to routes list
 
         returns:
@@ -198,7 +220,7 @@ class State():
             removes route from routes list
 
         returns:
-            True if operation was succesful    
+            True if operation was succesful
         """
         if route in self.routes:
 
@@ -224,7 +246,7 @@ class State():
 
         post:
             removes connection from unused connections list
-            adds connection to used connections list      
+            adds connection to used connections list
         """
         if connection in self.unused_connections:
             self.unused_connections.remove(connection)
@@ -236,18 +258,22 @@ class State():
 
         post:
             removes connection from used connections list (if not in any route)
-            adds connection to unused connections list (if not in any route)  
+            adds connection to unused connections list (if not in any route)
         """
 
         # removal does not work if the connection is not in used_connections
         if connection in self.used_connections:
 
             # check if connection is not in any route
-            if not any(route for route in self.routes if connection in route.route_connections):
+            if not any(route
+                       for route in self.routes
+                       if connection in route.route_connections):
                 self.used_connections.remove(connection)
                 self.unused_connections.append(connection)
 
-    def add_connection_to_route(self, route: 'Route', connection: 'Connection') -> bool:
+    def add_connection_to_route(self,
+                                route: 'Route',
+                                connection: 'Connection') -> bool:
         """
         Adds given connection to given route, if possible
 
@@ -257,7 +283,7 @@ class State():
 
         returns:
             True if action is successfull,
-            False otherwise    
+            False otherwise
         """
 
         # add_connection implicitly adds the connection if possible
@@ -270,7 +296,7 @@ class State():
         """
         deletes last connection of given route
 
-        pre: 
+        pre:
             route is in routes list
             route is not empty
 
@@ -279,14 +305,16 @@ class State():
             updates usage of deleted connection
 
         returns:
-            boolean indicating successfulness of operation      
+            boolean indicating successfulness of operation
         """
-        assert route in self.routes, "Route not in routes list of current state"
-        assert len(route.route_connections) != 0, "Route is empty already"
+        assert route in self.routes, \
+            "Route not in routes list of current state"
+        assert len(route.route_connections) != 0, \
+            "Route is empty already"
 
         connection = route.route_connections[-1]
 
-        # method implicitly deletes last connection
+        # method implicitly deletes end connection
         if route.delete_connection_end():
             self.set_unused(connection)
             return True
@@ -296,7 +324,7 @@ class State():
         """
         deletes first connection of given route
 
-        pre: 
+        pre:
             route is in routes list
             route is not empty
 
@@ -305,10 +333,12 @@ class State():
             updates usage of deleted connection
 
         returns:
-            boolean indicating successfulness of operation      
+            boolean indicating successfulness of operation
         """
-        assert route in self.routes, "Route not in routes list of current state"
-        assert len(route.route_connections) != 0, "Route is empty already"
+        assert route in self.routes, \
+            "Route not in routes list of current state"
+        assert len(route.route_connections) != 0, \
+            "Route is empty already"
 
         connection = route.route_connections[0]
 
@@ -330,7 +360,9 @@ class State():
         """
         # get number of unique connections
         unique_connections = set(
-            route_connection for route in self.routes for route_connection in route.route_connections)
+            route_connection
+            for route in self.routes
+            for route_connection in route.route_connections)
         number_unique_connections = len(unique_connections)
 
         # calculate fraction
@@ -349,9 +381,8 @@ class State():
         returns:
             number of routes
         """
-        updated_routes = len(self.routes)
-        self.number_routes = updated_routes
-        return updated_routes
+        self.number_routes = len(self.routes)
+        return self.number_routes
 
     def _update_total_minutes(self) -> int:
         """
@@ -361,18 +392,20 @@ class State():
             updates total number of minutes
 
         returns:
-            total number of minutes     
+            total number of minutes
         """
 
         # calculate number of minutes
         self.total_minutes = sum(
-            connection.distance for route in self.routes for connection in route.route_connections)
+            connection.distance
+            for route in self.routes
+            for connection in route.route_connections)
 
         return self.total_minutes
 
     def calculate_score(self) -> float:
         """
-        post: 
+        post:
             calculates and updates the quality score
         returns:
             the quality score
@@ -382,23 +415,29 @@ class State():
         self._update_fraction_used_connections()
         self._update_total_minutes()
 
+        # score function: k = p * 10000 - (100T + Min)
         self.score = self.fraction_used_connections * 10000 - \
             (self.number_routes * 100 + self.total_minutes)
+
         return self.score
 
-    def write_output(self, file_path: str):
+    def write_output(self, file_path: str) -> None:
         """
-        Writes output to output.csv according to given standard
-        post: 
+        Writes output to output.csv according to given standard:
+            train name, list of stations
+            last line: 'score', score
+
+        post:
             writes all routes to a .csv file
             adds score to .csv file
         """
 
-        # code source: https://www.scaler.com/topics/how-to-create-a-csv-file-in-python/
+        # code source:
+        #   https://www.scaler.com/topics/how-to-create-a-csv-file-in-python/
         with open(file_path, 'w') as file:
             writer = csv.writer(file)
 
-            # write headers
+            # write column headers
             writer.writerow(['train', 'stations'])
 
             # write stations
@@ -420,21 +459,24 @@ class State():
         checks if all routes are within the given timeframe
 
         returns:
-            true if all stations are valid      
+            true if all stations are valid
         """
+
+        # check time validity for every single route
         for route in self.routes:
             if not route.is_valid_time(self.time_frame):
                 return False
-            return True
+        return True
 
     def less_than_max_routes(self) -> bool:
         """
         Checks if there are not more than the max number of routes
 
         returns:
-            True if there are less routes than the max     
+            True if there are less routes than the max
         """
-        if self.max_number_routes and self.number_routes > self.max_number_routes:
+        if self.max_number_routes and \
+                self.number_routes > self.max_number_routes:
             return False
         return True
 
@@ -443,7 +485,7 @@ class State():
         Checks if all connections are used.
 
         returns:
-            True if all connections are used     
+            True if all connections are used
         """
         if len(self.unused_connections) == 0:
             return True
@@ -454,26 +496,39 @@ class State():
         Gives information about satisfaction of all constraints
 
         pre:
-            constraint relaxation parameters (default: False) relax the three specific constraints if True
+            constraint relaxation parameters (default: False)
+            relax the three specific constraints if True
 
         returns:
-            bool for overall constraint satisfaction     
+            bool for overall constraint satisfaction
         """
 
-        if (not self.relaxed_time_frame) and (not self.routes_valid_time_frame()):
+        if (
+                not self.relaxed_time_frame and
+                not self.routes_valid_time_frame()
+        ):
             return False
-        if (not self.relaxed_max_routes) and (not self.less_than_max_routes()):
+
+        if (
+                not self.relaxed_max_routes and
+                not self.less_than_max_routes()
+        ):
             return False
-        if (not self.relaxed_all_connections) and (not self.all_connections_used()):
+
+        if (
+            not self.relaxed_all_connections and
+            not self.all_connections_used()
+        ):
             return False
         return True
 
-    def is_valid_solution_non_relaxed(self) -> dict:
+    def is_valid_solution_non_relaxed(self) -> bool:
         """
-        Gives information about satisfaction of all constraints, without constraint relaxation
+        Gives information about satisfaction of all constraints,
+        without constraint relaxation
 
         returns:
-            bool for overall constraint satisfaction     
+            bool for overall constraint satisfaction
         """
 
         if not self.routes_valid_time_frame():
@@ -491,7 +546,7 @@ class State():
         returns:
             description with:
                 all routes with their connections
-                score      
+                score
         """
         result_string: str = "Routes:\n"
         for route in self.routes:
@@ -515,7 +570,7 @@ class State():
             - quality score
             - fraction of used connections
             - number of routes
-            - total distance driven 
+            - total distance driven
             - constraint relaxation values
                 - all connections used
                 - in time frame
@@ -523,15 +578,26 @@ class State():
             - routes
                 - name
                 - stations
-            the first delimiter is \t, the second is ;, the third is : and the fourth is >
+            delimiters:
+                1. \t
+                2. ;
+                3. :
+                4: >
         """
         sleeper_string: str = ""
 
         # add quality score and parameters
-        sleeper_string += f"{self.score}\t{self.fraction_used_connections}\t{self.number_routes}\t{self.total_minutes}\t"
+        sleeper_string += \
+            f"{self.score}\t" + \
+            f"{self.fraction_used_connections}\t" + \
+            f"{self.number_routes}\t" + \
+            f"{self.total_minutes}\t"
 
         # add constraint relaxation values
-        sleeper_string += f"{self.relaxed_all_connections};{self.relaxed_time_frame};{self.relaxed_max_routes}\t"
+        sleeper_string += \
+            f"{self.relaxed_all_connections};" + \
+            f"{self.relaxed_time_frame};" + \
+            f"{self.relaxed_max_routes}\t"
 
         # add routes
         for r_index, route in enumerate(self.routes):
@@ -566,12 +632,12 @@ class State():
         """
         'awakens' a certain state, using a sleeper string
 
-        pre: 
+        pre:
             sleeper_string is string with:
             - quality score
             - fraction of used connections
             - number of routes
-            - total distance driven 
+            - total distance driven
             - constraint relaxation values
                 - all connections used
                 - in time frame
@@ -582,10 +648,14 @@ class State():
             the first delimiter is \t, the second is ;, the third is -
 
         post:
-            updates routes, quality score and score parameter and constraint relaxation value attributes      
+            updates:
+                routes
+                quality score
+                score parameter attributes
+                constraint relaxation value attributes
         """
         self.reset()
-        sleeper_data = sleeper_string.split("\t")
+        sleeper_data: list[str] = sleeper_string.split("\t")
 
         # add quality score and quality score parameters
         self.score = float(sleeper_data[0])
@@ -602,16 +672,19 @@ class State():
         # add routes
         routes_data: list = sleeper_data[5].split(";")
         for index, route_data in enumerate(routes_data):
-            stations_list = route_data.split(":")[1].split(">")
-            connections_list: list = []
+            stations_list: list[str] = route_data.split(":")[1].split(">")
+            connections_list: list['Connection'] = []
             for i in range(len(stations_list) - 1):
                 for connection in self.connections:
+                    station_1: 'Station' = connection.station_1
+                    station_2: 'Station' = connection.station_2
                     if (
                         i + 1 < len(stations_list) and
                         (
-                            (connection.station_1.name == stations_list[i] and connection.station_2.name == stations_list[i + 1]) or
-                            (connection.station_2.name ==
-                             stations_list[i] and connection.station_1.name == stations_list[i + 1])
+                            (station_1.name == stations_list[i] and
+                                station_2.name == stations_list[i + 1]) or
+                            (station_2.name == stations_list[i] and
+                                station_1.name == stations_list[i + 1])
                         )
                     ):
                         connections_list.append(connection)
@@ -632,7 +705,7 @@ class State():
             - number_routes
             - total_minutes
             - is_solution
-            - sleeper_string       
+            - sleeper_string
         """
 
         csv_line: list = [
@@ -654,7 +727,7 @@ class State():
         post:
             empties list of routes
             resets score and score parameters
-            resets relaxations     
+            resets relaxations
         """
 
         # empty list of routes

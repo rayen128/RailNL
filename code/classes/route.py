@@ -1,6 +1,8 @@
 from station import Station
 from connection import Connection
 
+from typing import Union
+
 
 class Route():
     def __init__(self: 'Route', name: str, connection: 'Connection') -> None:
@@ -19,8 +21,12 @@ class Route():
         assert isinstance(name, str), "name is no string"
 
         self.name: str = name
+
+        station_1: 'Station' = connection.station_1
+        station_2: 'Station' = connection.station_2
+
         self.route_stations: list['Station'] = [
-            connection.station_1, connection.station_2]
+            station_1, station_2]
         connection.used += 1
         self.route_connections: list['Connection'] = [connection]
         self.connection_ids: list[int] = [connection.id]
@@ -96,8 +102,8 @@ class Route():
             self.total_time += connection.distance
             connection.used += 1
             return True
-        
-        return False 
+
+        return False
 
     def add_station_end(self: 'Route', station: 'Station') -> None:
         """
@@ -125,7 +131,7 @@ class Route():
         """
         self.route_stations.insert(0, station)
 
-    def get_other_station(self: 'Route', connection: 'Connection', station: 'Station') -> 'Station':
+    def get_other_station(self: 'Route', connection: 'Connection', station: 'Station') -> Union['Station', bool]:
         """
         returns the other station in a connection than the given station
 
@@ -137,15 +143,17 @@ class Route():
             the other station in the connection than the given station if the given station is in connection
             none if the given station is not in connection
         """
-        if station == connection.station_1:
-            return connection.station_2
+        station_1: 'Station' = connection.station_1
+        station_2: 'Station' = connection.station_2
+        if station == station_1:
+            return station_2
 
-        elif station == connection.station_2:
-            return connection.station_1
+        elif station == station_2:
+            return station_1
 
         return False
 
-    def delete_connection_end(self: 'Route') -> None:
+    def delete_connection_end(self: 'Route') -> bool:
         """
         deletes the last connection
 
@@ -171,7 +179,7 @@ class Route():
             return True
         return False
 
-    def delete_connection_start(self: 'Route') -> None:
+    def delete_connection_start(self: 'Route') -> bool:
         """
         deletes the first connection
 
@@ -186,7 +194,7 @@ class Route():
         """
         assert self.route_stations[0].has_connection(self.route_connections[0]), \
             "the first station in stations list has not the first connection in the connections list"
-        
+
         if len(self.route_connections) > 1:
             connection = self.route_connections.pop(0)
             self.connection_ids.pop(0)

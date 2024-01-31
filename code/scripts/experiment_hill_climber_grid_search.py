@@ -66,18 +66,19 @@ def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_sec
 
                     # run gives a list with list of results of each iteration
                     score_list = hc.run(
-                        1000, counter, change_light=change_light[change])
+                        10000, counter, change_light=change_light[change])
 
                     # write results to csv
                     writer.writerow(get_csv_row(
                         counter, hc.current_state, start_state, change, list_to_str(score_list)))
 
                     # show progress to user
-                    print(counter)
+                    print(
+                        f"HC. Case: {case_name}, start state: {start_state}, mutation: {change}, counter: {counter}")
                     counter += 1
 
 
-def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', time_seconds: int, restart_number: int) -> None:
+def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', time_seconds: int) -> None:
     """
     does a grid search experiment on the hill climber algorithm.
     parameters:
@@ -101,7 +102,6 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
             - sleeper string of state with best score
     """
     assert time_seconds > 0, "time_seconds should be larger than 0"
-    assert restart_number > 0, "restart_number should be larger than 0"
 
     with open(f"data/hill_climber_restart/experiment_hill_climber_restart_grid_search_{case_name}.csv", "w") as file:
         writer = csv.writer(file)
@@ -120,6 +120,7 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
         # configure grid items
         valid_start_state: dict = {'random': False}
         change_light: dict = {'light': True, 'heavy': False}
+        restart_numbers = [100, 250]
 
         # making a valid state for the Netherlands case is skipped,
         # because it takes too long to make such a state
@@ -129,23 +130,26 @@ def experiment_hill_climber_restart_grid_search(case_name: str, state: 'State', 
         # the counter is used to show progress to the user
         counter: int = 0
 
-        # run hill climber restart for every combination of grit items
-        for start_state in valid_start_state:
-            for change in change_light:
-                hcr = Hill_climber_restart(
-                    state, restart_number, valid_start_state=valid_start_state[start_state])
-                start = time.time()
+        # run hill climber restart for every combination of grid items
+        for restart_number in restart_numbers:
+            for start_state in valid_start_state:
+                for change in change_light:
+                    hcr = Hill_climber_restart(
+                        state, restart_number, valid_start_state=valid_start_state[start_state])
+                    start = time.time()
 
-                # run grid element for given amount of time
-                while time.time() - start < time_seconds:
+                    # run grid element for given amount of time
+                    while time.time() - start < time_seconds:
 
-                    # run gives a list with lists of results of each iteration,
-                    # and the best score, with the state that belongs to it
-                    best_score, best_state, score_list = hcr.run(
-                        1000, counter, change_light=change_light[change])
+                        # run gives a list with lists of results of each iteration,
+                        # and the best score, with the state that belongs to it
+                        best_score, best_state, score_list = hcr.run(
+                            10000, counter, change_light=change_light[change])
 
-                    writer.writerow(get_csv_row(
-                        counter, best_state, start_state, change, list_to_str(score_list), best_score=best_score))
+                        writer.writerow(get_csv_row(
+                            counter, best_state, start_state, change, list_to_str(score_list), best_score=best_score))
 
-                    print(counter)
-                    counter += 1
+                        # show progress to user
+                        print(
+                            f"HCR. Case: {case_name}, start state: {start_state}, mutation: {change}, restart number: {restart_number}, counter: {counter}")
+                        counter += 1

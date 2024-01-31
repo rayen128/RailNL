@@ -6,7 +6,7 @@ import statistics
 
 from results import read_csv, filter_states, all_scores, export_states
 
-def make_histogram(values: list, title_histogram: str, filepath: str) -> None:
+def make_histogram(values: list, title_histogram: str, filepath: str, text: str = None) -> None:
     """
     creates and saves a histogram with normal distribution line with the given values
 
@@ -18,6 +18,8 @@ def make_histogram(values: list, title_histogram: str, filepath: str) -> None:
         a png file is saved with a histogram
     """
     plt.clf()
+
+    title_list = list(title_histogram.split(" "))
 
     # make the histogram
     plt.hist(values, bins=50, density=True, edgecolor='black', color='#000066')
@@ -33,7 +35,13 @@ def make_histogram(values: list, title_histogram: str, filepath: str) -> None:
     plt.title(title_histogram)
     plt.xlabel("scores", labelpad=10)
     plt.ylabel("relative frequency", labelpad=10)
-    plt.xlim(4000, 9200)
+    if 'netherlands' in title_list:
+        plt.xlim(0, 9300)
+        #plt.text(4100, 0.0045, text, fontsize = 10)
+    elif 'holland' in title_list:
+        plt.xlim(7000, 9300)
+        #plt.text(7100, 0.0045, text, fontsize = 10)
+    plt.annotate(text, xy=(0.3, 0.7), fontsize = 10, xycoords='figure fraction')
     plt.ylim(0, 0.005)
     plt.subplots_adjust(left=0.17, right=0.9, top=0.9, bottom=0.15)
     plt.savefig(
@@ -100,7 +108,7 @@ def make_line_diagram(scores: list, title_diagram: str, filepath: str) -> None:
     plt.savefig(
         f'{filepath}.png')
     
-def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, filepath: str, comparison: bool, legend: list[str] = None, xlabel: str = 'Iterations') -> None:
+def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, filepath: str, comparison: bool, text: str = None, legend: list[str] = None, xlabel: str = 'Iterations') -> None:
     """
     makes a line diagram with multiple lines of the scores against the iterations
 
@@ -113,18 +121,20 @@ def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, fil
         saves a png file with the line diagram
     """
     plt.clf()
-    
     for i in range(len(scores)):
-        x = list(range(len(scores[i])))
+        x = list(range(1, 2001))
+        y = scores[i]
         if not comparison:
-            plt.plot(x, scores[i], alpha=0.2, color='magenta')
+            plt.plot(x, y[:2000], alpha=0.2, color='magenta')
         else:
-            plt.plot(x, scores[i])
+            plt.plot(x, y[:2000])
             plt.legend(legend, loc = "lower right")
     
     plt.xlabel(xlabel)
     plt.ylabel("Scores")
     plt.title(f"{title_diagram}")
+
+    plt.annotate(text, xy=(0.7, 0.3), fontsize = 10, xycoords='figure fraction')
     plt.savefig(
         f'{filepath}.png')
     
