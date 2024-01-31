@@ -5,6 +5,69 @@ from code.classes.state import State
 from .helpers import *
 
 
+def experiment_hill_climber_specific(case_name: str, state: 'State', start_state: str, time_seconds: int) -> None:
+    """
+    pre:
+        time_seconds is an integer greater than zero
+
+    post:
+        writes following results to a csv:
+            - id
+            - score
+            - fraction of used connections
+            - number of used routes
+            - total minutes
+            - type of start state (valid or random)
+            - type of mutation (light or heavy)
+            - list of scores after every iteration
+            - sleeper string of last state
+    """
+    assert time_seconds > 0, "time_seconds should be larger than 0"
+
+    with open(f"data/hill_climber/experiment_hill_climber_{case_name}_{start_state}.csv", "w") as file:
+        writer = csv.writer(file)
+
+        # write column heads
+        writer.writerow(["run_id",
+                         "score",
+                         "p",
+                         "T",
+                         "Min",
+                         "start",
+                         "mutation",
+                         "score_list",
+                         "sleeper_string"])
+
+        if start_state == 'valid':
+            valid_start_state = True
+        else:
+            valid_start_state = False
+
+        change = 'Heavy'
+
+        counter: int = 0
+
+        hc = Hill_climber(state, valid_start_state)
+
+        start = time.time()
+
+        # run grid element for given amount of seconds
+        while time.time() - start < time_seconds:
+
+            # run gives a list with list of results of each iteration
+            score_list = hc.run(
+                10000, counter, change_light=False)
+
+            # write results to csv
+            writer.writerow(get_csv_row(
+                counter, hc.current_state, start_state, change, list_to_str(score_list)))
+
+            # show progress to user
+            print(
+                f"HC. Case: {case_name}, start state: {start_state}, mutation: {change}, counter: {counter}")
+            counter += 1
+
+
 def experiment_hill_climber_grid_search(case_name: str, state: 'State', time_seconds: int) -> None:
     """
     does a grid search experiment on the hill climber algorithm.

@@ -165,6 +165,15 @@ class Plant_Propagation(Hill_climber):
                 state.run(1000, 1)
                 self.population.append(copy.deepcopy(state.current_state))
 
+        elif type == 'hill_climber_valid':
+            state = Hill_climber(
+                self.state, True, self.max_connection_returns)
+
+            # run hill_climbers
+            for i in range(self.population_size):
+                state.run(1000, 1)
+                self.population.append(copy.deepcopy(state.current_state))
+
     def change_population_type(self, type: str) -> None:
         """
         method to change intitial population-type

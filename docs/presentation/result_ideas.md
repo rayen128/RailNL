@@ -25,7 +25,7 @@
     - best linear: 200, heavy, valid
     - best exponentieel: 200, heavy, valid  
     - best logaritmisch: 100/200 valid 
-    --> heavy minder consistent, maar ook een paar hele hoge uitschieters
+    --> minder consistent, maar ook een paar hele hoge uitschieters
 
 #### Netherlands:
     -  zelfde beste linear: 200, heavy (random?)
@@ -53,9 +53,12 @@
 
 
 ## Computing:
-    - 1u nog Hill_climber NL valid runnen
-    - 1u PPA NL valid?
-    - PPA voor NL
+    Gert:
+        - 1u nog Hill_climber, Annealing, PPA NL valid heavy runnen
+        - Hill_climber random NL
+        - Advanced
+    
+    - PPA voor NL 
 
 
 ## Ideeën:

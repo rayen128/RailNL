@@ -9,7 +9,7 @@ path.append("code/classes")
 from state import State
 
 
-def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_population: str, filter_type: str):
+def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_population: str, filter_type: str, specific: bool = False):
     """
     does a grid search based on the PlantPropagation algorithm with the following parameters:
 
@@ -48,8 +48,12 @@ def grid_search_PPA(state: object, time_seconds: int, case_name: str, initial_po
         counter = 0
 
         population_size_list = [12, 30]
-        max_runners_list = [3, 15]
+        max_runners_list = [15, 3]
         generation_count = 200
+
+        if specific == True:
+            population_size_list = [30]
+            max_runners = [3]
 
         if case_name == 'holland':
             heuristic_list = [0]
