@@ -59,7 +59,7 @@ def experiment_annealing_grid_search(case_name: str, state: 'State', time_second
         for start_state in valid_start_state:
             for change in change_light:
                 sa = Simulated_annealing(
-                    state, temperature, 1000, valid_start_state=valid_start_state[start_state])
+                    state, temperature, 10000, valid_start_state=valid_start_state[start_state])
                 start = time.time()
 
                 # run grid element for given amount of time
