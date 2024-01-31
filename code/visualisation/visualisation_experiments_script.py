@@ -32,8 +32,8 @@ def make_plots_annealing():
                 # create linediagram and histogram 
                 for start in starts:
                     for mutation in ["light", "heavy"]:
-                        onegrid_hc(results_dict, f"../../docs/graphs/annealing/2000/line_annealing_{case_name}_{cooling_scheme}_{temperature}_{start}_{mutation}", f"Annealing {case_name} {cooling_scheme} {temperature} {start} {mutation}", start, mutation, 'linediagram')
-                        #onegrid_hc(results_dict, f"../../docs/graphs/annealing/histo_annealing_{case_name}_{cooling_scheme}_{temperature}_{start}_{mutation}", f"Annealing {case_name} {cooling_scheme} {temperature} {start} {mutation}", start, mutation, 'histogram')
+                        onegrid_hc(results_dict, f"../../docs/graphs/annealing/line_annealing_{case_name}_{cooling_scheme}_{temperature}_{start}_{mutation}", f"Annealing {case_name} {cooling_scheme} {temperature} {start} {mutation}", start, mutation, 'linediagram')
+                        onegrid_hc(results_dict, f"../../docs/graphs/annealing/histo_annealing_{case_name}_{cooling_scheme}_{temperature}_{start}_{mutation}", f"Annealing {case_name} {cooling_scheme} {temperature} {start} {mutation}", start, mutation, 'histogram')
 
 def make_plots_hill_climber():
     """
@@ -124,9 +124,72 @@ def make_plots_ppa(case_name: str, starting_states: str, filter_method: str):
 
 
 if __name__ == "__main__":
+    from results import filter_states, all_scores, str_to_list
+    from statistics import make_line_diagram_multiple_lines, make_histogram
+
+    #make_plots_ppa_nl('netherlands', 'hill_climber', 'sequential')
+
+    #results_dict = read_csv(f"../../data/annealing/experiment_annealing_grid_search_netherlands_logaritmic_200.csv", 'run_id')
+    #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/line_annealing_netherlands_logaritmic_200_valid_heavy", "Simulated annealing Netherlands logarithmic 200 valid heavy", "valid", "heavy", 'linediagram')
+    best_scores_lists = []
+    legend = []
+
+    results_dict_logaritmic = read_csv(f"../../data/annealing/experiment_annealing_grid_search_holland_logaritmic_200.csv", 'run_id')
+    results_dict_lineair = read_csv(f"../../data/annealing/experiment_annealing_grid_search_holland_lineair_200.csv", 'run_id')
+    results_dict_exponential = read_csv(f"../../data/annealing/experiment_annealing_grid_search_holland_exponential_200.csv", 'run_id')
+    
+    
+    # sort results
+    sorted_results = dict(sorted(results_dict_logaritmic.items(), key=lambda x: float(x[1]['score']), reverse=True))
+
+    # get results of the best run
+    key_run = list(sorted_results.keys())[0]
+    best_scores = str_to_list(results_dict_logaritmic[key_run]['score_list'])
+    best_scores_lists.append(best_scores)
+
+    # save legend values
+    legend.append("Logarithmic")
+
+    # sort results
+    sorted_results = dict(sorted(results_dict_lineair.items(), key=lambda x: float(x[1]['score']), reverse=True))
+
+    # get results of the best run
+    key_run = list(sorted_results.keys())[0]
+    best_scores = str_to_list(results_dict_lineair[key_run]['score_list'])
+    best_scores_lists.append(best_scores)
+
+    # save legend values
+    legend.append("Linear")
+
+    # sort results
+    sorted_results = dict(sorted(results_dict_exponential.items(), key=lambda x: float(x[1]['score']), reverse=True))
+
+    # get results of the best run
+    key_run = list(sorted_results.keys())[0]
+    best_scores = str_to_list(results_dict_exponential[key_run]['score_list'])
+    best_scores_lists.append(best_scores)
+
+    # save legend values
+    legend.append("Exponential")
+
+    make_line_diagram_multiple_lines(best_scores_lists, "Simulated Annealing comparison cooling schemes 200", "../../docs/presentation/assets/plots_def/comparison_annealing_holland_200", True, None, legend)
+
+
+
+
+
     #make_plots_hill_climber()
     #make_plots_annealing()
     #make_plots_ppa('netherlands', 'hill_climber', 'random')
     #make_plots_ppa('netherlands', 'hill_climber', 'best')
     #make_plots_ppa('holland', 'random', 'sequential')
-    make_plots_ppa_nl('netherlands', 'hill_climber', 'sequential')
+    #make_plots_ppa_nl('netherlands', 'hill_climber', 'sequential')
+
+    #results_dict = read_csv(f"../../data/annealing/experiment_annealing_grid_search_netherlands_logaritmic_200.csv", 'run_id')
+    #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/line_annealing_netherlands_logaritmic_200_valid_heavy", "Simulated annealing Netherlands logarithmic 200 valid heavy", "valid", "heavy", 'linediagram')
+
+
+
+    #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/histo_hill_climber_holland_valid_heavy", "Hill-climber Holland valid heavy", "valid", "heavy", 'histogram')
+    #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/histo_hill_climber_holland_random_heavy", "Hill-climber Holland random heavy", "random", "heavy", 'histogram')
+    #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/histo_hill_climber_netherlands_random_heavy", "Hill-climber Netherlands random heavy", "random", "heavy", 'histogram')

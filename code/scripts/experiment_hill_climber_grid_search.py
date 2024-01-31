@@ -1,5 +1,6 @@
 import csv
 import time
+
 from code.algorithms.hill_climber import Hill_climber, Hill_climber_restart
 from code.classes.state import State
 from .helpers import get_csv_row, list_to_str

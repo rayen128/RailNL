@@ -38,9 +38,9 @@ def make_histogram(values: list, title_histogram: str, filepath: str, text: str 
     #if 'netherlands' in title_list:
        # plt.xlim(0, 9300)
     #elif 'holland' in title_list:
-       # plt.xlim(7000, 9300)
-    plt.annotate(text, xy=(0.3, 0.7), fontsize = 10, xycoords='figure fraction')
-    #plt.ylim(0, 0.005)
+    plt.xlim(7000, 9500)
+    plt.annotate(text, xy=(0.2, 0.85), fontsize = 10, xycoords='figure fraction')
+    #plt.ylim(0, 0.003)
     plt.subplots_adjust(left=0.17, right=0.9, top=0.9, bottom=0.15)
     plt.savefig(
         f'{filepath}.png')
@@ -182,19 +182,3 @@ def statistics_scores(scores: list) -> dict:
     statistics_scores_dict['stdev'] = statistics.stdev(scores)
 
     return statistics_scores_dict
-
-if __name__ == "__main__":
-
-    states_results = read_csv("../../data/baseline_data_holland.csv", "state_id")
-    filtered_results_1 = filter_states(states_results, 'algorithm', 'random_algorithm_2')
-    scores_1 = all_scores(filtered_results_1)
-
-    filtered_results_2 = filter_states(states_results, 'algorithm', 'random_algorithm_2')
-    scores_2 = all_scores(filtered_results_2)
-    
-    filtered_results_3 = filter_states(states_results, 'algorithm', 'random_algorithm_3')
-    scores_3 = all_scores(filtered_results_3)
-
-    scores_total = all_scores(states_results)
-    scores = [scores_1, scores_2, scores_3, scores_total]
-    make_boxplot(scores, 'Boxplot Baseline', 'boxplot', ['Algorithm 1', 'Algorithm 2', 'Algorithm 3', 'Total'])

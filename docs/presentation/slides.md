@@ -215,8 +215,8 @@ K = p * 10000 - (T * 100 + Min)
 
 - Heavy vs. Light  
 
-[histo_hill_climber_netherlands_random_heavy.png]
-[histo_hill_climber_netherlands_random_light.png]
+[assets/plots_def/histo_hill_climber_netherlands_random_heavy.png]
+[assets/plots_def/histo_hill_climber_netherlands_random_light.png]
 --> TODO: deze op schaal 0 - 4000
 
 ---
@@ -224,9 +224,9 @@ K = p * 10000 - (T * 100 + Min)
 
 - Random vs. valid
 
-[histo_hill_climber_holland_random_heavy.png] 
+[assets/plots_def/histo_hill_climber_holland_random_heavy.png] 
 
-[histo_hill_climber_holland_random_light.png]
+[assets/plots_def/histo_hill_climber_holland_random_light.png]
 
 
 
