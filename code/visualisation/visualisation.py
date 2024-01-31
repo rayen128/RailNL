@@ -28,7 +28,7 @@ def get_station_info(state: object) -> dict[str: list[float]]:
     """
     # assert that state is an instance of State
     assert isinstance(
-        state, State), "The input state must be an instance of State."
+        state, object), "The input state must be an instance of State."
 
     # assert that state.stations exists and is a list
     assert hasattr(state, 'stations') and isinstance(
@@ -258,7 +258,7 @@ def plot_map(p: figure, map: str) -> None:
     """
 
     if map == 'holland':
-        with open('../../data/holland_regions.geojson', 'r') as geojson_file:
+        with open('data/holland_regions.geojson', 'r') as geojson_file:
             geojson_data = json.load(geojson_file)
 
         # Create GeoJSONDataSource
