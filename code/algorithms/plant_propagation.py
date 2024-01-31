@@ -8,12 +8,30 @@ from ..visualisation.visualisation import *
 class Plant_Propagation(Hill_climber):
 
     def __init__(self, state: object, valid_states: bool, population_size: int, max_generations: int, max_nr_runners: int, max_connection_returns: int = 0):
+        """
+        initializes the plant propagation algorithm (PPA) with the following parameters: 
+            population_size
+            amount of generations
+            max_runners
+
+
+        pre: 
+            state is a state object
+            population_size is an integer
+            max_runners an integer
+
+        post:
+            PPA object is created with all necesarry aspects
+            the PPA is ready to be run
+        """
         super().__init__(state, valid_states, max_connection_returns=max_connection_returns)
 
+        # all population and generation variables
         self.population_size = population_size
         self.population: list[object] = []
         self.max_generations = max_generations
 
+        # scores lists
         self.scores: list[float] = []
         self.fitness_values: list[list[float, object]] = []
 
@@ -50,6 +68,9 @@ class Plant_Propagation(Hill_climber):
     ### GENERAL FUNCTIONS ###
 
     def run(self):
+        """
+
+        """
         self.reset()
 
         # create initial population
