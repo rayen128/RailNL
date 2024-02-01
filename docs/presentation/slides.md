@@ -269,12 +269,36 @@ TODO: line_plaatje valid 200 logaritmisch (wel/niet NL)
 
 - Filters
 - Parameters
-- heuristiek
 - valid vs. random
-- verandering is niet goed
+
+
 
 ---
 
+## Resultaten - Plant Propagation
+
+- Eigenlijk gewoon slecht
+
+
+
+---
+
+## Resultaten - Plant Propagation
+
+- Afhankelijk van lokale minima
+
+[assets/plots_def/line_netherlands_random_sequential_30_200_3_0.png]
+
+
+
+---
+## Resultaten - Plant Propagation
+
+- Bij goede scores zelfs nog erger
+
+[assets/plots_def/line_netherlands_hill_climber_sequential_30_200_3_0.png]
+
+---
 <!-- _paginate: skip -->
 ---
 
