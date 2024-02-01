@@ -581,7 +581,7 @@ class State():
                 result_string += f"  - {connection}\n"
             result_string += f"Total minutes: {route.total_time}\n\n"
         result_string += f"Score: {self.calculate_score()}\n"
-        if self.is_valid_solution():
+        if self.is_valid_solution_without_connection():
             result_string += "The current solution is valid."
         else:
             result_string += "The current solution is not valid."

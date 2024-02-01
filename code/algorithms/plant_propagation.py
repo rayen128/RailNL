@@ -102,7 +102,6 @@ class Plant_Propagation(Hill_climber):
             self.filter_population(self.filter_type, generation)
 
             print(f"Generation {generation + 1}: {self.high_score}")
-            print(f"p= {self.best_state.fraction_used_connections}")
 
             # save most important info of best_state
             self.add_info()
@@ -284,7 +283,7 @@ class Plant_Propagation(Hill_climber):
 
     ### POPULATION FUNCTIONS ###
 
-    def filter_population(self, filter_type: str, generation, visualize_states: bool = True) -> None:
+    def filter_population(self, filter_type: str, generation, visualize_states: bool = False) -> None:
         """
         filters the (best of) the current population using the selected filter_method 
         if set visualize is set to True, also visualizes whole population
