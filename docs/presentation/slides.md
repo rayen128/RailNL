@@ -308,6 +308,13 @@ Lineair | Exponentieel | Logaritmisch
 
 ![bg right](assets/empty_state.png)
 
+
+---
+
+# Potential Readings
+
+
+
 ---
 <!-- _paginate: skip -->
 ---
@@ -360,18 +367,6 @@ Histogram totaal            |  Boxplot alle algoritmen
 
 ---
 
-## Baseline NL - Histogram & Boxplot
-
-TODO:
-
----
-
-
-## Baseline NL - Solved States Results
-
-TODO:
-
----
 ## Simulated annealing - random vs. valid
 
 Random            |  Valid

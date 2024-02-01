@@ -36,10 +36,10 @@ def make_histogram(values: list, title_histogram: str, filepath: str, text: str 
     plt.title(title_histogram)
     plt.xlabel("scores", labelpad=10)
     plt.ylabel("relative frequency", labelpad=10)
-    #if 'netherlands' in title_list:
-       #plt.xlim(0, 9300)
-    #elif 'holland' in title_list:
-    plt.xlim(2000, 4500)
+    if 'netherlands' in title_list:
+       plt.xlim(0, 9300)
+    elif 'holland' in title_list:
+        plt.xlim(2000, 4500)
     plt.annotate(text, xy=(0.2, 0.85), fontsize = 10, xycoords='figure fraction')
     plt.ylim(0, 0.005)
     plt.subplots_adjust(left=0.17, right=0.9, top=0.9, bottom=0.15)
