@@ -243,24 +243,18 @@ Random           | Valid
 
 - Logaritmisch
 
- 
-TODO: line_plaatje valid 200 logaritmisch (wel/niet NL) 
+![bg right width:700](assets/plots_def/line_annealing_holland_logaritmic_100_valid_heavy.png)
 
 ---
 ## Resultaten - Plant Propagation
 
 - Filters
 - Parameters
+- heuristiek
 - valid vs. random
+- verandering is niet goed
 
-
-
----
-## Future work
-- Heuristieken implementeren
-- Plant propagation finetunen
-
-![bg right](assets/empty_state.png)
+![width:600 bg right](assets/PPA/strawberry_plant.png)
 
 ---
 
@@ -276,7 +270,7 @@ TODO: line_plaatje valid 200 logaritmisch (wel/niet NL)
 
 - Afhankelijk van lokale minima
 
-[assets/plots_def/line_netherlands_random_sequential_30_200_3_0.png]
+![bg right width:700](assets/plots_def/line_netherlands_random_sequential_30_200_3_0.png)
 
 
 
@@ -285,7 +279,14 @@ TODO: line_plaatje valid 200 logaritmisch (wel/niet NL)
 
 - Bij goede scores zelfs nog erger
 
-[assets/plots_def/line_netherlands_hill_climber_sequential_30_200_3_0.png]
+![bg right width:700](assets/plots_def/line_netherlands_hill_climber_sequential_30_200_3_0.png)
+
+---
+## Future work
+- Heuristieken implementeren
+- Plant propagation finetunen
+
+![bg right](assets/empty_state.png)
 
 ---
 <!-- _paginate: skip -->
