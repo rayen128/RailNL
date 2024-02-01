@@ -71,7 +71,10 @@ class Plant_Propagation(Hill_climber):
 
     def run(self) -> None:
         """
-        TODO: doc-string
+        runs the algorithm
+
+        post:
+            information of best found state is saved
         """
 
         # reset the state
@@ -528,7 +531,6 @@ class Plant_Propagation(Hill_climber):
         """
         determines a distance (semi-random) based on a fitness-value  
         """
-        # TODO: Experimenteren
         scale_factor = 10
         variability = scale_factor / 2
         r = random.random()

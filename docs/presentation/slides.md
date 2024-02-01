@@ -142,13 +142,12 @@ K = p * 10000 - (T * 100 + Min)
 
 ## Heuristieken
 
-- Aan de voorkant
-  - Geïsoleerde stations
-- Bij evaluatie van scores
-  - Plus- en minpunten
-  - Meervoudig gebruik connecties
+- Valide start state
 
-![bg right](assets/empty_state_holland.png)
+- Constraint: alle connecties bereden
+
+
+![bg right]plaatje van scatterplot)
 
 ---
 
@@ -272,6 +271,13 @@ TODO: line_plaatje valid 200 logaritmisch (wel/niet NL)
 - heuristiek
 - valid vs. random
 - verandering is niet goed
+
+---
+## Future work
+- Heuristieken implementeren
+- Plant propagation finetunen
+
+![bg right](assets/empty_state.png)
 
 ---
 
