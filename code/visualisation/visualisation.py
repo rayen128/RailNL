@@ -1,10 +1,4 @@
 from sys import argv, path
-path.append("../classes")
-from state import State
-from route import Route
-from connection import Connection
-import os
-
 from bokeh.models import GeoJSONDataSource, HoverTool, Legend
 from bokeh.plotting import figure, show
 from bokeh.sampledata.sample_geojson import geojson
@@ -12,6 +6,12 @@ from bokeh.palettes import Dark2_5 as palette
 from bokeh.io import export_png
 import itertools
 import json
+import os
+
+path.append("../classes")
+from state import State
+from route import Route
+from connection import Connection
 
 
 def get_station_info(state: object) -> dict[str: list[float]]:
@@ -306,8 +306,6 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
     plot_connections(p, state, station_dict)
     plot_routes(p, state, station_dict)
     plot_stations(p, station_dict)
-
-    # TODO: Totale Score (goed) weergeven in de Legenda?
 
     # add HoverTool for connections
     hover_connections = HoverTool(
