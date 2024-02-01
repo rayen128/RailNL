@@ -131,6 +131,7 @@ if __name__ == "__main__":
 
     #results_dict = read_csv(f"../../data/annealing/experiment_annealing_grid_search_netherlands_logaritmic_200.csv", 'run_id')
     #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/line_annealing_netherlands_logaritmic_200_valid_heavy", "Simulated annealing Netherlands logarithmic 200 valid heavy", "valid", "heavy", 'linediagram')
+    """
     best_scores_lists = []
     legend = []
 
@@ -173,7 +174,7 @@ if __name__ == "__main__":
     legend.append("Exponential")
 
     make_line_diagram_multiple_lines(best_scores_lists, "Simulated Annealing comparison cooling schemes 200", "../../docs/presentation/assets/plots_def/comparison_annealing_holland_200", True, None, legend)
-
+    """
 
 
 
@@ -185,11 +186,12 @@ if __name__ == "__main__":
     #make_plots_ppa('holland', 'random', 'sequential')
     #make_plots_ppa_nl('netherlands', 'hill_climber', 'sequential')
 
-    #results_dict = read_csv(f"../../data/annealing/experiment_annealing_grid_search_netherlands_logaritmic_200.csv", 'run_id')
+    results_dict = read_csv(f"../../data/hill_climber/experiment_hill_climber_grid_search_netherlands.csv", 'run_id')
     #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/line_annealing_netherlands_logaritmic_200_valid_heavy", "Simulated annealing Netherlands logarithmic 200 valid heavy", "valid", "heavy", 'linediagram')
 
 
 
     #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/histo_hill_climber_holland_valid_heavy", "Hill-climber Holland valid heavy", "valid", "heavy", 'histogram')
     #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/histo_hill_climber_holland_random_heavy", "Hill-climber Holland random heavy", "random", "heavy", 'histogram')
-    #onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/histo_hill_climber_netherlands_random_heavy", "Hill-climber Netherlands random heavy", "random", "heavy", 'histogram')
+    onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/histo_hill_climber_netherlands_random_heavy", "Hill-climber Netherlands random heavy", "random", "heavy", 'histogram')
+    onegrid_hc(results_dict, f"../../docs/presentation/assets/plots_def/histo_hill_climber_netherlands_random_light", "Hill-climber Netherlands random light", "random", "light", 'histogram')

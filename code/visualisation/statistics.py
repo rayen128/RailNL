@@ -38,7 +38,7 @@ def make_histogram(values: list, title_histogram: str, filepath: str, text: str 
     #if 'netherlands' in title_list:
        # plt.xlim(0, 9300)
     #elif 'holland' in title_list:
-    plt.xlim(7000, 9500)
+    plt.xlim(0, 6500)
     plt.annotate(text, xy=(0.2, 0.85), fontsize = 10, xycoords='figure fraction')
     #plt.ylim(0, 0.003)
     plt.subplots_adjust(left=0.17, right=0.9, top=0.9, bottom=0.15)
