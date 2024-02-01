@@ -136,7 +136,16 @@ K = p * 10000 - (T * 100 + Min)
 
 ---
 
-(Overzicht van alle algoritme)
+## Algoritmen
+- Hillclimber
+- Simulated annealing
+- Plant propagation
+---
+
+## Opties
+- Start state: valid/random
+- Verandering: light/heavy
+- Specifieke parameters
 
 ---
 
@@ -149,7 +158,7 @@ K = p * 10000 - (T * 100 + Min)
   - Routes maximaal gevuld
 
 
-![bg right](assets/scatterplot)
+![bg right](assets/scatterplot.png)
 
 ---
 
@@ -250,9 +259,8 @@ Random           | Valid
 
 - Filters
 - Parameters
-- heuristiek
-- valid vs. random
-- verandering is niet goed
+- Valid vs. random
+
 
 ![width:600 bg right](assets/PPA/strawberry_plant.png)
 
@@ -260,15 +268,16 @@ Random           | Valid
 
 ## Resultaten - Plant Propagation
 
-- Eigenlijk gewoon slecht
-
-
+- Nog geen goede resultaten
+- Niet beter dan hillclimber
+- Oorzaak:
+  - Mutaties gaan nog niet goed
 
 ---
 
 ## Resultaten - Plant Propagation
 
-- Afhankelijk van lokale minima
+- Gevolg: afhankelijk van lokale minima
 
 ![bg right width:700](assets/plots_def/line_netherlands_random_sequential_30_200_3_0.png)
 
