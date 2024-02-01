@@ -126,11 +126,11 @@ K = p * 10000 - (T * 100 + Min)
 ## Baseline
 
 - Holland
-  - Realistisch: ``8300-8600``
+  - Baseline: ``8300-8600``
   - Maximum : ``9219``
 <br>
 - NL: 
-  - Realistisch: ``+/- 4000``
+  - Baseline: ``+/- 4000``
   - Maximum: ``7549``
 
 
@@ -211,19 +211,33 @@ K = p * 10000 - (T * 100 + Min)
 ## Resultaten - Hillclimber
 
 ---
-
-## Resultaten - Hillclimber 
-
-Heavy           | Light
-:-------------------------:|:-------------------------:
-![width:550](assets/plots_def/histo_hill_climber_netherlands_random_heavy.png) | ![width:550](assets/plots_def/histo_hill_climber_netherlands_random_light.png)
-
----
 ## Resultaten - Hillclimber
 
 Random           | Valid
 :-------------------------:|:-------------------------:
 ![width:550](assets/plots_def/histo_hill_climber_holland_random_heavy.png) | ![width:550](assets/plots_def/histo_hill_climber_holland_valid_heavy.png)
+---
+
+## Resultaten - Hillclimber 
+
+Light           | Heavy
+:-------------------------:|:-------------------------:
+![width:550](assets/plots_def/histo_hill_climber_netherlands_random_light.png) | ![width:550](assets/plots_def/histo_hill_climber_netherlands_random_heavy.png)
+
+
+---
+## Resultaten - Hillclimber
+Dus:
+- Valid is beter
+- Heavy is beter
+
+---
+<br>
+<br>
+<br>
+<br>
+
+## Resultaten - Simulated Annealing
 
 ---
 
@@ -245,9 +259,9 @@ Random           | Valid
 ---
 ## Resultaten - Simulated Annealing
 
-x | y | z
+Lineair | Exponentieel | Logaritmisch
 :------------:|:------------:|:---------:
-![width:350](assets/plots_def/) | ![width:350](assets/plots_def/histo_hill_climber_holland_valid_heavy.png) | ![width:350](assets/plots_def/histo_hill_climber_holland_valid_heavy.png)
+![width:373](assets/plots_def/histo_annealing_netherlands_lineair_200_random_heavy.png) | ![width:373](assets/plots_def/histo_annealing_netherlands_exponential_200_random_heavy.png) | ![width:373](assets/plots_def/histo_annealing_netherlands_logaritmic_200_random_heavy.png)
 
 ---
 ## Resultaten - Simulated Annealing
@@ -260,7 +274,6 @@ x | y | z
 ---
 ## Resultaten - Plant Propagation
 
-- Filters
 - Parameters
 - Valid vs. random
 
@@ -283,15 +296,6 @@ x | y | z
 - Gevolg: afhankelijk van lokale minima
 
 ![bg right width:700](assets/plots_def/line_netherlands_random_sequential_30_200_3_0.png)
-
-
-
----
-## Resultaten - Plant Propagation
-
-- Bij goede scores zelfs nog erger
-
-![bg right width:700](assets/plots_def/line_netherlands_hill_climber_sequential_30_200_3_0.png)
 
 ---
 ## Conclusie
