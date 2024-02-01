@@ -163,12 +163,10 @@ K = p * 10000 - (T * 100 + Min)
 
 ## Hillclimber
 - Maak start-state
+  - Valid of random
 
 - Maak aanpassing
-    - Verwijderen connectie
-    - Toevoegen connectie
-    - Verwijderen route
-    - Toevoegen route
+    - Light of heavy
 
 - Vergelijk score
 
