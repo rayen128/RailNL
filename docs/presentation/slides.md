@@ -135,6 +135,18 @@ K = p * 10000 - (T * 100 + Min)
 
 
 ---
+## Heuristieken
+
+- Constraint: alle connecties bereden
+
+- Valide start state
+  - Voorkeur aan onbereden connecties
+  - Routes maximaal gevuld
+
+
+![bg right width:675](assets/plots_def/scatterplot.png)
+
+---
 
 ## Algoritmen
 - Hillclimber
@@ -149,20 +161,7 @@ K = p * 10000 - (T * 100 + Min)
 
 ---
 
-## Heuristieken
-
-- Constraint: alle connecties bereden
-
-- Valide start state
-  - Voorkeur aan onbereden connecties
-  - Routes maximaal gevuld
-
-
-![bg right](assets/scatterplot.png)
-
----
-
-## Hill-climber
+## Hillclimber
 - Maak start-state
 
 - Maak aanpassing
@@ -175,6 +174,11 @@ K = p * 10000 - (T * 100 + Min)
 
 ![bg right](assets/valid_state.png)
 
+---
+## Simulated annealing
+- Acceptatiekans
+- Temperatuur
+- Koeling schema
 
 ---
 
@@ -182,40 +186,40 @@ K = p * 10000 - (T * 100 + Min)
 ## Plant propagation - Overview
 
 - Genetic Algorithm
-- Hill-Climbers
+- Specifieke parameters:
+  - Populatie
+  - Aantal runners
+  - Aantal generaties
 
 ![width:600 bg right](assets/PPA/strawberry_plant.png)
 
 ---
-## Plant propagation - runners
-- Ver en weinig vs. dichtbij en veel
-- Afstand
-- Richting
-  - Heuristieken
+<!-- _paginate: skip -->
+<br>
+<br>
+<br>
+<br>
+
+# Resulaten
+
+---
+<br>
+<br>
+<br>
+<br>
+
+## Resultaten - Hillclimber
 
 ---
 
-## Resulaten
-
-
----
-## Resultaten - Hill Climber
-
-- High-scores
-  - Holland: ``9200``
-  - NL: ``6500``
-
-
----
-
-## Resultaten - Hill Climber 
+## Resultaten - Hillclimber 
 
 Heavy           | Light
 :-------------------------:|:-------------------------:
 ![width:550](assets/plots_def/histo_hill_climber_netherlands_random_heavy.png) | ![width:550](assets/plots_def/histo_hill_climber_netherlands_random_light.png)
 
 ---
-## Resultaten - Hill Climber
+## Resultaten - Hillclimber
 
 Random           | Valid
 :-------------------------:|:-------------------------:
@@ -223,9 +227,9 @@ Random           | Valid
 
 ---
 
-## Resultaten - Hill Climber
+## Resultaten - Simulated Annealing
 
-- Disclaimer: valid duurt lang bij grote state-space (Netherlands)
+- 200 beste temperatuur
  
 
 
@@ -235,24 +239,23 @@ Random           | Valid
 
 - 200 beste temperatuur
 - Log vs. Linear vs. Expo
- 
-
-
----
-
-## Resultaten - Simulated Annealing
-
-- Log vs. Linear vs. Expo
 
 ![bg right width:700](assets/plots_def/comparison_annealing_holland_200.png)
 
 ---
+## Resultaten - Simulated Annealing
 
+x | y | z
+:------------:|:------------:|:---------:
+![width:350](assets/plots_def/) | ![width:350](assets/plots_def/histo_hill_climber_holland_valid_heavy.png) | ![width:350](assets/plots_def/histo_hill_climber_holland_valid_heavy.png)
+
+---
 ## Resultaten - Simulated Annealing
 
 - Logaritmisch
 
-![bg right width:700](assets/plots_def/line_annealing_holland_logaritmic_100_valid_heavy.png)
+![width:700 bg right](assets/plots_def//line_annealing_holland_logaritmic_100_valid_heavy.png)
+
 
 ---
 ## Resultaten - Plant Propagation
@@ -289,6 +292,12 @@ Random           | Valid
 - Bij goede scores zelfs nog erger
 
 ![bg right width:700](assets/plots_def/line_netherlands_hill_climber_sequential_30_200_3_0.png)
+
+---
+## Conclusie
+- Simulated annealing is het best
+  - Valid start state
+- Plant propagation heeft potentie
 
 ---
 ## Future work
@@ -359,6 +368,13 @@ TODO:
 ## Baseline NL - Solved States Results
 
 TODO:
+
+---
+## Simulated annealing - random vs. valid
+
+Random            |  Valid
+:-------------------------:|:-------------------------:
+  ![width:550](assets/plots_def/histo_annealing_random.png) | ![width:550](assets/plots_def/histo_annealing_valid.png)
 
 ---
 
