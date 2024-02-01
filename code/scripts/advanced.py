@@ -2,113 +2,114 @@ import random
 import csv
 import copy
 from ..algorithms.hill_climber import Hill_climber
+from ..classes.state import State
 
 
-# class Advanced_7():
-#     """
-#     performs and saves the results of experiment 5 of the advanced RailNL case
-#     """
+class Advanced_7():
+    """
+    performs and saves the results of experiment 5 of the advanced RailNL case
+    """
 
-#     def __init__(self, state: object, itterations: int) -> None:
+    def __init__(self, state: object, itterations: int) -> None:
 
-#         self.state = state
+        self.state = state
 
-#         self.itterations = itterations
+        self.itterations = itterations
 
-#         self.original_score: list[float] = []
+        self.original_score: list[float] = []
 
-#         self.score_changes: dict[str: float] = {
-#             station.name: 0 for station in self.state.stations}
+        self.score_changes: dict[str: float] = {
+            station.name: 0 for station in self.state.stations}
 
-#     def run(self):
-#         """
-#         run the algorithm
-#         """
-#         random.seed(42)
-#         print('loop 1')
+    def run(self):
+        """
+        run the algorithm
+        """
+        random.seed(42)
+        print('loop 1')
 
-#         alg = Hill_climber(self.state)
-#         alg.valid_start_state = False
+        alg = Hill_climber(self.state)
+        alg.valid_start_state = False
 
-#         for i in range(self.itterations):
-#             print(f"itteration {i}")
-#             station_to_eliminate = self.get_station(self.state)
-#             self.eliminate_station_fake(station_to_eliminate)
-#             alg.run(100, i, False)
-#             self.original_score.append(alg.state.score)
+        for i in range(self.itterations):
+            print(f"itteration {i}")
+            station_to_eliminate = self.get_station(self.state)
+            self.eliminate_station_fake(station_to_eliminate)
+            alg.run(100, i, False)
+            self.original_score.append(alg.state.score)
 
-#         random.seed(42)
-#         print('loop 2')
+        random.seed(42)
+        print('loop 2')
 
-#         for i in range(self.itterations):
-#             state_copy = copy.deepcopy(self.state)
-#             print(
-#                 f"itteration {i}, aantal stations is: {len(self.state.stations)}")
+        for i in range(self.itterations):
+            state_copy = copy.deepcopy(self.state)
+            print(
+                f"itteration {i}, aantal stations is: {len(self.state.stations)}")
 
-#             alg = Hill_climber(state_copy)
-#             alg.valid_start_state = False
+            alg = Hill_climber(state_copy)
+            alg.valid_start_state = False
 
-#             station_to_eliminate = self.get_station(state_copy)
+            station_to_eliminate = self.get_station(state_copy)
 
-#             eliminated_station = self.eliminate_station(
-#                 station_to_eliminate, state_copy)
+            eliminated_station = self.eliminate_station(
+                station_to_eliminate, state_copy)
 
-#             alg.run(100, i, False)
-#             score_difference = alg.state.score - self.original_score[i]
-#             self.score_changes[eliminated_station] += score_difference
+            alg.run(100, i, False)
+            score_difference = alg.state.score - self.original_score[i]
+            self.score_changes[eliminated_station] += score_difference
 
-#         print(self.score_changes)
-#         self.write_to_csv()
+        print(self.score_changes)
+        self.write_to_csv()
 
-#     def eliminate_station(self, station_to_eliminate: object, state: object):
-#         """
-#         removes a station & all its connections
-#         """
+    def eliminate_station(self, station_to_eliminate: object, state: object):
+        """
+        removes a station & all its connections
+        """
 
-#         # remove station from state
-#         state.stations.remove(station_to_eliminate)
+        # remove station from state
+        state.stations.remove(station_to_eliminate)
 
-#         # go over all connections and check they us the station to eliminate
-#         for connection in state.connections:
-#             if station_to_eliminate == connection.station_1:
-#                 connection.station_2.connections.remove(connection)
-#                 state.connections.remove(connection)
+        # go over all connections and check they us the station to eliminate
+        for connection in state.connections:
+            if station_to_eliminate == connection.station_1:
+                connection.station_2.connections.remove(connection)
+                state.connections.remove(connection)
 
-#             elif station_to_eliminate == connection.station_2:
-#                 connection.station_1.connections.remove(connection)
-#                 state.connections.remove(connection)
+            elif station_to_eliminate == connection.station_2:
+                connection.station_1.connections.remove(connection)
+                state.connections.remove(connection)
 
-#         return station_to_eliminate.name
+        return station_to_eliminate.name
 
-#     def get_station(self, state: object):
-#         """
-#         returns random station from state
-#         """
-#         return random.choice(state.stations)
+    def get_station(self, state: object):
+        """
+        returns random station from state
+        """
+        return random.choice(state.stations)
 
-#     def eliminate_station_fake(self, station_to_eliminate: object):
-#         """
-#         mimics the eliminate_station method
-#         """
-#         station_to_eliminate = station_to_eliminate
+    def eliminate_station_fake(self, station_to_eliminate: object):
+        """
+        mimics the eliminate_station method
+        """
+        station_to_eliminate = station_to_eliminate
 
-#     def write_to_csv(self):
-#         pass
+    def write_to_csv(self):
+        pass
 
 
-# class Advanced_6(Advanced_7):
-#     """
-#     performs and saves the results of experiment 6 of the advanced RailNL case
-#     """
+class Advanced_6(Advanced_7):
+    """
+    performs and saves the results of experiment 6 of the advanced RailNL case
+    """
 
-#     def __init__(self, state: object, itterations: int) -> None:
-#         super().__init__(state, itterations)
+    def __init__(self, state: object, itterations: int) -> None:
+        super().__init__(state, itterations)
 
-#     def get_station(self, state: state):
-#         return self.state.stations[53]
+    def get_station(self, state: 'State'):
+        return self.state.stations[53]
 
-#     def write_to_csv(self):
-#         pass
+    def write_to_csv(self):
+        pass
 
 
 class Advanced_5():

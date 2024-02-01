@@ -1,12 +1,7 @@
 from sys import argv, path
-from bokeh.models import GeoJSONDataSource, HoverTool, Legend
+from bokeh.models import GeoJSONDataSource, HoverTool
 from bokeh.plotting import figure, show
-from bokeh.sampledata.sample_geojson import geojson
-from bokeh.palettes import Dark2_5 as palette
-from bokeh.io import export_png
-import itertools
 import json
-import os
 
 path.append("../classes")
 from state import State

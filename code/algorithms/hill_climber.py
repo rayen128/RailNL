@@ -111,8 +111,7 @@ class Hill_climber(Algorithm):
         score = state.calculate_score()
 
         if not state.is_valid_solution_without_connection():
-            score -= 100000
-
+            score -= 1000
 
         return score
 
@@ -146,11 +145,13 @@ class Hill_climber(Algorithm):
         returns:
             a random route from the list with routes able to add a connection
         """
+        
         # add routes with enough time left to add connections to list
         routes_able_to_add_connection = []
         for index in range(self.state.number_routes - 1):
             if self.state.routes[index].total_time <= self.state.time_frame - 20:
                 routes_able_to_add_connection.append(index)
+
         # return none if there are no routes
         if routes_able_to_add_connection == []:
             return None

@@ -7,7 +7,6 @@ from code.classes.connection import Connection
 from code.classes.route import Route
 
 import random
-import copy
 from typing import Union
 
 
@@ -202,7 +201,7 @@ class Algorithm():
             number_of_routes = self.number_of_routes
 
         else:
-            number_of_routes = random.randint(1, self.state.max_number_routes)
+            number_of_routes = self.state.max_number_routes
             number_of_connections = random.randint(1, 20)
 
         for new_route in range(number_of_routes):
@@ -360,43 +359,43 @@ class Algorithm():
         """
         return self._connection_used_consecutively(connection, route.route_connections)
 
-    # def get_forbidden_connection_start(self, route: 'Route', station: 'Station') -> Union['Connection', None]:
-    #     """
-    #     gives connection that is used too much right after the start station
+    def get_forbidden_connection_start(self, route: 'Route', station: 'Station') -> Union['Connection', None]:
+        """
+        gives connection that is used too much right after the start station
 
-    #     pre:
-    #         station is Station object
-    #     """
-    #     assert isinstance(
-    #         Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
+        pre:
+            station is Station object
+        """
+        assert isinstance(
+            Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
 
-    #     assert isinstance(
-    #         Station, station), f"station should be a station object, is a {type(station)} (value: {station})"
+        assert isinstance(
+            Station, station), f"station should be a station object, is a {type(station)} (value: {station})"
 
-    #     for connection in station.connections:
-    #         if self.max_connection_returns and self.connection_used_after_start(connection, route) >= self.max_connection_returns:
-    #             return connection
+        for connection in station.connections:
+            if self.max_connection_returns and self.connection_used_after_start(connection, route) >= self.max_connection_returns:
+                return connection
 
-    # def get_forbidden_connection_end(self, route: 'Route', station: 'Station') -> Union['Connection', None]:
-    #     """
-    #     gives connection that is used too much right before the end station
+    def get_forbidden_connection_end(self, route: 'Route', station: 'Station') -> Union['Connection', None]:
+        """
+        gives connection that is used too much right before the end station
 
-    #     pre:
-    #         station is Station object
+        pre:
+            station is Station object
 
-    #     returns:
-    #         forbidden connection
-    #         None if there is no forbidden connection
-    #     """
-    #     assert isinstance(
-    #         Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
+        returns:
+            forbidden connection
+            None if there is no forbidden connection
+        """
+        assert isinstance(
+            Route, route), f"route should be a Route object, is a {type(route)} (value: {route})"
 
-    #     assert isinstance(
-    #         Station, station), f"station should be a station object, is a {type(station)} (value: {station})"
+        assert isinstance(
+            Station, station), f"station should be a station object, is a {type(station)} (value: {station})"
 
-    #     for connection in station.connections:
-    #         if self.max_connection_returns and self.connection_used_before_end(connection, route) >= self.max_connection_returns:
-    #             return connection
+        for connection in station.connections:
+            if self.max_connection_returns and self.connection_used_before_end(connection, route) >= self.max_connection_returns:
+                return connection
 
     def get_allowed_connections_start(self, route: 'Route', station: 'Station') -> list['Connection']:
         """
@@ -434,9 +433,11 @@ class Algorithm():
             return end_connections
 
         allowed_connections: list['Connection'] = []
+
         for connection in end_connections:
             if not self.max_connection_returns or self.connection_used_before_end(connection, route) < self.max_connection_returns:
                 allowed_connections.append(connection)
+        
         return allowed_connections
 
     #### MINUS POINTS MULTIPLE USE CONNECTION HEURISTIC ####
@@ -449,8 +450,10 @@ class Algorithm():
             minus points for multiple use of one single connection
         """
         minus_points: int = 0
+
         for i in range(1, connection.used):
             minus_points += int(connection.distance) * i
+
         return minus_points
 
     def get_points_multiple_use_connections(self, state: 'State') -> int:
@@ -465,9 +468,11 @@ class Algorithm():
         """
 
         minus_points = 0
+
         for connection in state.connections:
             minus_points -= self._get_points_multiple_use_connection(
                 connection)
+            
         return minus_points
 
     #### ROUTE MAXIMALISATION HEURISTIC ####
@@ -497,9 +502,11 @@ class Algorithm():
         """
 
         minus_points = 0
+
         for route in state.routes:
             minus_points += self._minus_points_route_maximalisation(
                 route, state.time_frame)
+            
         return minus_points
 
     #### DIFFICTULT CONNECTIONS HEURISTIC ####
@@ -516,6 +523,7 @@ class Algorithm():
         """
         check_station_1 = len(connection.station_1.connections) % 2
         check_station_2 = len(connection.station_2.connections) % 2
+
         return not (check_station_1 and check_station_2)
 
     def identify_difficult_connections(self, state) -> set:
@@ -525,8 +533,10 @@ class Algorithm():
         pre:
             state is a State object
         """
+        
         difficult_connections = (
             connection for connection in state.connections if self.connection_is_difficult(connection))
+        
         return difficult_connections
 
     def difficult_connections_used(self, state):
@@ -543,9 +553,11 @@ class Algorithm():
         difficult_connections = self.identify_difficult_connections(state)
 
         bonus_points = 0
+
         for connection in state.used_connections:
             if connection in difficult_connections:
                 bonus_points += connection.distance
+
         return bonus_points
 
     #### NON VALID HEURISTIC ####

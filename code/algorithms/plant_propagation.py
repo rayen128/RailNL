@@ -16,7 +16,6 @@ class Plant_Propagation(Hill_climber):
             amount of generations
             max_runners
 
-
         pre: 
             state is a state object
             population_size is an integer
@@ -151,12 +150,14 @@ class Plant_Propagation(Hill_climber):
                 self.state.reset()
                 self.create_valid_state()
                 self.population.append(copy.deepcopy(self.state))
+
         # create random_state population
         elif type == 'random':
             for i in range(self.population_size):
                 self.state.reset()
                 self.create_random_state(static=True)
                 self.population.append(copy.deepcopy(self.state))
+
         # create hill_climber population
         elif type == 'hill_climber':
             state = Hill_climber(
@@ -233,9 +234,8 @@ class Plant_Propagation(Hill_climber):
         post:
             self.fitness_values is populated with tuples consisting of:
                 (fitness_values, state, absolute_score)
-
-
         """
+
         # Extract just the scores from self.scores
         scores_only = [score_state_pair[0] for score_state_pair in self.scores]
 
@@ -293,6 +293,7 @@ class Plant_Propagation(Hill_climber):
             'random' (tournament-style, randomly select buckets)
             'sequential' (tournament-style, loops over population for buckets) 
         """
+
         # add runners to population
         self.merge_population()
 
@@ -421,6 +422,7 @@ class Plant_Propagation(Hill_climber):
 
         """
         while len(self.population) < self.population_size:
+            
             # ensure tournament_size doesn't exceed number of remaining states
             current_tournament_size = min(tournament_size, len(self.scores))
 

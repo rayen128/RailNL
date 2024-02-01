@@ -2,9 +2,6 @@ from .algorithm import Algorithm
 from ..classes.state import State
 from ..classes.route import Route
 
-import random
-import copy
-
 
 class Baseline_Algorithm(Algorithm):
     def __init__(self, state: object) -> None:
@@ -71,12 +68,12 @@ class Baseline_Algorithm(Algorithm):
 
             # remove last-added connection
             self.delete_random_connection(-1, choice)
-            # if choice == 'start':
-            #     self.state.delete_start_connection_from_route(
-            #         self.state.routes[-1])
-            # elif choice == 'end':
-            #     self.state.delete_end_connection_from_route(
-            #         self.state.routes[-1])
+            if choice == 'start':
+                self.state.delete_start_connection_from_route(
+                    self.state.routes[-1])
+            elif choice == 'end':
+                self.state.delete_end_connection_from_route(
+                    self.state.routes[-1])
             self.current_route_index += 1
 
         self.return_score()
