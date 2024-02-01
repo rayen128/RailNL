@@ -142,27 +142,14 @@ K = p * 10000 - (T * 100 + Min)
 
 ## Heuristieken
 
-- Valide start state
-
 - Constraint: alle connecties bereden
 
-
-![bg right]plaatje van scatterplot)
-
----
-
-## LRA
-
-- Voor het maken van een **valide state**
+- Valide start state
+  - Voorkeur aan onbereden connecties
+  - Routes maximaal gevuld
 
 
-- Maakt nieuwe routes tot *valide state*
-
-- Voegt connecties toe tot *timeframe* is bereikt
-
-- Geeft voorrang aan *ongebruikte connecties*
-
-![bg right](assets/lra_gif.gif)
+![bg right](assets/scatterplot)
 
 ---
 
@@ -176,6 +163,8 @@ K = p * 10000 - (T * 100 + Min)
     - Toevoegen route
 
 - Vergelijk score
+
+![bg right](assets/valid_state.png)
 
 
 ---
@@ -210,31 +199,24 @@ K = p * 10000 - (T * 100 + Min)
 
 ---
 
-## Resultaten - Hill Climber
+## Resultaten - Hill Climber 
 
-- Heavy vs. Light  
-
-[assets/plots_def/histo_hill_climber_netherlands_random_heavy.png]
-[assets/plots_def/histo_hill_climber_netherlands_random_light.png]
---> TODO: deze op schaal 0 - 4000
+Heavy           | Light
+:-------------------------:|:-------------------------:
+![width:550](assets/plots_def/histo_hill_climber_netherlands_random_heavy.png) | ![width:550](assets/plots_def/histo_hill_climber_netherlands_random_light.png)
 
 ---
 ## Resultaten - Hill Climber
 
-- Random vs. valid
-
-[assets/plots_def/histo_hill_climber_holland_random_heavy.png] 
-
-[assets/plots_def/histo_hill_climber_holland_random_light.png]
-
-
+Random           | Valid
+:-------------------------:|:-------------------------:
+![width:550](assets/plots_def/histo_hill_climber_holland_random_heavy.png) | ![width:550](assets/plots_def/histo_hill_climber_holland_valid_heavy.png)
 
 ---
 
 ## Resultaten - Hill Climber
 
-- Random vs. valid
-- Disclaimer: valid duurt lang bij grote state-space
+- Disclaimer: valid duurt lang bij grote state-space (Netherlands)
  
 
 
@@ -252,32 +234,27 @@ K = p * 10000 - (T * 100 + Min)
 ## Resultaten - Simulated Annealing
 
 - Log vs. Linear vs. Expo
- 
-TODO: grafiek met beste scores van de 3 coolingschemes
+
+![bg right width:700](assets/plots_def/comparison_annealing_holland_200.png)
 
 ---
 
 ## Resultaten - Simulated Annealing
 
 - Logaritmisch
- 
-TODO: line_plaatje valid 200 logaritmisch (wel/niet NL) 
+
+![bg right width:700](assets/plots_def/line_annealing_holland_logaritmic_100_valid_heavy.png)
 
 ---
 ## Resultaten - Plant Propagation
 
 - Filters
 - Parameters
+- heuristiek
 - valid vs. random
+- verandering is niet goed
 
-
-
----
-## Future work
-- Heuristieken implementeren
-- Plant propagation finetunen
-
-![bg right](assets/empty_state.png)
+![width:600 bg right](assets/PPA/strawberry_plant.png)
 
 ---
 
@@ -293,7 +270,7 @@ TODO: line_plaatje valid 200 logaritmisch (wel/niet NL)
 
 - Afhankelijk van lokale minima
 
-[assets/plots_def/line_netherlands_random_sequential_30_200_3_0.png]
+![bg right width:700](assets/plots_def/line_netherlands_random_sequential_30_200_3_0.png)
 
 
 
@@ -302,7 +279,14 @@ TODO: line_plaatje valid 200 logaritmisch (wel/niet NL)
 
 - Bij goede scores zelfs nog erger
 
-[assets/plots_def/line_netherlands_hill_climber_sequential_30_200_3_0.png]
+![bg right width:700](assets/plots_def/line_netherlands_hill_climber_sequential_30_200_3_0.png)
+
+---
+## Future work
+- Heuristieken implementeren
+- Plant propagation finetunen
+
+![bg right](assets/empty_state.png)
 
 ---
 <!-- _paginate: skip -->

@@ -2,7 +2,7 @@
 Voor Holland (Noord- en Zuid-Holland) of voor Nederland moet een lijnvoering gemaakt worden. Deze moet zo efficiënt mogelijk zijn, terwijl alle connecties tussen stations worden bereden. Hiervoor implementeren wij verschillende algoritmen, en vergelijken deze met elkaar.
 
 ## Vereisten
-Om deze code te runnen zijn een aantal dingen nodig. Deze kunnen worden geïnstalleerd met pip:
+Om deze code te runnen zijn een aantal packages nodig. Deze kunnen worden geïnstalleerd met pip:
 
 ```bash
 pip install -r requirements.txt
