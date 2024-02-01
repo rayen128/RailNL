@@ -109,3 +109,24 @@ def all_scores(states_dict: dict) -> list:
         scores.append(int(round(float(state["score"]), 0)))
 
     return scores
+
+def all_p(states_dict: dict) -> list:
+    """
+    makes a list with all the scores from every state
+
+    pre: 
+        states_dict is a dict with which maintains state dictionaries  
+
+    returns:
+        the list with scores
+    """
+
+    # make an empty list to save the scores into
+    scores = []
+
+    # add all the scores from every state to the list
+    for state in states_dict.values():
+        scores.append(float(state["p"]))
+
+    return scores
+

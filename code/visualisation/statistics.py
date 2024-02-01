@@ -6,6 +6,7 @@ import statistics
 
 from results import read_csv, filter_states, all_scores, export_states
 
+
 def make_histogram(values: list, title_histogram: str, filepath: str, text: str = None) -> None:
     """
     creates and saves a histogram with normal distribution line with the given values
@@ -35,12 +36,12 @@ def make_histogram(values: list, title_histogram: str, filepath: str, text: str 
     plt.title(title_histogram)
     plt.xlabel("scores", labelpad=10)
     plt.ylabel("relative frequency", labelpad=10)
-    #if 'netherlands' in title_list:
-       # plt.xlim(0, 9300)
-    #elif 'holland' in title_list:
-    plt.xlim(7000, 9500)
+    if 'netherlands' in title_list:
+       plt.xlim(0, 9300)
+    elif 'holland' in title_list:
+        plt.xlim(7000, 9300)
     plt.annotate(text, xy=(0.2, 0.85), fontsize = 10, xycoords='figure fraction')
-    #plt.ylim(0, 0.003)
+    plt.ylim(0, 0.003)
     plt.subplots_adjust(left=0.17, right=0.9, top=0.9, bottom=0.15)
     plt.savefig(
         f'{filepath}.png')
@@ -82,7 +83,8 @@ def make_boxplot(values: list, title_boxplot: str, filepath: str, legend: list[s
     # save the plot in a png
     plt.savefig(
         f'{filepath}.png')
-    
+
+
 def make_line_diagram(scores: list, title_diagram: str, filepath: str) -> None:
     """
     makes a line diagram of the scores against the iterations
@@ -96,16 +98,17 @@ def make_line_diagram(scores: list, title_diagram: str, filepath: str) -> None:
         saves a png file with the line diagram
     """
     plt.clf()
-    
+
     x = list(range(len(scores)))
-    
+
     plt.plot(x, scores)
     plt.xlabel("Iterations")
     plt.ylabel("Scores")
     plt.title(f"{title_diagram}")
     plt.savefig(
         f'{filepath}.png')
-    
+
+
 def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, filepath: str, comparison: bool, text: str = None, legend: list[str] = None, xlabel: str = 'Iterations') -> None:
     """
     makes a line diagram with multiple lines of the scores against the iterations
@@ -125,16 +128,17 @@ def make_line_diagram_multiple_lines(scores: list[list], title_diagram: str, fil
             plt.plot(x, scores[i], alpha=0.2, color='magenta')
         else:
             plt.plot(x, scores[i])
-            plt.legend(legend, loc = "lower right")
-    
+            plt.legend(legend, loc="lower right")
+
     plt.xlabel(xlabel)
     plt.ylabel("Scores")
     plt.title(f"{title_diagram}")
 
-    plt.annotate(text, xy=(0.7, 0.3), fontsize = 10, xycoords='figure fraction')
+    plt.annotate(text, xy=(0.7, 0.3), fontsize=10, xycoords='figure fraction')
     plt.savefig(
         f'{filepath}.png')
-    
+
+
 def ranking(states_dict: dict, amount: int):
     """
     prints a ranking with the states with the highest scores
@@ -152,16 +156,16 @@ def ranking(states_dict: dict, amount: int):
     # sort the states dictionary based on scores
     sorted_states = dict(
         sorted(states_dict.items(), key=lambda x: float(x[1]['score']), reverse=True))
-    
+
     # print the column names
     print("state id \t algorithm \t \t \t score\t\t\tused connections \t routes \ttotal minutes \tis solution")
 
     # print the states
     for state in islice(sorted_states.values(), amount):
         print(f"{state['state_id']} \t \t {state['algorithm']} \t \t {state['score']} \t \t"
-                f"{state['fraction_used_connections']} \t \t \t {state['number_routes']} \t \t"
-                f"{state['total_minutes']} \t \t{state['is_solution']}")
-            
+              f"{state['fraction_used_connections']} \t \t \t {state['number_routes']} \t \t"
+              f"{state['total_minutes']} \t \t{state['is_solution']}")
+
 
 def statistics_scores(scores: list) -> dict:
     """
@@ -175,7 +179,7 @@ def statistics_scores(scores: list) -> dict:
     """
 
     # add statistics to dictionary
-    statistics_scores_dict = {} 
+    statistics_scores_dict = {}
     statistics_scores_dict['min_score'] = min(scores)
     statistics_scores_dict['max_score'] = max(scores)
     statistics_scores_dict['mean'] = sum(scores) / len(scores)
