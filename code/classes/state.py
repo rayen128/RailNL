@@ -521,6 +521,32 @@ class State():
         ):
             return False
         return True
+    
+    def is_valid_solution_without_connection(self) -> bool:
+        """
+        Gives information about satisfaction of the two constraints
+
+        pre:
+            constraint relaxation parameters (default: False)
+            relax the three specific constraints if True
+
+        returns:
+            bool for overall constraint satisfaction
+        """
+
+        if (
+                not self.relaxed_time_frame and
+                not self.routes_valid_time_frame()
+        ):
+            return False
+
+        if (
+                not self.relaxed_max_routes and
+                not self.less_than_max_routes()
+        ):
+            return False
+
+        return True
 
     def is_valid_solution_non_relaxed(self) -> bool:
         """
@@ -752,13 +778,4 @@ class State():
         for connection in self.connections:
             connection.used = 0
 
-
-if __name__ == "__main__":
-    state = State("../../data/stations_holland.csv",
-                  "../../data/routes_holland.csv",
-                  7,
-                  120)
-    print(state.show())
-    print(state.show_csv_line(1, "algorithm_x"))
-    print(state.connections)
-    print(state.unused_connections)
+ 

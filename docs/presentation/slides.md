@@ -20,7 +20,7 @@ Lieke | Rayen | Gert
 
 - Doel: zo efficiënt mogelijke lijnvoering
 
-![bg right](assets/empty_state.png)
+![bg right](assets/filled_state_netherlands.png)
 
 ---
 ## Terminologie
@@ -315,7 +315,13 @@ Lineair | Exponentieel | Logaritmisch
 
 # Potential Readings
 
+- Nature-Inspired Optimisation Approaches and the New PPA 
 
+- Parameter control for the PPA - Wouter 
+
+- Fireworks Algorithm vs. PPA - Wouter (Master scriptie)
+
+- The PPA on Timetables: First Results - Quinten
 
 ---
 <!-- _paginate: skip -->

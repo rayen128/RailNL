@@ -110,6 +110,10 @@ class Hill_climber(Algorithm):
         """
         score = state.calculate_score()
 
+        if not state.is_valid_solution_without_connection():
+            score -= 100000
+
+
         return score
 
     def compare_scores_state(self) -> None:
