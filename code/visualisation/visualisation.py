@@ -307,8 +307,6 @@ def show_plot(station_dict: dict[str: list[float]], state: object, map: str) -> 
     plot_routes(p, state, station_dict)
     plot_stations(p, station_dict)
 
-    # TODO: Totale Score (goed) weergeven in de Legenda?
-
     # add HoverTool for connections
     hover_connections = HoverTool(
         renderers=[p.select_one({'name': 'Connections'})],

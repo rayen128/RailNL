@@ -5,8 +5,6 @@ from ..classes.route import Route
 import random
 import copy
 
-# TODO: test of dit nog werkt na add_connection aanpassing
-
 
 class Baseline_Algorithm(Algorithm):
     def __init__(self, state: object) -> None:

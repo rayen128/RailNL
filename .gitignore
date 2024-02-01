@@ -175,5 +175,5 @@ test_state.py
 test.py
 
 # visualisation files
-test.html
+code/visualisation/visualisation.html
 main.html
