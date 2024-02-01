@@ -284,7 +284,7 @@ class Plant_Propagation(Hill_climber):
 
     ### POPULATION FUNCTIONS ###
 
-    def filter_population(self, filter_type: str, generation, visualize_states: bool = False) -> None:
+    def filter_population(self, filter_type: str, generation, visualize_states: bool = True) -> None:
         """
         filters the (best of) the current population using the selected filter_method 
         if set visualize is set to True, also visualizes whole population
@@ -299,8 +299,10 @@ class Plant_Propagation(Hill_climber):
 
         # potentially visualize states
         if visualize_states:
+            station_dict = get_station_info(self.state)
+
             for state in self.population:
-                show_plot(self.station_dict, state, 'netherlands')
+                show_plot(station_dict, state, 'netherlands')
 
         # calculate all scores
         self.get_scores()
