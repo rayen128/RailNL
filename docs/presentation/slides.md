@@ -270,15 +270,6 @@ TODO: line_plaatje valid 200 logaritmisch (wel/niet NL)
 - Parameters
 - valid vs. random
 
-
-
----
-## Future work
-- Heuristieken implementeren
-- Plant propagation finetunen
-
-![bg right](assets/empty_state.png)
-
 ---
 
 ## Resultaten - Plant Propagation
@@ -304,6 +295,13 @@ TODO: line_plaatje valid 200 logaritmisch (wel/niet NL)
 
 [assets/plots_def/line_netherlands_hill_climber_sequential_30_200_3_0.png]
 
+
+---
+## Future work
+- Heuristieken implementeren
+- Plant propagation finetunen
+
+![bg right](assets/empty_state.png)
 ---
 <!-- _paginate: skip -->
 ---
