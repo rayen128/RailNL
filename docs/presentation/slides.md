@@ -408,10 +408,3 @@ Originale Paper            |  ChatGPT
 ## UML
 
 ![width:800 bg center](assets/UML.png)
-
----
-## Simulated Annealing - Results
-
-TODO: opvullen
-
----
